@@ -3,19 +3,22 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
-#include "game_manager.h";
+#include "game_manager.h"
+#include "texture_manager.h"
 
 namespace fruit_game {
-	class renderer
+	class Renderer
 	{
 	public:
 		SDL_Window* gWindow;
 		SDL_Surface* gScreenSurface;
 		SDL_Renderer* gRenderer;
+		
+		TextureManager* texture_mgr;
 
-		renderer();
-		~renderer();
+		Renderer();
+		~Renderer();
 
-		void Render(game_manager* game);
+		void Render(GameManager* game);
 	};
 }

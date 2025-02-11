@@ -109,6 +109,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)sdl\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="game_manager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="texture_manager.cpp" />
     <ClCompile Include="ui\menu.cpp" />
     <ClCompile Include="renderer.cpp" />
   </ItemGroup>
@@ -147,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game_manager.h" />
+    <ClInclude Include="texture_manager.h" />
     <ClInclude Include="ui\menu.h" />
     <ClInclude Include="renderer.h" />
   </ItemGroup>
@@ -165,6 +168,9 @@
     <Content Include="sdl\lib\$(Platform)\SDL2_ttf.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>SDL2_ttf.dll</TargetPath>
+    </Content>
+    <Content Include="game_data\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>

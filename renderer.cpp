@@ -1,11 +1,11 @@
 #include "renderer.h"
 #include "game_manager.h"
 
-#include "ui/menu.h";
+#include "ui/menu.h"
 
 namespace fruit_game
 {
-	renderer::renderer() {
+	Renderer::Renderer() {
 		if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 			SDL_Log("SDL could not initialize! SDL error: %s\n", SDL_GetError());
 			SDL_Quit();
@@ -28,9 +28,8 @@ namespace fruit_game
 			return;
 		}
 
-		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-
-		if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		int imageFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+		if (!(IMG_Init(imageFlags) & imageFlags)) { // what
 			SDL_Log("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 			SDL_Quit();
 			return;
@@ -41,26 +40,28 @@ namespace fruit_game
 			SDL_Quit();
 			return;
 		}
+
+		texture_mgr = new TextureManager(this->gRenderer);
+		fruit_ui::menu::Render(this);
 	}
 
-	renderer::~renderer() {
+	Renderer::~Renderer() {
 		SDL_DestroyRenderer(gRenderer);
 		SDL_DestroyWindow(gWindow);
 		SDL_Quit();
 	}
 
-	void renderer::Render(game_manager* game_manager) {
+	void Renderer::Render(GameManager* GameManager) {
 		/*
 		* Could have built an entire ui framework for this
 		* but imo its kinda overkill.
 		* well.... if i have time....
 		* TODO: build an ui framework
 		*/
-		if (game_manager->isInMenu) {
-			fruit_ui::menu::Render(this);
-		}
-		else {
-		}
+		//Reset the frame
+		if (GameManager->isInMenu) return;
+
+		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 		SDL_RenderClear(this->gRenderer);
 		SDL_RenderPresent(this->gRenderer);
 		SDL_UpdateWindowSurface(this->gWindow);

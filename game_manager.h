@@ -3,7 +3,7 @@
 #include "SDL.h"
 
 namespace fruit_game {
-	class game_manager
+	class GameManager
 	{
 	public:
 		bool running = true;

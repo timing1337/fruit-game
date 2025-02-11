@@ -4,7 +4,7 @@
 
 namespace fruit_game
 {
-	void game_manager::Tick()
+	void GameManager::Tick()
 	{
 		SDL_Event* e = &this->event;
 		while (SDL_PollEvent(e) != 0)

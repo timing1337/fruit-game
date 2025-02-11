@@ -1,9 +1,12 @@
 #include "menu.h"
 
+using namespace fruit_game;
+
 namespace fruit_ui {
 
-	void menu::Render(fruit_game::renderer* renderer)
+	void menu::Render(Renderer* renderer)
 	{
+
 	}
 }	
 
