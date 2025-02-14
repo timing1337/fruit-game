@@ -42,13 +42,15 @@ namespace fruit_game
 		}
 
 		texture_mgr = new TextureManager(this->gRenderer);
-		fruit_ui::menu::Render(this);
+		font_mgr = new FontManager();
 	}
 
 	Renderer::~Renderer() {
 		SDL_DestroyRenderer(gRenderer);
 		SDL_DestroyWindow(gWindow);
 		SDL_Quit();
+		IMG_Quit();
+		TTF_Quit();
 	}
 
 	void Renderer::Render(GameManager* GameManager) {
@@ -59,10 +61,14 @@ namespace fruit_game
 		* TODO: build an ui framework
 		*/
 		//Reset the frame
-		if (GameManager->isInMenu) return;
-
 		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 		SDL_RenderClear(this->gRenderer);
+		if (GameManager->isInMenu) {
+			fruit_ui::menu::Render(this);
+		}
+		else {
+			//Render the game
+		}
 		SDL_RenderPresent(this->gRenderer);
 		SDL_UpdateWindowSurface(this->gWindow);
 	}

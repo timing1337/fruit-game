@@ -9,7 +9,7 @@ namespace fruit_game {
 	class TextureManager
 	{
 	public:
-		std::unordered_map<std::string, SDL_Texture*> loadedTextures;  // Store textures by hash
+		std::unordered_map<std::string, SDL_Texture*> textures;
 
 		TextureManager(SDL_Renderer* renderer);
 		~TextureManager();
