@@ -8,7 +8,7 @@ namespace fruit_ui {
 	{
 		TextureManager* texture_mgr = renderer->texture_mgr;
 
-		TextureData* mainTitle = renderer->CreateText("CAT FRUIT", "Helvetica-Bold", 50, 255, 255, 255, 255);
+		TextureData* mainTitle = renderer->CreateText("CAT FRUIT", "Helvetica-Bold", 40, 255, 206, 131, 255);
 		texture_mgr->textures["ui/main_title_text"] = mainTitle;
 	}
 
@@ -21,7 +21,8 @@ namespace fruit_ui {
 
 		const int halfTitleWidth = mainTitle->width / 2;
 
-		renderer->RenderTexture("ui/main_title_text", halfWidth - halfTitleWidth, 150);
+		renderer->SetBackgroundColor(255, 236, 179, 255);
+		renderer->RenderTexture("ui/main_title_text", halfWidth - halfTitleWidth, 50);
 	}
 }	
 

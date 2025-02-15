@@ -32,5 +32,6 @@ namespace fruit_game {
 
 		void RenderTexture(const char* textureId, const int x, const int y);
 		void RenderTextureBackground(const char* textureId);
+		void SetBackgroundColor(const int r, const int g, const int b, const int a);
 	};
 }

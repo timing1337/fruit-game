@@ -79,8 +79,8 @@ namespace fruit_game
 			SDL_Log("Texture not found: %s\n", textureId);
 			return;
 		}
-		SDL_Rect destRect = { x, y, texture->width, texture->height };
-		SDL_RenderCopy(gRenderer, texture->texture, NULL, &destRect);
+		SDL_Rect rect = { x, y, texture->width, texture->height };
+		SDL_RenderCopy(gRenderer, texture->texture, NULL, &rect);
 	}
 
 	void Renderer::RenderTextureBackground(const char* textureId) {
@@ -92,6 +92,11 @@ namespace fruit_game
 		SDL_RenderCopy(gRenderer, texture->texture, NULL, NULL);
 	}
 
+	void Renderer::SetBackgroundColor(const int r, const int g, const int b, const int a) {
+		SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
+		SDL_RenderClear(gRenderer);
+	}
+
 	TextureData* Renderer::CreateText(const char* text, const char* fontName, const int size, const SDL_Color color) {
 		TTF_Font* font = font_mgr->fonts[fontName];
 		if (font == nullptr) {
@@ -101,7 +106,7 @@ namespace fruit_game
 
 		TTF_SetFontSize(font, size);
 
-		SDL_Surface* surface = TTF_RenderText_Blended(font, text, color);
+		SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
 		if (surface == nullptr) {
 			SDL_Log("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
 			return NULL;
