@@ -15,5 +15,8 @@ int main(int argc, char* args[])
 		render->Render(game);
 	}
 
+	delete game;
+	delete render;
+
 	return 0;
 }

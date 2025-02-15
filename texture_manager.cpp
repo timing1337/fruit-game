@@ -25,14 +25,22 @@ namespace fruit_game {
 
 			SDL_Log("Loading texture: %s", textureId.c_str());
 
-			textures[textureId] = IMG_LoadTexture(renderer, dataPath.string().c_str());
+			SDL_Texture* texture = IMG_LoadTexture(renderer, dataPath.string().c_str());
+
+			TextureData* textureData = new TextureData();
+			textureData->texture = texture;
+
+			SDL_QueryTexture(texture, NULL, NULL, &textureData->width, &textureData->height);
+
+			textures[textureId] = textureData;
 		}
 	}
 
 	TextureManager::~TextureManager()
 	{
+		SDL_Log("Destroying textures");
 		for (auto& texture : textures) {
-			SDL_DestroyTexture(texture.second);
+			SDL_DestroyTexture(texture.second->texture);
 		}
 	}
 }

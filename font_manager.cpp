@@ -13,13 +13,18 @@ namespace fruit_game {
 				continue;
 			}
 
-			fonts[dataPath.filename().replace_extension().string()] = TTF_OpenFont(dataPath.string().c_str(), 24);
+			auto fontId = dataPath.filename().replace_extension().string();
 
-			SDL_Log("Loading font: %s", dataPath.filename().replace_extension().string().c_str());
+			fonts[fontId] = TTF_OpenFont(dataPath.string().c_str(), 1);
+
+			SDL_Log("Loading font: %s", fontId.c_str());
 		}
 	}
 
 	FontManager::~FontManager() {
-
+		SDL_Log("Destroying fonts");
+		for (auto& font : fonts) {
+			TTF_CloseFont(font.second);
+		}
 	}
 }

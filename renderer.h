@@ -19,9 +19,18 @@ namespace fruit_game {
 		TextureManager* texture_mgr;
 		FontManager* font_mgr;
 
+		const int width = 928;
+		const int height = 522;
+
 		Renderer();
 		~Renderer();
 
 		void Render(GameManager* game);
+
+		TextureData* CreateText(const char* text, const char* fontId, const int size, const SDL_Color color);
+		TextureData* CreateText(const char* text, const char* fontId, const int size, const int r, const int g, const int b, const int a);
+
+		void RenderTexture(const char* textureId, const int x, const int y);
+		void RenderTextureBackground(const char* textureId);
 	};
 }

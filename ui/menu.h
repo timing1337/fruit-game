@@ -9,5 +9,6 @@ namespace fruit_ui {
 	{
 	public:
 		static void Render(Renderer* renderer);
+		static void Initialize(Renderer* renderer);
 	};
 }
