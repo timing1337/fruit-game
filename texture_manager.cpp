@@ -27,10 +27,14 @@ namespace fruit_game {
 
 			SDL_Texture* texture = IMG_LoadTexture(renderer, dataPath.string().c_str());
 
-			TextureData* textureData = new TextureData();
-			textureData->texture = texture;
+			Sprite* sprite = new Sprite();
+			sprite->texture = texture;
 
-			SDL_QueryTexture(texture, NULL, NULL, &textureData->width, &textureData->height);
+			SDL_QueryTexture(texture, NULL, NULL, &sprite->width, &sprite->height);
+
+			GameTexture* textureData = new GameTexture();
+			textureData->type = GameTextureType::SPRITE;
+			textureData->sprite = sprite;
 
 			textures[textureId] = textureData;
 		}
@@ -40,7 +44,23 @@ namespace fruit_game {
 	{
 		SDL_Log("Destroying textures");
 		for (auto& texture : textures) {
-			SDL_DestroyTexture(texture.second->texture);
+			GameTexture* textureData = texture.second;
+			switch (textureData->type)
+			{
+				case GameTextureType::SPRITE:
+					SDL_DestroyTexture(textureData->sprite->texture);
+					delete textureData->sprite;
+				break;
+				case GameTextureType::TEXT:
+					SDL_DestroyTexture(textureData->text->text);
+					if (textureData->text->outline > 0) {
+						SDL_DestroyTexture(textureData->text->outlineText);
+					}
+					delete textureData->text;
+			default:
+				break;
+			}
+			delete textureData;
 		}
 	}
 }

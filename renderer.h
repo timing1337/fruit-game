@@ -27,11 +27,12 @@ namespace fruit_game {
 
 		void Render(GameManager* game);
 
-		TextureData* CreateText(const char* text, const char* fontId, const int size, const SDL_Color color);
-		TextureData* CreateText(const char* text, const char* fontId, const int size, const int r, const int g, const int b, const int a);
+		GameTexture* CreateText(const char* text, const char* fontId, const int size, const SDL_Color color);
+		GameTexture* CreateOutlineText(const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 1, const SDL_Color outlineColor = { 0, 0, 0, 0xff });
 
-		void RenderTexture(const char* textureId, const int x, const int y);
+		void RenderSprite(const char* textureId, const int x, const int y);
 		void RenderTextureBackground(const char* textureId);
 		void SetBackgroundColor(const int r, const int g, const int b, const int a);
+		void RenderText(const char* textureId, const int x, const int y);
 	};
 }

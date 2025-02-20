@@ -41,7 +41,7 @@ namespace fruit_game
 			return;
 		}
 
-		texture_mgr = new TextureManager(this->gRenderer);
+		texture_mgr = new TextureManager(gRenderer);
 		font_mgr = new FontManager();
 
 		fruit_ui::menu::Initialize(this);
@@ -73,23 +73,60 @@ namespace fruit_game
 
 	// API WRAPPER
 
-	void Renderer::RenderTexture(const char* textureId, int x, int y) {
-		TextureData* texture = texture_mgr->textures[textureId];
+	void Renderer::RenderText(const char* textureId, int x, int y) {
+		GameTexture* texture = texture_mgr->textures[textureId];
 		if (texture == nullptr) {
 			SDL_Log("Texture not found: %s\n", textureId);
 			return;
 		}
-		SDL_Rect rect = { x, y, texture->width, texture->height };
-		SDL_RenderCopy(gRenderer, texture->texture, NULL, &rect);
+		if (texture->type != GameTextureType::TEXT) {
+			SDL_Log("Texture is not text: %s\n", textureId);
+			return;
+		}
+		RenderedText* text = texture->text;
+
+		SDL_Rect rect = { x + text->outline, y + text->outline, text->width, text->height };
+		SDL_RenderCopy(gRenderer, text->text, NULL, &rect);
+
+		if (text->outline > 0) {
+			SDL_Rect outlineRect = { x, y, text->width, text->height };
+			SDL_RenderCopy(gRenderer, text->outlineText, NULL, &outlineRect);
+		}
+	}
+
+	void Renderer::RenderSprite(const char* textureId, int x, int y) {
+		GameTexture* texture = texture_mgr->textures[textureId];
+		if (texture == nullptr) {
+			SDL_Log("Texture not found: %s\n", textureId);
+			return;
+		}
+
+		if (texture->type != GameTextureType::SPRITE) {
+			SDL_Log("Texture is not a sprite: %s\n", textureId);
+			return;
+		}
+
+		Sprite* sprite = texture->sprite;
+
+		SDL_Rect rect = { x, y, sprite->width, sprite->height };
+		SDL_RenderCopy(gRenderer, sprite->texture, NULL, &rect);
 	}
 
 	void Renderer::RenderTextureBackground(const char* textureId) {
-		TextureData* texture = texture_mgr->textures[textureId];
+		GameTexture* texture = texture_mgr->textures[textureId];
 		if (texture == nullptr) {
 			SDL_Log("Texture not found: %s\n", textureId);
 			return;
 		}
-		SDL_RenderCopy(gRenderer, texture->texture, NULL, NULL);
+
+		if (texture->type != GameTextureType::SPRITE) {
+			SDL_Log("Texture is not a sprite: %s\n", textureId);
+			return;
+		}
+
+		Sprite* sprite = texture->sprite;
+
+		SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
 	}
 
 	void Renderer::SetBackgroundColor(const int r, const int g, const int b, const int a) {
@@ -97,10 +134,10 @@ namespace fruit_game
 		SDL_RenderClear(gRenderer);
 	}
 
-	TextureData* Renderer::CreateText(const char* text, const char* fontName, const int size, const SDL_Color color) {
-		TTF_Font* font = font_mgr->fonts[fontName];
+	GameTexture* Renderer::CreateText(const char* text, const char* fontId, const int size, const SDL_Color color) {
+		TTF_Font* font = font_mgr->fonts[fontId];
 		if (font == nullptr) {
-			SDL_Log("Font not found: %s\n", fontName);
+			SDL_Log("Font not found: %s\n", fontId);
 			return NULL;
 		}
 
@@ -114,18 +151,68 @@ namespace fruit_game
 
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
 
-		TextureData* textureData = new TextureData();
-		textureData->texture = texture;
-		textureData->width = surface->w;
-		textureData->height = surface->h;
+		GameTexture* textureData = new GameTexture();
+		textureData->type = GameTextureType::TEXT;
+
+		textureData->text = new RenderedText();
+		textureData->text->font = font;
+		textureData->text->outline = 0;
+		textureData->text->text = texture;
+		textureData->text->outlineText = nullptr;
+		textureData->text->width = surface->w;
+		textureData->text->height = surface->h;
 
 		SDL_FreeSurface(surface);
 
 		return textureData;
 	}
 
-	TextureData* Renderer::CreateText(const char* text, const char* fontName, const int size, const int r, const int g, const int b, const int a) {
-		SDL_Color color = { r, g, b, a };
-		return CreateText(text, fontName, size, color);
+	GameTexture* Renderer::CreateOutlineText(const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor){
+		TTF_Font* font = font_mgr->fonts[fontId];
+		if (font == nullptr) {
+			SDL_Log("Font not found: %s\n", fontId);
+			return NULL;
+		}
+
+		GameTexture* textureData = new GameTexture();
+		textureData->type = GameTextureType::TEXT;
+
+		TTF_SetFontSize(font, size);
+
+		SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
+		if (surface == nullptr) {
+			SDL_Log("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+			return NULL;
+		}
+
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
+
+		TTF_SetFontOutline(font, outlineSize);
+
+		SDL_Surface* outlineSurface = TTF_RenderText_Blended(font, text, outlineColor);
+
+		if (outlineSurface == nullptr) {
+			SDL_Log("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+			return NULL;
+		}
+
+		SDL_Texture* outlineTexture = SDL_CreateTextureFromSurface(gRenderer, outlineSurface);
+
+		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+		textureData->text = new RenderedText();
+		textureData->text->font = font;
+		textureData->text->text = texture;
+		textureData->text->width = surface->w;
+		textureData->text->height = surface->h;
+
+		textureData->text->outlineText = outlineTexture;
+		textureData->text->outline = outlineSize;
+
+		SDL_FreeSurface(surface);
+		SDL_FreeSurface(outlineSurface);
+
+		return textureData;
 	}
+
 }

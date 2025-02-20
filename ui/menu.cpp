@@ -8,21 +8,21 @@ namespace fruit_ui {
 	{
 		TextureManager* texture_mgr = renderer->texture_mgr;
 
-		TextureData* mainTitle = renderer->CreateText("CAT FRUIT", "Helvetica-Bold", 40, 255, 206, 131, 255);
+		GameTexture* mainTitle = renderer->CreateOutlineText("CAT FRUIT", "NoyhR-Black", 40, SDL_Color{ 255, 255, 255, 255 });
 		texture_mgr->textures["ui/main_title_text"] = mainTitle;
 	}
 
 	void menu::Render(Renderer* renderer)
 	{
-		TextureData* mainTitle = renderer->texture_mgr->textures["ui/main_title_text"];
+		GameTexture* mainTitle = renderer->texture_mgr->textures["ui/main_title_text"];
 
 		const int halfWidth = renderer->width / 2;
 		const int halfHeight = renderer->height / 2;
 
-		const int halfTitleWidth = mainTitle->width / 2;
+		const int halfTitleWidth = mainTitle->text->width / 2;
 
 		renderer->SetBackgroundColor(255, 236, 179, 255);
-		renderer->RenderTexture("ui/main_title_text", halfWidth - halfTitleWidth, 50);
+		renderer->RenderText("ui/main_title_text", halfWidth - halfTitleWidth, 50);
 	}
 }	
 
