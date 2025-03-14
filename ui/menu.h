@@ -1,14 +1,16 @@
 #pragma once
 
-#include "renderer.h"
+#include "SDL.h"
 
-using namespace fruit_game;
+#include "utils/math.h"
+#include "render.h"
 
-namespace fruit_ui {
-	class menu
-	{
-	public:
-		static void Render(Renderer* renderer);
-		static void Initialize(Renderer* renderer);
-	};
-}
+class Renderer;
+
+class MainMenu
+{
+public:
+	static void Initialize(Renderer* renderer);
+	static void Show(Renderer* renderer);
+};
+

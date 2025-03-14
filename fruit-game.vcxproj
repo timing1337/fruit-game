@@ -138,22 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="font_manager.cpp" />
-    <ClCompile Include="game_manager.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="texture_manager.cpp" />
-    <ClCompile Include="ui\menu.cpp" />
-    <ClCompile Include="renderer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include=".gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="font_manager.h" />
-    <ClInclude Include="game_manager.h" />
-    <ClInclude Include="texture_manager.h" />
-    <ClInclude Include="ui\menu.h" />
-    <ClInclude Include="renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -174,5 +159,19 @@
     <Content Include="game_data\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="utils\math.cpp" />
+    <ClCompile Include="ui\menu.cpp" />
+    <ClCompile Include="render.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h" />
+    <ClInclude Include="utils\math.h" />
+    <ClInclude Include="ui\menu.h" />
+    <ClInclude Include="render.h" />
+    <ClInclude Include="textures.h" />
   </ItemGroup>
 </Project>
