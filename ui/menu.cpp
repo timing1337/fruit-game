@@ -1,11 +1,13 @@
 #include "menu.h"
 
-void MainMenu::Initialize(Renderer* renderer) {
+void MainMenu::Initialize() {
+	Renderer* renderer = Renderer::getInstance();
 	renderer->textures["ui/button_play"] = renderer->CreateText("Play", "Helvetica-Bold", 24, { 255, 255, 255, 255 });
 	renderer->textures["ui/button_play_hover"] = renderer->CreateText("Play", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
 }
 
-void MainMenu::Show(Renderer* renderer) {
+void MainMenu::Show() {
+	Renderer* renderer = Renderer::getInstance();
 	const vec2_t center = vec2_t(renderer->width / 2, renderer->height / 2);
 	vec2_t mousePos = vec2_t(0, 0);
 	

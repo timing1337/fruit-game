@@ -4,6 +4,7 @@
 
 enum GameState {
 	WAITING,
+	PREPARING,
 	STARTING,
 	RUNNING,
 	POSTGAME
@@ -12,12 +13,15 @@ enum GameState {
 class GameManager
 {
 public:
-	bool running = true;
+	static GameManager* instancePtr;
 
+	bool running = true;
 	GameState state = GameState::WAITING;
 
-	GameManager();
-	~GameManager();
+	int score = 0;
+	int remainingLives = 3;
+
+	int ticks = 0;
 
 	void Heartbeat();
 
@@ -27,5 +31,8 @@ public:
 	void OnStarting();
 	void OnRunning();
 	void OnPostgame();
+	static GameManager* getInstance() {
+		return instancePtr;
+	}
 };
 

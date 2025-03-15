@@ -8,10 +8,12 @@
 #include <string>
 #include <unordered_map>
 
+#include "animation/animation.h"
 #include "game.h"
 #include "textures.h"
 
 #include "ui/menu.h";
+#include "ui/main_scene.h";
 
 using namespace std;
 
@@ -24,9 +26,9 @@ enum Alignment{
 };
 
 class Renderer {
+private:
+	static Renderer* instancePtr;
 public:
-
-	GameManager* game_mgr;
 
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
@@ -39,14 +41,20 @@ public:
 
 	const string game_data_path = fs::current_path().string() + "/game_data/";
 
-	Renderer(GameManager* game_mgr);
-	~Renderer();
+	static void Initialize();
+
+	static Renderer* getInstance() {
+		return instancePtr;
+	}
 
 	void PreRender();
 	void Render();
-	void PostRender();
+	void UpdateRender();
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
+
+	void OnStarting();
+	void PlayTitleAnimation();
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);
@@ -60,4 +68,5 @@ public:
 	void SetBackgroundColor(const int r, const int g, const int b, const int a);
 
 	void RenderText(const char* textureId, int x, int y, const Alignment align = Alignment::CENTER);
+	void RenderText(GameTexture* texture, int x, int y, const Alignment align = Alignment::CENTER);
 };

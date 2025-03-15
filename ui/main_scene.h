@@ -1,13 +1,8 @@
 #pragma once
 
-#include "SDL.h"
-
-#include "utils/math.h"
 #include "render.h"
 
-class Renderer;
-
-class MainMenu
+class MainScene
 {
 public:
 	static void Initialize();

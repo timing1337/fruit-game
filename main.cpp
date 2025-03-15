@@ -1,9 +1,12 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "SDL_timer.h"
 
 #include "game.h"
 #include "render.h"
+
+#include "animation/animation.h"
 
 int main(int argc, char* args[])
 {
@@ -26,30 +29,39 @@ int main(int argc, char* args[])
 		return 0;
 	}
 
-	GameManager* game_mgr = new GameManager();
-	Renderer* renderer = new Renderer(game_mgr);
+	std::srand(std::time(0));
+
+	Renderer::Initialize();
+
+	Renderer* renderer = Renderer::getInstance();
+	GameManager* game_mgr = GameManager::getInstance();
 
 	while(game_mgr->running){
-		renderer->PreRender();
-
 		game_mgr->Heartbeat();
 
-		SDL_Event e;
-		while (SDL_PollEvent(&e) != 0)
-		{
-			switch (e.type) {
-			case SDL_QUIT:
-				game_mgr->running = false;
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				renderer->OnMouseClick(e.button);
+		renderer->PreRender();
+		renderer->Render();
+
+		//is this bad? yes
+		//Do i have any idea how to approach this correctly? no
+		while (true) {
+			bool allReady = true;
+			for (auto& animation : AnimationManager::getInstance()->animations) {
+				if (!animation.second->isReadyForRender) {
+					allReady = false;
+					break;
+				}
+			}
+			if (allReady) {
 				break;
 			}
 		}
+		renderer->UpdateRender();
 
-		renderer->Render();
-
-		renderer->PostRender();
+		//Resetting their state.
+		for (auto& animation : AnimationManager::getInstance()->animations) {
+			animation.second->isReadyForRender = false;
+		}
 	}
 
 	return 0;

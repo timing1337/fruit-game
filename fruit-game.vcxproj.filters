@@ -33,6 +33,12 @@
     <ClCompile Include="utils\math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="animation\animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\main_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -48,6 +54,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="animation\animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\main_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

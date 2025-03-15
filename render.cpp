@@ -1,12 +1,16 @@
 #include "render.h"
 
-Renderer::Renderer(GameManager* game_mgr) {
-	gWindow = SDL_CreateWindow("game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_OPENGL);
-	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+Renderer* Renderer::instancePtr = new Renderer();
 
-	this->game_mgr = game_mgr;
+void Renderer::Initialize() {
+	Renderer* renderer = getInstance();
+	renderer->gWindow = SDL_CreateWindow("game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, renderer->width, renderer->height, SDL_WINDOW_OPENGL);
+	renderer->gRenderer = SDL_CreateRenderer(renderer->gWindow, -1, SDL_RENDERER_ACCELERATED);
 
-	MainMenu::Initialize(this);
+	SDL_SetRenderDrawBlendMode(renderer->gRenderer, SDL_BLENDMODE_BLEND);
+
+	MainMenu::Initialize();
+	MainScene::Initialize();
 }
 
 void Renderer::PreRender() {
@@ -15,13 +19,14 @@ void Renderer::PreRender() {
 }
 
 void Renderer::Render() {
-	switch (game_mgr->state) {
+	switch (GameManager::getInstance()->state) {
 	case GameState::WAITING:
-		MainMenu::Show(this);
+	case GameState::PREPARING:
+		MainMenu::Show();
 		break;
 	case GameState::STARTING:
-		break;
 	case GameState::RUNNING:
+		MainScene::Show();
 		break;
 	case GameState::POSTGAME:
 		break;
@@ -29,7 +34,7 @@ void Renderer::Render() {
 }
 
 void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
-	switch (game_mgr->state) {
+	switch (GameManager::getInstance()->state) {
 	case GameState::WAITING:
 		if (e.button != SDL_BUTTON_LEFT) {
 			return;
@@ -43,13 +48,73 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 
 		if (mousePos.x >= center.x - playButton->text->width / 2 && mousePos.x <= center.x + playButton->text->width / 2 &&
 			mousePos.y >= center.y - playButton->text->height / 2 && mousePos.y <= center.y + playButton->text->height / 2) {
-			game_mgr->FireStateChange(GameState::STARTING);
+			this->OnStarting();
 		}
 		break;
 	}
 }
 
-void Renderer::PostRender() {
+void Renderer::OnStarting() {
+	GameManager::getInstance()->FireStateChange(GameState::PREPARING);
+	Animation* animation = new Animation(10 * 100, [this](Animation* self) {
+		SDL_Rect fillRect = { 0, 0, this->width, this->height };
+		int calculatedOpacity;
+		if (self->current <= 500) {
+			calculatedOpacity = (self->current * 255) / 500;
+		}
+		else {
+			GameManager::getInstance()->FireStateChange(GameState::STARTING);
+			calculatedOpacity = 255 - (((self->current - 500) * 255) / 500);
+		}
+		SDL_Log("Opacity: %d", calculatedOpacity);
+		SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
+		SDL_RenderFillRect(this->gRenderer, &fillRect);
+	},
+	[this](Animation* self) {
+			this->PlayTitleAnimation();
+	});
+
+	AnimationManager::getInstance()->Play(animation);
+}
+
+void Renderer::PlayTitleAnimation() {
+	Animation* animation = new Animation(3 * 1000 + 500, [this](Animation* self) {
+		int second = 3 - self->current / 1000;
+		GameTexture* texture;
+		if (self->current >= 3000) {
+			texture = this->GetTextureByName("ui/title_go");
+			SDL_SetTextureColorMod(texture->text->text, rand() % 256, rand() % 256, rand() % 256);
+			this->RenderText("ui/title_go", this->width / 2, this->height / 2, Alignment::CENTER);
+			return;
+		}
+		int calculatedOpacity = 255 - ((self->current % 1000) * 255) / 1000;
+		switch (second) {
+		case 1:
+			texture = this->GetTextureByName("ui/title_number_one");
+			break;
+		case 2:
+			texture = this->GetTextureByName("ui/title_number_two");
+			break;
+		case 3:
+			texture = this->GetTextureByName("ui/title_number_three");
+			break;
+		default:
+			texture = NULL;
+			break;
+		}
+		if (texture == NULL) {
+			return;
+		}
+		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
+		this->RenderText(texture, this->width / 2, this->height / 2, Alignment::CENTER);
+	},
+	[this](Animation* self) {
+			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
+	});
+	AnimationManager::getInstance()->Play(animation);
+}
+
+void Renderer::UpdateRender() {
 	SDL_RenderPresent(this->gRenderer);
 	SDL_UpdateWindowSurface(this->gWindow);
 }
@@ -138,14 +203,7 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 
 void Renderer::RenderTextureBackground(const char* textureId) {
 	GameTexture* texture = GetTextureByName(textureId);
-
-	if (texture->type != GameTextureType::SPRITE) {
-		SDL_Log("Texture is not a sprite: %s\n", textureId);
-		return;
-	}
-
 	Sprite* sprite = texture->sprite;
-
 	SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
 }
 
@@ -156,12 +214,10 @@ void Renderer::SetBackgroundColor(const int r, const int g, const int b, const i
 
 void Renderer::RenderText(const char* textureId, int x, int y, const Alignment align) {
 	GameTexture* texture = GetTextureByName(textureId);
+	RenderText(texture, x, y, align);
+}
 
-	if (texture->type != GameTextureType::TEXT) {
-		SDL_Log("Texture is not a text: %s\n", textureId);
-		return;
-	}
-
+void Renderer::RenderText(GameTexture* texture, int x, int y, const Alignment align) {
 	RenderedText* text = texture->text;
 
 	y -= text->height / 2;
