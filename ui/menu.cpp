@@ -8,8 +8,8 @@ void MainMenu::Initialize() {
 
 void MainMenu::Show() {
 	Renderer* renderer = Renderer::getInstance();
-	const vec2_t center = vec2_t(renderer->width / 2, renderer->height / 2);
-	vec2_t mousePos = vec2_t(0, 0);
+	const SDL_Point center = SDL_Point{ renderer->width / 2, renderer->height / 2 };
+	SDL_Point mousePos = SDL_Point{ 0, 0 };
 	
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
 

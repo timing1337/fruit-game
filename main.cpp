@@ -3,6 +3,7 @@
 #include "SDL_ttf.h"
 #include "SDL_timer.h"
 
+#include "entity.h"
 #include "game.h"
 #include "render.h"
 
@@ -34,15 +35,28 @@ int main(int argc, char* args[])
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
 	AnimationManager* animation_mgr = AnimationManager::getInstance();
+	EntityManager* entity_mgr = EntityManager::getInstance();
 
-	while(game_mgr->running){
+	entity_mgr->spawnEntity(vec2_t(0, renderer->height), 20, 500);
+
+	game_mgr->lastUpdatedTicks = SDL_GetTicks();
+
+	while (game_mgr->running) {
+		Uint64 start = SDL_GetPerformanceCounter();
 		renderer->PreRender();
 
+		Uint32 current = SDL_GetTicks();
 		game_mgr->Heartbeat();
+		entity_mgr->Heartbeat();
+
+		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks) / 1000.0f;
+
 		renderer->Render();
+
 		animation_mgr->Heartbeat();
 
 		renderer->UpdateRender();
+		game_mgr->lastUpdatedTicks = current;
 	}
 
 	return 0;

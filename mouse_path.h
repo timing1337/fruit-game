@@ -6,9 +6,9 @@
 #include <vector>
 
 struct MousePathRecord {
-	std::vector<vec2_t> paths;
+	std::vector<SDL_Point> paths;
 
 	MousePathRecord() {
-		paths = std::vector<vec2_t>();
+		paths = std::vector<SDL_Point>();
 	};
 };

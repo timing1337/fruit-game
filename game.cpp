@@ -36,7 +36,7 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 	this->isRecording = true;
 
 	this->currentRecord->paths.clear();
-	this->currentRecord->paths.push_back(vec2_t(e.x, e.y));
+	this->currentRecord->paths.push_back({ e.x, e.y });
 }
 
 void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
@@ -53,7 +53,7 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 	}
 
 	this->isRecording = false;
-	this->currentRecord->paths.push_back(vec2_t(e.x, e.y));
+	this->currentRecord->paths.push_back(SDL_Point{ e.x, e.y });
 
 	if (this->currentRecord->paths.size() < 5) {
 		return;
@@ -71,8 +71,7 @@ void GameManager::OnMouseMove(SDL_MouseMotionEvent& e) {
 		return;
 	}
 
-	vec2_t currentPos = vec2_t(e.x, e.y);
-	this->currentRecord->paths.push_back(currentPos);
+	this->currentRecord->paths.push_back({ e.x, e.y });
 
 	if (this->currentRecord->paths.size() > 200) {
 		//Force end
@@ -105,11 +104,9 @@ void GameManager::OnWaiting() {
 void GameManager::OnStarting() {
 	this->remainingLives = 3;
 	this->score = 0;
-	this->ticks = 0;
 }
 
 void GameManager::OnRunning() {
-	this->ticks++;
 }
 
 void GameManager::OnPostgame() {

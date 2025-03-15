@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entity.h"
 #include "render.h"
 
 class MainScene

@@ -21,12 +21,13 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::WAITING;
+	GameState state = GameState::RUNNING;
+	float deltaTime = 0;
 
 	//Game Data
 	int score = 0;
 	int remainingLives = 3;
-	int ticks = 0;
+	int lastUpdatedTicks = 0;
 
 	//Mouse path recording
 	bool isRecording = false;

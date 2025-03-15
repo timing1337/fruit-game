@@ -21,6 +21,13 @@ void MainScene::Show() {
 	renderer->RenderText("ui/score_text", x, y, Alignment::RIGHT);
 	x += renderer->GetTextureByName("ui/score_text")->text->width;
 	renderer->RenderText(scoreText, x, y, Alignment::RIGHT);
+
+	//Testing
+	for (auto& entity : EntityManager::getInstance()->entities) {
+		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
+		SDL_FRect rect = { entity.position.x - 5, entity.position.y - 5, 10, 10 };
+		SDL_RenderFillRectF(renderer->gRenderer, &rect);
+	}
 }
 
 void MainScene::UpdateScoreText() {

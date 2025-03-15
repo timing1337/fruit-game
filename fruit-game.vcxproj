@@ -162,15 +162,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation\animation.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ui\main_scene.cpp" />
-    <ClCompile Include="utils\math.cpp" />
     <ClCompile Include="ui\menu.cpp" />
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation\animation.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="mouse_path.h" />
     <ClInclude Include="ui\main_scene.h" />
