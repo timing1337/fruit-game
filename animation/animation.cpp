@@ -10,12 +10,11 @@ Animation::Animation(int duration, function<void(Animation* self)> onUpdate, fun
 	this->onUpdate = onUpdate;
 }
 
-Uint32 Callback(Uint32 interval, void* param) {
-	Animation* animation = static_cast<Animation*>(param);
-	return animation->Update(interval, param);
+Animation::~Animation() {
+
 }
 
-Uint32 Animation::Update(Uint32 interval, void* param){
+void Animation::Update() {
 	this->onUpdate(this);
 	if (current >= duration) {
 		OnComplete();
@@ -23,21 +22,38 @@ Uint32 Animation::Update(Uint32 interval, void* param){
 	else {
 		current++;
 	}
-	isReadyForRender = true;
-	return interval;
+}
+
+
+void Animation::Start() {
+	this->state = AnimationState::RUN;
 }
 
 void Animation::OnComplete() {
-	SDL_RemoveTimer(timerId);
-	AnimationManager::getInstance()->animations.erase(timerId);
 	this->onComplete(this);
+	this->state = AnimationState::KILLED;
 }
 
-void Animation::Start() {
-	timerId = SDL_AddTimer(1, Callback, this);
+void AnimationManager::Play(int duration, function<void(Animation* self)> onUpdate, function<void(Animation* self)> onComplete) {
+	Animation animation = Animation(duration, onUpdate, onComplete);
+	animation.Start();
+	this->animations.push_back(animation);
 }
 
-void AnimationManager::Play(Animation* animation) {
-	animation->Start();
-	this->animations[animation->timerId] = animation;
+void AnimationManager::Heartbeat() {
+	if (this->animations.size() == 0) return;
+	for (int i = 0; i < this->animations.size(); i++) {
+		Animation* animation = &this->animations[i];
+		switch (animation->state)
+		{
+		case AnimationState::RUN:
+			animation->Update();
+			break;
+		case AnimationState::KILLED:
+			this->animations.erase(this->animations.begin() + i);
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -29,39 +29,20 @@ int main(int argc, char* args[])
 		return 0;
 	}
 
-	std::srand(std::time(0));
-
 	Renderer::Initialize();
 
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
+	AnimationManager* animation_mgr = AnimationManager::getInstance();
 
 	while(game_mgr->running){
-		game_mgr->Heartbeat();
-
 		renderer->PreRender();
+
+		game_mgr->Heartbeat();
 		renderer->Render();
+		animation_mgr->Heartbeat();
 
-		//is this bad? yes
-		//Do i have any idea how to approach this correctly? no
-		while (true) {
-			bool allReady = true;
-			for (auto& animation : AnimationManager::getInstance()->animations) {
-				if (!animation.second->isReadyForRender) {
-					allReady = false;
-					break;
-				}
-			}
-			if (allReady) {
-				break;
-			}
-		}
 		renderer->UpdateRender();
-
-		//Resetting their state.
-		for (auto& animation : AnimationManager::getInstance()->animations) {
-			animation.second->isReadyForRender = false;
-		}
 	}
 
 	return 0;

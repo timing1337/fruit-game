@@ -4,16 +4,18 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 
+#include "animation/animation.h"
+#include "game.h"
+#include "mouse_path.h"
+#include "textures.h"
+
+#include "ui/menu.h"
+#include "ui/main_scene.h"
+
 #include <filesystem>
 #include <string>
 #include <unordered_map>
 
-#include "animation/animation.h"
-#include "game.h"
-#include "textures.h"
-
-#include "ui/menu.h";
-#include "ui/main_scene.h";
 
 using namespace std;
 
@@ -52,12 +54,15 @@ public:
 	void UpdateRender();
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
-
 	void OnStarting();
+	void OnMousePathRecorded(MousePathRecord record);
+
 	void PlayTitleAnimation();
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);
+
+	void FreeGameTexture(GameTexture* texture);
 
 	TTF_Font* GetFontByName(const char* name);
 	GameTexture* GetTextureByName(const char* name);

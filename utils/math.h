@@ -4,6 +4,8 @@ struct vec2_t {
 	int x;
 	int y;
 
+	vec2_t() : x(0), y(0) {} // Default constructor
+
 	vec2_t(int x, int y) : x(x), y(y) {}
 
 	vec2_t operator+(const vec2_t& other) {
@@ -26,4 +28,3 @@ struct vec2_t {
 		return x == other.x && y == other.y;
 	}
 };
-

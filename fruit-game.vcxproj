@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="animation\animation.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="mouse_path.h" />
     <ClInclude Include="ui\main_scene.h" />
     <ClInclude Include="utils\math.h" />
     <ClInclude Include="ui\menu.h" />

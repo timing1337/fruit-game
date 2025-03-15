@@ -56,15 +56,15 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 
 void Renderer::OnStarting() {
 	GameManager::getInstance()->FireStateChange(GameState::PREPARING);
-	Animation* animation = new Animation(10 * 100, [this](Animation* self) {
+	AnimationManager::getInstance()->Play(10 * 200, [this](Animation* self) {
 		SDL_Rect fillRect = { 0, 0, this->width, this->height };
 		int calculatedOpacity;
-		if (self->current <= 500) {
-			calculatedOpacity = (self->current * 255) / 500;
+		if (self->current <= 1000) {
+			calculatedOpacity = (self->current * 255) / 1000;
 		}
 		else {
 			GameManager::getInstance()->FireStateChange(GameState::STARTING);
-			calculatedOpacity = 255 - (((self->current - 500) * 255) / 500);
+			calculatedOpacity = 255 - (((self->current - 1000) * 255) / 1000);
 		}
 		SDL_Log("Opacity: %d", calculatedOpacity);
 		SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
@@ -73,21 +73,13 @@ void Renderer::OnStarting() {
 	[this](Animation* self) {
 			this->PlayTitleAnimation();
 	});
-
-	AnimationManager::getInstance()->Play(animation);
 }
 
 void Renderer::PlayTitleAnimation() {
-	Animation* animation = new Animation(3 * 1000 + 500, [this](Animation* self) {
-		int second = 3 - self->current / 1000;
+	AnimationManager::getInstance()->Play(4 * 2000, [this](Animation* self) {
+		int second = 3 - self->current / 2000;
 		GameTexture* texture;
-		if (self->current >= 3000) {
-			texture = this->GetTextureByName("ui/title_go");
-			SDL_SetTextureColorMod(texture->text->text, rand() % 256, rand() % 256, rand() % 256);
-			this->RenderText("ui/title_go", this->width / 2, this->height / 2, Alignment::CENTER);
-			return;
-		}
-		int calculatedOpacity = 255 - ((self->current % 1000) * 255) / 1000;
+		int calculatedOpacity = 255 - ((self->current % 2000) * 255) / 2000;
 		switch (second) {
 		case 1:
 			texture = this->GetTextureByName("ui/title_number_one");
@@ -99,11 +91,8 @@ void Renderer::PlayTitleAnimation() {
 			texture = this->GetTextureByName("ui/title_number_three");
 			break;
 		default:
-			texture = NULL;
+			texture = this->GetTextureByName("ui/title_go");
 			break;
-		}
-		if (texture == NULL) {
-			return;
 		}
 		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
 		this->RenderText(texture, this->width / 2, this->height / 2, Alignment::CENTER);
@@ -111,12 +100,10 @@ void Renderer::PlayTitleAnimation() {
 	[this](Animation* self) {
 			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
 	});
-	AnimationManager::getInstance()->Play(animation);
 }
 
 void Renderer::UpdateRender() {
 	SDL_RenderPresent(this->gRenderer);
-	SDL_UpdateWindowSurface(this->gWindow);
 }
 
 bool Renderer::LoadFontByName(const char* name) {
@@ -128,6 +115,7 @@ bool Renderer::LoadFontByName(const char* name) {
 	}
 
 	fonts[name] = font;
+	return true;
 }
 
 bool Renderer::LoadTextureByName(const char* name) {
@@ -145,6 +133,7 @@ bool Renderer::LoadTextureByName(const char* name) {
 	SDL_QueryTexture(texture, NULL, NULL, &game_texture->sprite->width, &game_texture->sprite->height);
 
 	textures[name] = game_texture;
+	return true;
 }
 
 TTF_Font* Renderer::GetFontByName(const char* name) {
@@ -165,6 +154,22 @@ GameTexture* Renderer::GetTextureByName(const char* name) {
 		return textures[name];
 	}
 	return textures[name];
+}
+
+void Renderer::FreeGameTexture(GameTexture* texture) {
+	switch (texture->type) {
+	case GameTextureType::SPRITE:
+		SDL_DestroyTexture(texture->sprite->texture);
+		delete texture->sprite;
+		break;
+	case GameTextureType::TEXT:
+		SDL_DestroyTexture(texture->text->text);
+		if (texture->text->outline != 0)
+			SDL_DestroyTexture(texture->text->outlineText);
+		delete texture->text;
+		break;
+	}
+	delete texture;
 }
 
 GameTexture* Renderer::CreateText(const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
@@ -240,4 +245,27 @@ void Renderer::RenderText(GameTexture* texture, int x, int y, const Alignment al
 
 	SDL_Rect rect = { x, y, text->width, text->height };
 	SDL_RenderCopy(gRenderer, text->text, NULL, &rect);
+}
+
+void Renderer::OnMousePathRecorded(MousePathRecord record) {
+	//Path drawing
+	SDL_Log("Draw");
+	AnimationManager::getInstance()->Play(4000, [this, record](Animation* self) {
+		int calculatedOpacity = 255;
+		if (self->current >= 2000) {
+			//Calculate opacity
+			calculatedOpacity = 255 - (((self->current - 2000) % 2000) * 255) / 2000;
+		}
+		SDL_SetRenderDrawColor(gRenderer, 255, 5, 5, calculatedOpacity);
+		vec2_t secondPoint = record.paths[0];
+
+		int pair = record.paths.size() / 2;
+		for (int i = 1; i < pair; i++) {
+			vec2_t firstPoint = record.paths[i];
+			secondPoint = record.paths[i + 1];
+			SDL_RenderDrawLine(gRenderer, firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
+		}
+	},
+	[this](Animation* self) {
+	});
 }

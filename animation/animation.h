@@ -1,28 +1,32 @@
 #pragma once
 
 #include "SDL.h"
-#include "SDL_timer.h"
 
 #include "game.h"
 #include "render.h"
 
-#include <unordered_map>
 #include <functional>
+#include <vector>
 
 using namespace std;
 
 class Renderer;
 class GameManager;
 
+enum AnimationState {
+	WAIT,
+	RUN,
+	KILLED
+};
+
 class Animation
 {
 public:
-	SDL_TimerID timerId;
+	int timerId;
 	int duration;
-	int interval;
 	int current = 0;
 
-	bool isReadyForRender = false;
+	AnimationState state = AnimationState::WAIT;
 
 	function<void(Animation* self)> onUpdate;
 	function<void(Animation* self)> onComplete;
@@ -31,7 +35,7 @@ public:
 	~Animation();
 
 	void Start();
-	Uint32 Update(Uint32 interval, void* param);
+	void Update();
 	void OnComplete();
 };
 
@@ -40,9 +44,12 @@ class AnimationManager
 private:
 	static AnimationManager* instancePtr;
 public:
-	unordered_map<SDL_TimerID, Animation*> animations;
+	int timerId = 0;
+	int lastUpdatedTick = 0;
+	vector<Animation> animations;
 	static AnimationManager* getInstance() {
 		return instancePtr;
 	}
-	void Play(Animation* animation);
+	void Play(int duration, function<void(Animation* self)> onUpdate, function<void(Animation* self)> onComplete);
+	void Heartbeat();
 };

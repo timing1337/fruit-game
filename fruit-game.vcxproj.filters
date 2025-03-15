@@ -62,5 +62,8 @@
     <ClInclude Include="ui\main_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mouse_path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
