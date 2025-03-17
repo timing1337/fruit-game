@@ -3,6 +3,8 @@
 GameManager* GameManager::instancePtr = new GameManager();
 
 void GameManager::Heartbeat() {
+	GameManager::ListenToMouseMovement();
+
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -17,9 +19,6 @@ void GameManager::Heartbeat() {
 		case SDL_MOUSEBUTTONUP:
 			this->OnMouseRelease(e.button);
 			break;
-		case SDL_MOUSEMOTION:
-			this->OnMouseMove(e.motion);
-			break;
 		}
 	}
 }
@@ -33,10 +32,10 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	this->isRecording = true;
+	this->mousePathRecord->isRecording = true;
 
-	this->currentRecord->paths.clear();
-	this->currentRecord->paths.push_back({ e.x, e.y });
+	this->mousePathRecord->paths.clear();
+	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
 }
 
 void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
@@ -48,35 +47,35 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (!this->isRecording) {
+	if (!this->mousePathRecord->isRecording) {
 		return;
 	}
 
-	this->isRecording = false;
-	this->currentRecord->paths.push_back(SDL_Point{ e.x, e.y });
+	this->mousePathRecord->isRecording = false;
+	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
 
-	if (this->currentRecord->paths.size() < 5) {
+	if (this->mousePathRecord->paths.size() < 5) {
 		return;
 	}
 
-	Renderer::getInstance()->OnMousePathRecorded(*(MousePathRecord*)this->currentRecord);
+	Renderer::getInstance()->OnMousePathRecorded(*(MousePathRecord*)this->mousePathRecord);
 }
 
-void GameManager::OnMouseMove(SDL_MouseMotionEvent& e) {
+void GameManager::ListenToMouseMovement() {
 	if (this->state != GameState::RUNNING) {
 		return;
 	}
 
-	if (!this->isRecording) {
+	if (!this->mousePathRecord->isRecording) {
 		return;
 	}
 
-	this->currentRecord->paths.push_back({ e.x, e.y });
+	SDL_Point lastPoint = this->mousePathRecord->paths.back();
+	SDL_Point currentPoint{};
+	SDL_GetMouseState(&currentPoint.x, &currentPoint.y);
 
-	if (this->currentRecord->paths.size() > 200) {
-		//Force end
-		this->isRecording = false;
-		Renderer::getInstance()->OnMousePathRecorded(*(MousePathRecord*)this->currentRecord);
+	if (lastPoint.x != currentPoint.x || lastPoint.y != currentPoint.y) {
+		this->mousePathRecord->AddPoint(SDL_Point{ currentPoint.x, currentPoint.y });
 	}
 }
 

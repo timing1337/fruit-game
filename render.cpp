@@ -256,14 +256,8 @@ void Renderer::OnMousePathRecorded(MousePathRecord record) {
 			calculatedOpacity = 255 - (((self->current - 500) % 500) * 255) / 500;
 		}
 		SDL_SetRenderDrawColor(gRenderer, 255, 5, 5, calculatedOpacity);
-		SDL_Point secondPoint = record.paths[0];
 
-		int pair = record.paths.size() / 2;
-		for (int i = 1; i < pair; i++) {
-			SDL_Point firstPoint = record.paths[i];
-			secondPoint = record.paths[i + 1];
-			SDL_RenderDrawLine(gRenderer, firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);
-		}
+		SDL_RenderDrawLines(gRenderer, record.paths.data(), record.paths.size());
 	},
 	[this](Animation* self) {
 	});

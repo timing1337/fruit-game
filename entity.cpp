@@ -37,11 +37,11 @@ void Entity::onTick() {
 
 	float deltaTime = GameManager::getInstance()->deltaTime;
 
-	this->direction.y -= 5 * deltaTime;
+	this->direction.y -= 10 * deltaTime;
 
     this->position.x += this->direction.x * deltaTime;
     this->position.y -= this->direction.y * deltaTime;
-	this->position.y += 5 * deltaTime; //gravity
+	this->position.y += 10 * deltaTime; //gravity
 }
 
 void Entity::despawn() {

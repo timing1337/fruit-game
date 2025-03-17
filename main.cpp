@@ -37,8 +37,6 @@ int main(int argc, char* args[])
 	AnimationManager* animation_mgr = AnimationManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
 
-	entity_mgr->spawnEntity(vec2_t(0, renderer->height), 20, 100);
-
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
 	while (game_mgr->running) {

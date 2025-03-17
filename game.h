@@ -1,8 +1,9 @@
 #pragma once
 
-#include "render.h"
+#include "SDL.h"
 
 #include "mouse_path.h"
+#include "render.h"
 
 class Renderer;
 
@@ -30,8 +31,7 @@ public:
 	int lastUpdatedTicks = 0;
 
 	//Mouse path recording
-	bool isRecording = false;
-	MousePathRecord* currentRecord = new MousePathRecord();
+	MousePathRecord* mousePathRecord = new MousePathRecord();
 
 	void Heartbeat();
 
@@ -39,7 +39,8 @@ public:
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
 	void OnMouseRelease(SDL_MouseButtonEvent& e);
-	void OnMouseMove(SDL_MouseMotionEvent& e);
+
+	void ListenToMouseMovement();
 
 	void OnWaiting();
 	void OnStarting();
