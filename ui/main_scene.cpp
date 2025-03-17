@@ -24,9 +24,7 @@ void MainScene::Show() {
 
 	//Testing
 	for (auto& entity : EntityManager::getInstance()->entities) {
-		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
-		SDL_FRect rect = { entity.position.x - 5, entity.position.y - 5, 10, 10 };
-		SDL_RenderFillRectF(renderer->gRenderer, &rect);
+		entity.onRender();
 	}
 }
 

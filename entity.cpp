@@ -26,11 +26,32 @@ void EntityManager::Heartbeat() {
 }
 
 void Entity::onTick() {
+	if (!this->alive) {
+		return;
+	}
+
+	if (this->position.y > Renderer::getInstance()->width + 50) {
+		this->despawn();
+		return;
+	}
+
 	float deltaTime = GameManager::getInstance()->deltaTime;
 
-	this->direction.y -= 10 * deltaTime;
+	this->direction.y -= 5 * deltaTime;
 
     this->position.x += this->direction.x * deltaTime;
     this->position.y -= this->direction.y * deltaTime;
-	this->position.y += 30 * deltaTime; //gravity
+	this->position.y += 5 * deltaTime; //gravity
+}
+
+void Entity::despawn() {
+	SDL_Log("Despawn");
+	this->alive = false;
+}
+
+void Entity::onRender() {
+	Renderer* renderer = Renderer::getInstance();
+	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
+	SDL_FRect rect = { position.x - 20, position.y - 20, 20, 20 };
+	SDL_RenderFillRectF(renderer->gRenderer, &rect);
 }

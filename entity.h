@@ -16,6 +16,10 @@ public:
 
 	void onTick();
 	void onDeath();
+	void onRender();
+	void onHit();
+
+	void despawn();
 };
 
 class EntityManager

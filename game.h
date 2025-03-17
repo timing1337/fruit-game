@@ -21,7 +21,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::RUNNING;
+	GameState state = GameState::WAITING;
 	float deltaTime = 0;
 
 	//Game Data
