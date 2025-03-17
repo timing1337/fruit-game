@@ -40,18 +40,16 @@ int main(int argc, char* args[])
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
 	while (game_mgr->running) {
-		Uint64 start = SDL_GetPerformanceCounter();
+		Uint32 current = SDL_GetTicks();
 		renderer->PreRender();
 
-		Uint32 current = SDL_GetTicks();
 		game_mgr->Heartbeat();
 		entity_mgr->Heartbeat();
+		animation_mgr->Heartbeat();
 
 		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks);
 
 		renderer->Render();
-
-		animation_mgr->Heartbeat();
 
 		renderer->UpdateRender();
 		game_mgr->lastUpdatedTicks = current;
