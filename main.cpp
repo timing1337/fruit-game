@@ -47,7 +47,7 @@ int main(int argc, char* args[])
 		game_mgr->Heartbeat();
 		entity_mgr->Heartbeat();
 
-		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks) / 1000.0f;
+		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks);
 
 		renderer->Render();
 

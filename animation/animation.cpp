@@ -16,13 +16,9 @@ Animation::~Animation() {
 
 void Animation::Update() {
 	this->onUpdate(this);
-	if (GameManager::getInstance()->deltaTime > 0) {
-		if (current >= duration) {
-			OnComplete();
-		}
-		else {
-			current++;
-		}
+	current += GameManager::getInstance()->deltaTime;
+	if (current >= duration) {
+		OnComplete();
 	}
 }
 

@@ -35,7 +35,7 @@ void Entity::onTick() {
 		return;
 	}
 
-	float deltaTime = GameManager::getInstance()->deltaTime;
+	float deltaTime = GameManager::getInstance()->deltaTime / 1000.0f;
 
 	this->direction.y -= 10 * deltaTime;
 
