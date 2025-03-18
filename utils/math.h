@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#define M_E 2.71828182845904523536
+
 struct vec2_t {
 	float x;
 	float y;

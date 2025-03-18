@@ -5,6 +5,8 @@
 #include "SDL_ttf.h"
 
 #include "animation/animation.h"
+#include "draw/surface_draw.h"
+#include "draw/post_processing.h"
 #include "game.h"
 #include "mouse_path.h"
 #include "textures.h"
@@ -15,7 +17,6 @@
 #include <filesystem>
 #include <string>
 #include <unordered_map>
-
 
 using namespace std;
 

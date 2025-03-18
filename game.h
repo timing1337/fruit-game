@@ -22,7 +22,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::WAITING;
+	GameState state = GameState::RUNNING;
 	float deltaTime = 0;
 
 	//Game Data
@@ -39,8 +39,7 @@ public:
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
 	void OnMouseRelease(SDL_MouseButtonEvent& e);
-
-	void ListenToMouseMovement();
+	void OnMouseMove(SDL_MouseButtonEvent& e);
 
 	void OnWaiting();
 	void OnStarting();

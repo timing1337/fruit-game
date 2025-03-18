@@ -1,6 +1,7 @@
 #include "main_scene.h"
 
 GameTexture* MainScene::scoreText = nullptr;
+SDL_Surface* MainScene::gameCanvas = nullptr;
 
 void MainScene::Initialize() {
 	Renderer* renderer = Renderer::getInstance();
@@ -12,6 +13,7 @@ void MainScene::Initialize() {
 	renderer->textures["ui/title_go"] = renderer->CreateText("GO!", "Helvetica-Bold", 60, { 255, 255, 255, 255 });
 
 	scoreText = renderer->CreateText("0", "Helvetica-Bold", 24, { 255, 255, 255, 255 });
+	gameCanvas = SDL_CreateRGBSurfaceWithFormat(0, renderer->width, renderer->height, 32, SDL_PIXELFORMAT_RGBA8888);
 }
 
 void MainScene::Show() {
@@ -26,6 +28,11 @@ void MainScene::Show() {
 	for (auto& entity : EntityManager::getInstance()->entities) {
 		entity.onRender();
 	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->gRenderer, gameCanvas);
+	SDL_RenderCopy(renderer->gRenderer, texture, NULL, NULL);
+	SDL_DestroyTexture(texture);
+
 }
 
 void MainScene::UpdateScoreText() {

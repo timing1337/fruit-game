@@ -3,8 +3,6 @@
 GameManager* GameManager::instancePtr = new GameManager();
 
 void GameManager::Heartbeat() {
-	GameManager::ListenToMouseMovement();
-
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -18,6 +16,9 @@ void GameManager::Heartbeat() {
 			break;
 		case SDL_MOUSEBUTTONUP:
 			this->OnMouseRelease(e.button);
+			break;
+		case SDL_MOUSEMOTION:
+			this->OnMouseMove(e.button);
 			break;
 		}
 	}
@@ -58,10 +59,12 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	Renderer::getInstance()->OnMousePathRecorded(*(MousePathRecord*)this->mousePathRecord);
+	MousePathRecord record = *this->mousePathRecord;
+
+	Renderer::getInstance()->OnMousePathRecorded(record);
 }
 
-void GameManager::ListenToMouseMovement() {
+void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 	if (this->state != GameState::RUNNING) {
 		return;
 	}
@@ -70,13 +73,8 @@ void GameManager::ListenToMouseMovement() {
 		return;
 	}
 
-	SDL_Point lastPoint = this->mousePathRecord->paths.back();
-	SDL_Point currentPoint{};
-	SDL_GetMouseState(&currentPoint.x, &currentPoint.y);
-
-	if (lastPoint.x != currentPoint.x || lastPoint.y != currentPoint.y) {
-		this->mousePathRecord->AddPoint(SDL_Point{ currentPoint.x, currentPoint.y });
-	}
+	SDL_Point currentPoint = SDL_Point{ e.x, e.y };
+	this->mousePathRecord->AddPoint(SDL_Point{ currentPoint.x, currentPoint.y });
 }
 
 void GameManager::FireStateChange(GameState state) {

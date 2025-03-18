@@ -247,18 +247,17 @@ void Renderer::RenderText(GameTexture* texture, int x, int y, const Alignment al
 }
 
 void Renderer::OnMousePathRecorded(MousePathRecord record) {
-	//Path drawing
-	SDL_Log("Draw");
-	AnimationManager::getInstance()->Play(1000, [this, record](Animation* self) {
-		int calculatedOpacity = 255;
-		if (self->current >= 500) {
-			//Calculate opacity
-			calculatedOpacity = 255 - (((self->current - 500) % 500) * 255) / 500;
-		}
-		SDL_SetRenderDrawColor(gRenderer, 255, 5, 5, calculatedOpacity);
+	AnimationManager::getInstance()->Play(1000,
+		[this, record](Animation* self) {
+			int calculatedOpacity = 255;
+			if (self->current >= 500) {
+				//Calculate opacity
+				calculatedOpacity = 255 - (((self->current - 500) % 500) * 255) / 500;
+			}
 
-		SDL_RenderDrawLines(gRenderer, record.paths.data(), record.paths.size());
-	},
-	[this](Animation* self) {
-	});
+			SDL_SurfaceDrawLines(MainScene::gameCanvas, record.paths.data(), record.paths.size(), 255, 0, 0, calculatedOpacity, 1);
+		},
+		[](Animation* self) {
+		}
+	);
 }
