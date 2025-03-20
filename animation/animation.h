@@ -36,7 +36,7 @@ public:
 
 	void Start();
 	void Update();
-	void OnComplete();
+	void Kill();
 };
 
 class AnimationManager

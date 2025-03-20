@@ -10,6 +10,7 @@ public:
 	GameTexture* entityTexture;
 	vec2_t position;
 	vec2_t direction;
+	vec2_t rotation;
 
 	int lifeTicks = 0;
 	bool alive = true;
@@ -33,7 +34,7 @@ public:
 		return instancePtr;
 	}
 
-	void spawnEntity(vec2_t position, vec2_t direction);
-	void spawnEntity(vec2_t position, float degree, float speed);
+	void spawnEntity(vec2_t position, vec2_t direction, vec2_t rotation = vec2_t(0, 0));
+	void spawnEntity(vec2_t position, float velocityAngle, float speed, vec2_t rotation = vec2_t(0, 0));
 	void Heartbeat();
 };

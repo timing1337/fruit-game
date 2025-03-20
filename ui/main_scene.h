@@ -2,6 +2,7 @@
 
 #include "entity.h"
 #include "render.h"
+#include "draw/surface_draw.h"
 
 class MainScene
 {

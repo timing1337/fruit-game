@@ -177,6 +177,7 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 	TTF_SetFontSize(font, size);
 
 	SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
+
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
 
 	GameTexture* textureData = new GameTexture();
@@ -244,20 +245,4 @@ void Renderer::RenderText(GameTexture* texture, int x, int y, const Alignment al
 
 	SDL_Rect rect = { x, y, text->width, text->height };
 	SDL_RenderCopy(gRenderer, text->text, NULL, &rect);
-}
-
-void Renderer::OnMousePathRecorded(MousePathRecord record) {
-	AnimationManager::getInstance()->Play(1000,
-		[this, record](Animation* self) {
-			int calculatedOpacity = 255;
-			if (self->current >= 500) {
-				//Calculate opacity
-				calculatedOpacity = 255 - (((self->current - 500) % 500) * 255) / 500;
-			}
-
-			SDL_SurfaceDrawLines(MainScene::gameCanvas, record.paths.data(), record.paths.size(), 255, 0, 0, calculatedOpacity, 1);
-		},
-		[](Animation* self) {
-		}
-	);
 }

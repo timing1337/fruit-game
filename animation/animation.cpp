@@ -16,9 +16,11 @@ Animation::~Animation() {
 
 void Animation::Update() {
 	this->onUpdate(this);
+	
 	current += GameManager::getInstance()->deltaTime;
+	
 	if (current >= duration) {
-		OnComplete();
+		Kill();
 	}
 }
 
@@ -27,7 +29,7 @@ void Animation::Start() {
 	this->state = AnimationState::RUN;
 }
 
-void Animation::OnComplete() {
+void Animation::Kill() {
 	this->onComplete(this);
 	this->state = AnimationState::KILLED;
 }
@@ -39,7 +41,6 @@ void AnimationManager::Play(int duration, function<void(Animation* self)> onUpda
 }
 
 void AnimationManager::Heartbeat() {
-	if (this->animations.size() == 0) return;
 	for (int i = 0; i < this->animations.size(); i++) {
 		Animation* animation = &this->animations[i];
 		switch (animation->state)

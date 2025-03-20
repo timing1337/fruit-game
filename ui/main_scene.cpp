@@ -24,11 +24,25 @@ void MainScene::Show() {
 	x += renderer->GetTextureByName("ui/score_text")->text->width;
 	renderer->RenderText(scoreText, x, y, Alignment::RIGHT);
 
-	//Testing
+	//Draw entity
 	for (auto& entity : EntityManager::getInstance()->entities) {
 		entity.onRender();
 	}
 
+	//Draw mouse path
+
+	vector<MousePath> paths = GameManager::getInstance()->mousePathRecord->paths;
+	if (paths.size() > 3) {
+		for (int i = 0; i < GameManager::getInstance()->mousePathRecord->paths.size() - 1; i++) {
+			MousePath* point = &GameManager::getInstance()->mousePathRecord->paths[i];
+			MousePath* nextPoint = &GameManager::getInstance()->mousePathRecord->paths[i + 1];
+
+			int alpha = point->longevity * 255 / 1000;
+			SDL_SurfaceDrawLine(gameCanvas, point->point, nextPoint->point, 255, 255, 255, alpha, 1);
+		}
+	}
+	
+	//Apply post processing
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->gRenderer, gameCanvas);
 	SDL_RenderCopy(renderer->gRenderer, texture, NULL, NULL);
 	SDL_DestroyTexture(texture);

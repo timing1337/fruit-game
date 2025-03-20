@@ -22,6 +22,14 @@ void GameManager::Heartbeat() {
 			break;
 		}
 	}
+
+	for (int i = 0; i < this->mousePathRecord->paths.size(); i++) {
+		MousePath* path = &this->mousePathRecord->paths[i];
+		path->longevity -= this->deltaTime;
+		if (path->longevity <= 0) {
+			this->mousePathRecord->paths.erase(this->mousePathRecord->paths.begin() + i);
+		}
+	}
 }
 
 void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
@@ -34,8 +42,6 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 	}
 
 	this->mousePathRecord->isRecording = true;
-
-	this->mousePathRecord->paths.clear();
 	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
 }
 
@@ -54,14 +60,6 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 
 	this->mousePathRecord->isRecording = false;
 	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
-
-	if (this->mousePathRecord->paths.size() < 5) {
-		return;
-	}
-
-	MousePathRecord record = *this->mousePathRecord;
-
-	Renderer::getInstance()->OnMousePathRecorded(record);
 }
 
 void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {

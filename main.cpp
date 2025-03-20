@@ -30,12 +30,17 @@ int main(int argc, char* args[])
 		return 0;
 	}
 
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+
+
 	Renderer::Initialize();
 
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
 	AnimationManager* animation_mgr = AnimationManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
+
+	entity_mgr->spawnEntity(vec2_t(100, 100), 0, 500);
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 

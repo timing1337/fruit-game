@@ -8,5 +8,5 @@
 
 using namespace std;
 
-void SDL_PostGaussianBlur(SDL_Surface* surface, float radius = 0);
+void SDL_PostGaussianBlur(SDL_Surface* surface, int radius = 0);
 void SDL_PostBrighten(SDL_Surface* surface);
