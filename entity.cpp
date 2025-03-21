@@ -24,6 +24,28 @@ void EntityManager::Heartbeat() {
 		}
 		entity->onTick();
 	}
+
+	//Check for collision
+	GameManager* gameManager = GameManager::getInstance();
+	MousePathRecord* mousePathRecord = gameManager->mousePathRecord;
+	vector<MousePath> points = mousePathRecord->paths;
+
+	if (!mousePathRecord->isRecording) {
+		return;
+	}
+
+	if (points.size() > 3) {
+		vector<SDL_Point> linePoints = getLinePoints(points[points.size() - 1].point, points[points.size() - 2].point);
+
+		for (auto& point : linePoints) {
+			for (auto& entity : this->entities) {
+				if (!entity.alive) continue;
+				if (entity.IsCollidingWithPoint(point.x, point.y)) {
+					entity.onHit();
+				}
+			}
+		}
+	}
 }
 
 void Entity::onTick() {
@@ -43,16 +65,24 @@ void Entity::onTick() {
 
 	float deltaTime = GameManager::getInstance()->deltaTime / 1000.0f;
 
+	if (this->direction.x <= 0) {
+		this->direction.x = 0;
+	}
+	else {
+		//Air resistance
+		this->direction.x -= 10 * deltaTime;
+	}
+
+	//Gravity
 	this->direction.y -= 10 * deltaTime;
-	this->direction.x -= 10 * deltaTime;
 
     this->position.x += this->direction.x * deltaTime;
     this->position.y -= this->direction.y * deltaTime;
-	this->position.y += 10 * deltaTime; //gravity
+
+	this->position.y += 10 * deltaTime;
 }
 
 void Entity::despawn() {
-	SDL_Log("Despawn");
 	this->alive = false;
 }
 
@@ -62,4 +92,14 @@ void Entity::onRender() {
 
 	SDL_FRect rect = { position.x - 15, position.y - 15, 30, 30 };
 	SDL_RenderFillRectF(renderer->gRenderer, &rect);
+}
+
+bool Entity::IsCollidingWithPoint(int x, int y) {
+	return isPointInRect({x, y}, {(int)position.x - 15, (int)position.y - 15}, {30, 30});
+}
+
+void Entity::onHit() {
+	this->despawn();
+
+	GameManager::getInstance()->UpdateScore(1);
 }

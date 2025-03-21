@@ -20,13 +20,30 @@ void GameManager::Heartbeat() {
 		case SDL_MOUSEMOTION:
 			this->OnMouseMove(e.button);
 			break;
+		case SDL_KEYDOWN:
+
+			switch (e.key.keysym.sym) {
+				case SDLK_SPACE:
+					this->running = false;
+				break;
+				case SDLK_INSERT:
+					//Spawn entity
+					if (this->state != GameState::RUNNING) {
+						break;
+					}
+					int x, y;
+					SDL_GetMouseState(&x, &y);
+					EntityManager::getInstance()->spawnEntity(vec2_t(x, y), 0, 0);
+				break;
+			}
+			break;
 		}
 	}
 
 	for (int i = 0; i < this->mousePathRecord->paths.size(); i++) {
 		MousePath* path = &this->mousePathRecord->paths[i];
 		path->longevity -= this->deltaTime;
-		if (path->longevity <= 0) {
+		if (path->longevity < 0) {
 			this->mousePathRecord->paths.erase(this->mousePathRecord->paths.begin() + i);
 		}
 	}
@@ -38,6 +55,10 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 	}
 
 	if (this->state != GameState::RUNNING) {
+		return;
+	}
+
+	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
 		return;
 	}
 
@@ -59,6 +80,10 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 	}
 
 	this->mousePathRecord->isRecording = false;
+
+	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
+		return;
+	}
 	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
 }
 
@@ -71,8 +96,10 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	SDL_Point currentPoint = SDL_Point{ e.x, e.y };
-	this->mousePathRecord->AddPoint(SDL_Point{ currentPoint.x, currentPoint.y });
+	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
+		return;
+	}
+	this->mousePathRecord->AddPoint({ e.x, e.y });
 }
 
 void GameManager::FireStateChange(GameState state) {
@@ -105,4 +132,9 @@ void GameManager::OnRunning() {
 }
 
 void GameManager::OnPostgame() {
+}
+
+void GameManager::UpdateScore(int score) {
+	this->score += score;
+	MainScene::UpdateScoreText();
 }

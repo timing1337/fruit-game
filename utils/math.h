@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include "textures.h"
 
 #define M_E 2.71828182845904523536
 
@@ -35,4 +36,12 @@ struct vec2_t {
 
 inline double deg2rad(double degrees) {
 	return degrees * 4.0 * atan(1.0) / 180.0;
+}
+
+inline bool isPointInRect(SDL_Point point, SDL_Point position, GameTexture* gameTexture) {
+	return point.x >= position.x && point.x <= position.x + gameTexture->text->width && point.y >= position.y && point.y <= position.y + gameTexture->text->height;
+}
+
+inline bool isPointInRect(SDL_Point point, SDL_Point position, SDL_Point size) {
+	return point.x >= position.x && point.x <= position.x + size.x && point.y >= position.y && point.y <= position.y + size.y;
 }

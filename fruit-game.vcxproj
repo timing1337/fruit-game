@@ -161,6 +161,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="animation\animation.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="animation\animation.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />

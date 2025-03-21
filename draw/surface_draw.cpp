@@ -1,4 +1,5 @@
 #include "surface_draw.h"
+#include "utils/algorithm.h"
 
 void SDL_SurfaceDrawLines(SDL_Surface* surface, const SDL_Point* points, const int count, const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a, const int thickness){
 	for (int i = 0; i < count - 1; i++) {
@@ -16,35 +17,10 @@ void SDL_SurfaceDrawLine(SDL_Surface* surface, SDL_Point start, SDL_Point end, c
 
 	Uint32* pixels = (Uint32*)surface->pixels;
 
-	int dx = abs(end.x - start.x);
-	int sx = start.x < end.x ? 1 : -1;
-	int dy = -abs(end.y - start.y);
-	int sy = start.y < end.y ? 1 : -1;
-	int error = dx + dy;
+	vector<SDL_Point> points = getLinePoints(start, end, thickness);
 
-	while (true)
-	{
-		for (int y = -thickness; y <= thickness; ++y) {
-			for (int x = -thickness; x <= thickness; ++x) {
-				int px = start.x + x;
-				int py = start.y + y;
-				if (px >= 0 && px < surface->w && py >= 0 && py < surface->h) {
-					pixels[py * pitch + px] = color;
-				}
-			}
-		}
-
-		int e2 = 2 * error;
-		if (e2 >= dy) {
-			if (start.x == end.x) break;
-			error += dy;
-			start.x += sx;
-		}
-		else if (e2 <= dx) {
-			if (start.y == end.y) break;
-			error += dx;
-			start.y += sy;
-		}
+	for (auto& point : points) {
+		pixels[point.y * pitch + point.x] = color;
 	}
 
 	SDL_UnlockSurface(surface);

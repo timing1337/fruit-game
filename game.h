@@ -46,6 +46,8 @@ public:
 	void OnRunning();
 	void OnPostgame();
 
+	void UpdateScore(int score);
+
 	static GameManager* getInstance() {
 		return instancePtr;
 	}

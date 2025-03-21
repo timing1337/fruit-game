@@ -15,8 +15,9 @@ void MainMenu::Show() {
 
 	GameTexture* playButton = renderer->GetTextureByName("ui/button_play");
 
-	if (mousePos.x >= center.x - playButton->text->width / 2 && mousePos.x <= center.x + playButton->text->width / 2 &&
-		mousePos.y >= center.y - playButton->text->height / 2 && mousePos.y <= center.y + playButton->text->height / 2) {
+	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
+
+	if (isPointInRect(mousePos, playButtonPos, playButton)) {
 		renderer->RenderText("ui/button_play_hover", center.x, center.y);
 	}
 	else {
