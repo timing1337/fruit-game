@@ -33,7 +33,6 @@ void GameManager::Heartbeat() {
 					}
 					int x, y;
 					SDL_GetMouseState(&x, &y);
-					EntityManager::getInstance()->spawnEntity(vec2_t(x, y), 0, 0);
 				break;
 			}
 			break;

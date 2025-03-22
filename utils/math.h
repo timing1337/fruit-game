@@ -34,8 +34,8 @@ struct vec2_t {
 	}
 };
 
-inline double deg2rad(double degrees) {
-	return degrees * 4.0 * atan(1.0) / 180.0;
+inline float deg2rad(float degrees) {
+	return degrees * 4.0f * atan(1.0f) / 180.0f;
 }
 
 inline bool isPointInRect(SDL_Point point, SDL_Point position, GameTexture* gameTexture) {

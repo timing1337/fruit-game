@@ -24,10 +24,6 @@ void MainScene::Show() {
 	x += renderer->GetTextureByName("ui/score_text")->text->width;
 	renderer->RenderText(scoreText, x, y, Alignment::RIGHT);
 
-	for (auto& entity : EntityManager::getInstance()->entities) {
-		entity.onRender();
-	}
-
 	SDL_FillRect(gameCanvas, NULL, 0x000000);
 
 	vector<MousePath> paths = GameManager::getInstance()->mousePathRecord->paths;

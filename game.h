@@ -4,6 +4,7 @@
 
 #include "mouse_path.h"
 #include "render.h"
+#include "entities/enemy.h"
 
 class Renderer;
 
@@ -23,7 +24,7 @@ public:
 	//Game state
 	bool running = true;
 	GameState state = GameState::RUNNING;
-	float deltaTime = 0;
+	int deltaTime = 0;
 
 	//Game Data
 	int score = 0;

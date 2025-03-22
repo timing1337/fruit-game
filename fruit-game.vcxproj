@@ -161,9 +161,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="entities\enemy.cpp" />
+    <ClCompile Include="entities\entity_mgr.cpp" />
+    <ClCompile Include="entities\entity.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="animation\animation.cpp" />
-    <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="draw\surface_draw.cpp" />
@@ -173,9 +175,11 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="entities\enemy.h" />
+    <ClInclude Include="entities\entity_mgr.h" />
+    <ClInclude Include="entities\entity.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="animation\animation.h" />
-    <ClInclude Include="entity.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="mouse_path.h" />
     <ClInclude Include="draw\surface_draw.h" />

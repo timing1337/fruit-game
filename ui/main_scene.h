@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity.h"
+#include "entities/entity.h"
 #include "render.h"
 #include "draw/surface_draw.h"
 

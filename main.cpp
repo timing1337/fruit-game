@@ -3,7 +3,7 @@
 #include "SDL_ttf.h"
 #include "SDL_timer.h"
 
-#include "entity.h"
+#include "entities/entity_mgr.h"
 #include "game.h"
 #include "render.h"
 
@@ -32,15 +32,12 @@ int main(int argc, char* args[])
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-
 	Renderer::Initialize();
 
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
 	AnimationManager* animation_mgr = AnimationManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
-
-	entity_mgr->spawnEntity(vec2_t(100, 100), 0, 0);
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
