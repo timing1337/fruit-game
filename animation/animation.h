@@ -10,9 +10,6 @@
 
 using namespace std;
 
-class Renderer;
-class GameManager;
-
 enum AnimationState {
 	WAIT,
 	RUN,

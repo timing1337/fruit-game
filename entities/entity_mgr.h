@@ -8,8 +8,6 @@
 
 using namespace std;
 
-class Entity;
-
 class EntityManager
 {
 private:

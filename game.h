@@ -7,10 +7,6 @@
 #include "mouse_path.h"
 #include "render.h"
 
-class Renderer;
-class Entity;
-class Enemy;
-
 enum GameState {
 	WAITING,
 	PREPARING,

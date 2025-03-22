@@ -5,8 +5,6 @@
 #include "utils/math.h"
 #include "render.h"
 
-class Renderer;
-
 class MainMenu
 {
 public:
