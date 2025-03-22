@@ -1,8 +1,8 @@
 #pragma once
 
-#include "entities/entity.h"
-#include "render.h"
 #include "draw/surface_draw.h"
+#include "entities/entity_mgr.h"
+#include "render.h"
 
 class MainScene
 {

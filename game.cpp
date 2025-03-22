@@ -33,6 +33,8 @@ void GameManager::Heartbeat() {
 					}
 					int x, y;
 					SDL_GetMouseState(&x, &y);
+					
+					EntityManager::getInstance()->spawnEntity<Enemy>(vec2_t(x, y), 0, 0);
 				break;
 			}
 			break;
@@ -98,7 +100,26 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
 		return;
 	}
-	this->mousePathRecord->AddPoint({ e.x, e.y });
+
+	EntityManager* entity_mgr = EntityManager::getInstance();
+
+	SDL_Point currentPoint{ e.x, e.y };
+
+	if (this->mousePathRecord->paths.size() >= 2) {
+		vector<MousePath> paths = this->mousePathRecord->paths;
+		vector<SDL_Point> linePoints = getLinePoints(paths[paths.size() - 1].point, currentPoint);
+
+		for (auto& point : linePoints) {
+			for (auto& entity : EntityManager::getInstance()->entities) {
+				if (!entity->alive) continue;
+				if (entity->IsCollidingWithPoint(point.x, point.y)) {
+					entity->onHit();
+				}
+			}
+		}
+	}
+
+	this->mousePathRecord->AddPoint(currentPoint);
 }
 
 void GameManager::FireStateChange(GameState state) {

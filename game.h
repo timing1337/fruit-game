@@ -2,11 +2,14 @@
 
 #include "SDL.h"
 
+#include "entities/entity_mgr.h"
+#include "entities/enemy.h"
 #include "mouse_path.h"
 #include "render.h"
-#include "entities/enemy.h"
 
 class Renderer;
+class Entity;
+class Enemy;
 
 enum GameState {
 	WAITING,

@@ -26,6 +26,10 @@ void MainScene::Show() {
 
 	SDL_FillRect(gameCanvas, NULL, 0x000000);
 
+	for (auto& entity : EntityManager::getInstance()->entities) {
+		entity->onRender();
+	}
+
 	vector<MousePath> paths = GameManager::getInstance()->mousePathRecord->paths;
 	if (paths.size() > 2) {
 		for (int i = 0; i < GameManager::getInstance()->mousePathRecord->paths.size() - 1; i++) {

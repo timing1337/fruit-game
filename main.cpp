@@ -45,9 +45,10 @@ int main(int argc, char* args[])
 		Uint32 current = SDL_GetTicks();
 		renderer->PreRender();
 		game_mgr->Heartbeat();
-		entity_mgr->Heartbeat();
 		
 		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks);
+		entity_mgr->Heartbeat(game_mgr->deltaTime);
+
 		renderer->Render();
 
 		animation_mgr->Heartbeat();

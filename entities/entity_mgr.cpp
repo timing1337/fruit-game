@@ -2,14 +2,16 @@
 
 EntityManager* EntityManager::instancePtr = new EntityManager();
 
-void EntityManager::Heartbeat() {
+void EntityManager::Heartbeat(int deltaTicks) {
 	for (int i = 0; i < this->entities.size(); i++) {
-		Entity* entity = &this->entities[i];
+		Entity* entity = this->entities[i];
 		if (!entity->alive) {
+			delete this->entities[i];
 			this->entities.erase(this->entities.begin() + i);
 			continue;
 		}
-		entity->onTick();
-	}
-}
 
+		entity->onTick(deltaTicks);
+	}
+
+}

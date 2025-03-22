@@ -42,11 +42,11 @@ void AnimationManager::Play(int duration, function<void(Animation* self)> onUpda
 
 void AnimationManager::Heartbeat() {
 	for (int i = 0; i < this->animations.size(); i++) {
-		Animation* animation = &this->animations[i];
-		switch (animation->state)
+		Animation animation = this->animations[i];
+		switch (animation.state)
 		{
 		case AnimationState::RUN:
-			animation->Update();
+			animation.Update();
 			break;
 		case AnimationState::KILLED:
 			this->animations.erase(this->animations.begin() + i);
