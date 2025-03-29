@@ -13,12 +13,16 @@
 
 #include "ui/menu.h"
 #include "ui/main_scene.h"
+#include "ui/death_scene.h"
 
+#include <functional>
 #include <filesystem>
 #include <string>
 #include <unordered_map>
 
 using namespace std;
+
+class Animation;
 
 namespace fs = std::filesystem;
 
@@ -55,10 +59,10 @@ public:
 	void UpdateRender();
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
-	void OnStarting();
 	void OnMousePathRecorded(MousePathRecord record);
 
-	void PlayTitleAnimation();
+	void PlayFadeTransition(std::function<void(Animation* self)> onComplete);
+	void PlayTitleAnimationAndStartGame();
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);

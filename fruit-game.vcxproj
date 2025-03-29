@@ -161,9 +161,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ui\death_scene.cpp" />
     <ClCompile Include="entities\enemy.cpp" />
     <ClCompile Include="entities\entity_mgr.cpp" />
     <ClCompile Include="entities\entity.cpp" />
+    <ClCompile Include="entities\shard.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="animation\animation.cpp" />
     <ClCompile Include="game.cpp" />
@@ -175,9 +177,11 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ui\death_scene.h" />
     <ClInclude Include="entities\enemy.h" />
     <ClInclude Include="entities\entity_mgr.h" />
     <ClInclude Include="entities\entity.h" />
+    <ClInclude Include="entities\shard.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="animation\animation.h" />
     <ClInclude Include="game.h" />

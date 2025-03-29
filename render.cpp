@@ -11,6 +11,7 @@ void Renderer::Initialize() {
 
 	MainMenu::Initialize();
 	MainScene::Initialize();
+	DeathScene::Initialize();
 }
 
 void Renderer::PreRender() {
@@ -29,6 +30,7 @@ void Renderer::Render() {
 		MainScene::Show();
 		break;
 	case GameState::POSTGAME:
+		DeathScene::Show();
 		break;
 	}
 }
@@ -49,13 +51,15 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 		SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
 
 		if (isPointInRect(mousePos, playButtonPos, playButton)) {
-			this->OnStarting();
+			this->PlayFadeTransition([this](Animation* self) {
+				this->PlayTitleAnimationAndStartGame();
+			});
 		}
 		break;
 	}
 }
 
-void Renderer::OnStarting() {
+void Renderer::PlayFadeTransition(function<void(Animation* self)> onComplete) {
 	GameManager::getInstance()->FireStateChange(GameState::PREPARING);
 	AnimationManager::getInstance()->Play(10 * 100, [this](Animation* self) {
 		SDL_Rect fillRect = { 0, 0, this->width, this->height };
@@ -69,13 +73,10 @@ void Renderer::OnStarting() {
 		}
 		SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
 		SDL_RenderFillRect(this->gRenderer, &fillRect);
-	},
-	[this](Animation* self) {
-			this->PlayTitleAnimation();
-	});
+	}, onComplete);
 }
 
-void Renderer::PlayTitleAnimation() {
+void Renderer::PlayTitleAnimationAndStartGame() {
 	AnimationManager::getInstance()->Play(4 * 500, [this](Animation* self) {
 		int second = 3 - self->current / 500;
 		GameTexture* texture;

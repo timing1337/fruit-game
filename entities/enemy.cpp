@@ -7,9 +7,14 @@ void Enemy::onHit() {
 void Enemy::onDespawn(EntityDeathType type) {
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
-		//Reduce player life
+		GameManager::getInstance()->remainingLives--;
+		if (GameManager::getInstance()->remainingLives <= 0) {
+			GameManager::getInstance()->FireStateChange(GameState::POSTGAME);
+		}
 		break;
+		//Reduce player life
 	case EntityDeathType::PLAYER_INTERACTION:
+		MainScene::killEffectFade = 300;
 		GameManager::getInstance()->UpdateScore(1);
 		break;
 	}

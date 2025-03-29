@@ -22,7 +22,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::RUNNING;
+	GameState state = GameState::POSTGAME;
 	int deltaTime = 0;
 
 	//Game Data

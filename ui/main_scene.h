@@ -10,6 +10,7 @@ private:
 	static GameTexture* scoreText;
 public:
 	static SDL_Surface* gameCanvas;
+	static int killEffectFade;
 
 	static void Initialize();
 	static void Show();
