@@ -110,5 +110,8 @@
     <ClInclude Include="ui\death_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="game_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

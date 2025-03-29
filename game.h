@@ -6,14 +6,7 @@
 #include "entities/enemy.h"
 #include "mouse_path.h"
 #include "render.h"
-
-enum GameState {
-	WAITING,
-	PREPARING,
-	STARTING,
-	RUNNING,
-	POSTGAME
-};
+#include "game_state.h"
 
 class GameManager
 {
@@ -22,7 +15,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::POSTGAME;
+	GameState state = GameState::WAITING;
 	int deltaTime = 0;
 
 	//Game Data

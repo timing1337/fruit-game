@@ -27,9 +27,10 @@ void Renderer::Render() {
 		break;
 	case GameState::STARTING:
 	case GameState::RUNNING:
+	case GameState::POSTGAME:
 		MainScene::Show();
 		break;
-	case GameState::POSTGAME:
+	case GameState::ENDGAME:
 		DeathScene::Show();
 		break;
 	}
@@ -51,29 +52,38 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 		SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
 
 		if (isPointInRect(mousePos, playButtonPos, playButton)) {
-			this->PlayFadeTransition([this](Animation* self) {
-				this->PlayTitleAnimationAndStartGame();
-			});
+			SDL_Log("hek");
+			GameManager::getInstance()->FireStateChange(GameState::PREPARING);
+
+			this->PlayFadeTransition(
+				[this](Animation* self) {
+					GameManager::getInstance()->FireStateChange(GameState::STARTING);
+				},
+				[this](Animation* self) {
+					this->PlayTitleAnimationAndStartGame();
+				});
 		}
 		break;
 	}
 }
 
-void Renderer::PlayFadeTransition(function<void(Animation* self)> onComplete) {
-	GameManager::getInstance()->FireStateChange(GameState::PREPARING);
-	AnimationManager::getInstance()->Play(10 * 100, [this](Animation* self) {
-		SDL_Rect fillRect = { 0, 0, this->width, this->height };
-		int calculatedOpacity;
-		if (self->current <= 500) {
-			calculatedOpacity = (self->current * 255) / 500;
-		}
-		else {
-			GameManager::getInstance()->FireStateChange(GameState::STARTING);
-			calculatedOpacity = 255 - (((self->current - 500) * 255) / 500);
-		}
-		SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
-		SDL_RenderFillRect(this->gRenderer, &fillRect);
-	}, onComplete);
+void Renderer::PlayFadeTransition(function<void(Animation* self)> onTransitioned, function<void(Animation* self)> onComplete) {
+	AnimationManager::getInstance()->Play(500,
+		[this](Animation* self) {
+			SDL_Rect fillRect = { 0, 0, this->width, this->height };
+			int calculatedOpacity = (self->current * 255) / 500;
+			SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
+			SDL_RenderFillRect(this->gRenderer, &fillRect);
+		}, [this, onTransitioned, onComplete](Animation* self) {
+			onTransitioned(self);
+			AnimationManager::getInstance()->Play(500,
+				[this](Animation* self) {
+					SDL_Rect fillRect = { 0, 0, this->width, this->height };
+					int calculatedOpacity = 255 - ((self->current * 255) / 500);
+					SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
+					SDL_RenderFillRect(this->gRenderer, &fillRect);
+				}, onComplete);
+		});
 }
 
 void Renderer::PlayTitleAnimationAndStartGame() {

@@ -7,9 +7,17 @@ void Enemy::onHit() {
 void Enemy::onDespawn(EntityDeathType type) {
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
+		if (GameManager::getInstance()->state != GameState::RUNNING) return;
+		SDL_Log("Enemy despawned due to out of bound. Reducing lives");
 		GameManager::getInstance()->remainingLives--;
-		if (GameManager::getInstance()->remainingLives <= 0) {
+		if (GameManager::getInstance()->remainingLives == 0) {
+			SDL_Log("Triggering post game");
+			Renderer* renderer = Renderer::getInstance();
 			GameManager::getInstance()->FireStateChange(GameState::POSTGAME);
+			renderer->PlayFadeTransition([this](Animation* self) {
+				GameManager::getInstance()->FireStateChange(GameState::ENDGAME);
+				SDL_Log("Game ended");
+			}, [this](Animation* self) {});
 		}
 		break;
 		//Reduce player life

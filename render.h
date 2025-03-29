@@ -4,10 +4,10 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 
+#include "game.h"
 #include "animation/animation.h"
 #include "draw/surface_draw.h"
 #include "draw/post_processing.h"
-#include "game.h"
 #include "mouse_path.h"
 #include "textures.h"
 
@@ -21,9 +21,6 @@
 #include <unordered_map>
 
 using namespace std;
-
-class Animation;
-
 namespace fs = std::filesystem;
 
 enum Alignment{
@@ -31,6 +28,9 @@ enum Alignment{
 	CENTER,
 	RIGHT
 };
+
+class Animation;
+enum GameState;
 
 class Renderer {
 private:
@@ -61,7 +61,7 @@ public:
 	void OnMouseClick(SDL_MouseButtonEvent& e);
 	void OnMousePathRecorded(MousePathRecord record);
 
-	void PlayFadeTransition(std::function<void(Animation* self)> onComplete);
+	void PlayFadeTransition(function<void(Animation* self)> onTransitioned, function<void(Animation* self)> onComplete);
 	void PlayTitleAnimationAndStartGame();
 
 	bool LoadFontByName(const char* name);

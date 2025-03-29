@@ -1,7 +1,5 @@
 #include "animation.h"
 
-//Basically a wrapper of SDL_timer
-
 AnimationManager* AnimationManager::instancePtr = new AnimationManager();
 
 Animation::Animation(int duration, function<void(Animation* self)> onUpdate, function<void(Animation* self)> onComplete) {
@@ -17,8 +15,8 @@ Animation::~Animation() {
 void Animation::Update() {
 	this->onUpdate(this);
 	
-	current += GameManager::getInstance()->deltaTime;
-	
+	this->current += GameManager::getInstance()->deltaTime;
+
 	if (current >= duration) {
 		Kill();
 	}
@@ -42,11 +40,11 @@ void AnimationManager::Play(int duration, function<void(Animation* self)> onUpda
 
 void AnimationManager::Heartbeat() {
 	for (int i = 0; i < this->animations.size(); i++) {
-		Animation animation = this->animations[i];
-		switch (animation.state)
+		Animation* animation = &this->animations[i];
+		switch (animation->state)
 		{
 		case AnimationState::RUN:
-			animation.Update();
+			animation->Update();
 			break;
 		case AnimationState::KILLED:
 			this->animations.erase(this->animations.begin() + i);
