@@ -30,7 +30,7 @@
     <ClCompile Include="ui\menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="animation\animation.cpp">
+    <ClCompile Include="task\task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ui\main_scene.cpp">
@@ -60,6 +60,18 @@
     <ClCompile Include="ui\death_scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="task\types\base_task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="task\task_state.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="task\types\repeated_task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="task\types\timer_task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -77,7 +89,7 @@
     <ClInclude Include="utils\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="animation\animation.h">
+    <ClInclude Include="task\task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\main_scene.h">
@@ -111,6 +123,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="game_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="task\types\base_task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="task\types\repeated_task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="task\types\timer_task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

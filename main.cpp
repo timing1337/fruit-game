@@ -7,8 +7,6 @@
 #include "game.h"
 #include "render.h"
 
-#include "animation/animation.h"
-
 int main(int argc, char* args[])
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -36,8 +34,11 @@ int main(int argc, char* args[])
 
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
-	AnimationManager* animation_mgr = AnimationManager::getInstance();
+	TaskManager* animation_mgr = TaskManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
+
+	entity_mgr->mt.seed(time(0));
+	entity_mgr->distribution = uniform_real_distribution<float>(0, 1);
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
@@ -52,7 +53,7 @@ int main(int argc, char* args[])
 
 		renderer->Render();
 
-		animation_mgr->Heartbeat();
+		animation_mgr->Heartbeat(game_mgr->deltaTime);
 
 		renderer->UpdateRender();
 		game_mgr->lastUpdatedTicks = current;

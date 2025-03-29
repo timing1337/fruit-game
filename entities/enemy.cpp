@@ -14,16 +14,26 @@ void Enemy::onDespawn(EntityDeathType type) {
 			SDL_Log("Triggering post game");
 			Renderer* renderer = Renderer::getInstance();
 			GameManager::getInstance()->FireStateChange(GameState::POSTGAME);
-			renderer->PlayFadeTransition([this](Animation* self) {
+			renderer->PlayFadeTransition([this](BaseTask* self) {
 				GameManager::getInstance()->FireStateChange(GameState::ENDGAME);
 				SDL_Log("Game ended");
-			}, [this](Animation* self) {});
+			}, [this](BaseTask* self) {});
 		}
 		break;
 		//Reduce player life
 	case EntityDeathType::PLAYER_INTERACTION:
-		MainScene::killEffectFade = 300;
-		GameManager::getInstance()->UpdateScore(1);
+		GameManager::getInstance()->UpdateScore(this->scoreBase);
+		Renderer* renderer = Renderer::getInstance();
+
+		TaskManager::getInstance()->RunTimerTask(400,
+			[renderer](TimerTask* self) {
+				SDL_Rect fillRect = { 0, 0, renderer->width, renderer->height };
+				int calculatedOpacity = 255 - ((self->counter * 255) / self->duration);
+				SDL_SetRenderDrawColor(renderer->gRenderer, 127, 250, 160, calculatedOpacity);
+				SDL_RenderFillRect(renderer->gRenderer, &fillRect);
+			}, [](BaseTask* self) {});
+
+
 		break;
 	}
 }

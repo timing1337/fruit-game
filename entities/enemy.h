@@ -7,6 +7,8 @@
 class Enemy: public Entity
 {
 public:
+	int scoreBase = 1;
+
 	void onRender();
 	void onDespawn(EntityDeathType type);
 	void onHit();

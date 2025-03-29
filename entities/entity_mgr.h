@@ -4,6 +4,11 @@
 #include "entities/enemy.h"
 #include "utils/math.h"
 
+
+#include <chrono>
+#include <ctime>  
+#include <iostream> 
+#include <random> 
 #include <vector>
 
 using namespace std;
@@ -15,6 +20,9 @@ private:
 public:
 	static EntityManager* instancePtr;
 	vector<Entity*> entities;
+	mt19937 mt;
+	uniform_real_distribution<float> distribution;
+
 	static EntityManager* getInstance() {
 		return instancePtr;
 	}

@@ -161,13 +161,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="task\types\repeated_task.cpp" />
+    <ClCompile Include="task\task_state.h" />
+    <ClCompile Include="task\types\base_task.cpp" />
+    <ClCompile Include="task\types\timer_task.cpp" />
     <ClCompile Include="ui\death_scene.cpp" />
     <ClCompile Include="entities\enemy.cpp" />
     <ClCompile Include="entities\entity_mgr.cpp" />
     <ClCompile Include="entities\entity.cpp" />
     <ClCompile Include="entities\shard.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
-    <ClCompile Include="animation\animation.cpp" />
+    <ClCompile Include="task\task.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="draw\surface_draw.cpp" />
@@ -177,14 +181,17 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="task\types\repeated_task.h" />
+    <ClInclude Include="task\types\base_task.h" />
     <ClInclude Include="game_state.h" />
+    <ClInclude Include="task\types\timer_task.h" />
     <ClInclude Include="ui\death_scene.h" />
     <ClInclude Include="entities\enemy.h" />
     <ClInclude Include="entities\entity_mgr.h" />
     <ClInclude Include="entities\entity.h" />
     <ClInclude Include="entities\shard.h" />
     <ClInclude Include="utils\algorithm.h" />
-    <ClInclude Include="animation\animation.h" />
+    <ClInclude Include="task\task.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="mouse_path.h" />
     <ClInclude Include="draw\surface_draw.h" />

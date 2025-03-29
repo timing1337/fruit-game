@@ -3,8 +3,6 @@
 GameTexture* MainScene::scoreText = nullptr;
 SDL_Surface* MainScene::gameCanvas = nullptr;
 
-int MainScene::killEffectFade = 0;
-
 void MainScene::Initialize() {
 	Renderer* renderer = Renderer::getInstance();
 	renderer->textures["ui/score_text"] = renderer->CreateText("SCORES: ", "Helvetica-Bold", 24, { 255, 255, 255, 255 });
@@ -30,12 +28,6 @@ void MainScene::Show() {
 
 	for (auto& entity : EntityManager::getInstance()->entities) {
 		entity->onRender();
-	}
-
-	if (killEffectFade > 0) {
-		SDL_SetRenderDrawColor(renderer->gRenderer, 127, 250, 160, max((killEffectFade * 255) / 300 - 50, 0));
-		SDL_RenderFillRect(renderer->gRenderer, NULL);
-		killEffectFade -= 5;
 	}
 
 	vector<MousePath> paths = GameManager::getInstance()->mousePathRecord->paths;

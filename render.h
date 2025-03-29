@@ -5,10 +5,11 @@
 #include "SDL_ttf.h"
 
 #include "game.h"
-#include "animation/animation.h"
 #include "draw/surface_draw.h"
 #include "draw/post_processing.h"
 #include "mouse_path.h"
+#include "task/task.h"
+#include "task/types/timer_task.h"
 #include "textures.h"
 
 #include "ui/menu.h"
@@ -29,7 +30,7 @@ enum Alignment{
 	RIGHT
 };
 
-class Animation;
+class BaseTask;
 enum GameState;
 
 class Renderer {
@@ -61,7 +62,7 @@ public:
 	void OnMouseClick(SDL_MouseButtonEvent& e);
 	void OnMousePathRecorded(MousePathRecord record);
 
-	void PlayFadeTransition(function<void(Animation* self)> onTransitioned, function<void(Animation* self)> onComplete);
+	void PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete);
 	void PlayTitleAnimationAndStartGame();
 
 	bool LoadFontByName(const char* name);

@@ -8,7 +8,6 @@ class MainScene
 {
 public:
 	static SDL_Surface* gameCanvas;
-	static int killEffectFade;
 	static GameTexture* scoreText;
 
 	static void Initialize();

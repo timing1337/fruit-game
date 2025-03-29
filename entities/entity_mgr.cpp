@@ -7,7 +7,7 @@ void EntityManager::Heartbeat(int deltaTicks) {
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {
-			delete this->entities[i];
+			delete entity;
 			this->entities.erase(this->entities.begin() + i);
 			continue;
 		}
@@ -15,4 +15,9 @@ void EntityManager::Heartbeat(int deltaTicks) {
 		entity->onTick(deltaTicks);
 	}
 
+
+	if (GameManager::getInstance()->state == GameState::RUNNING) {
+		//Spawning every 3 seconds
+		//Spawn rate calculation = 3 - (score / 10)
+	}
 }

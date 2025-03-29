@@ -52,14 +52,14 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 		SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
 
 		if (isPointInRect(mousePos, playButtonPos, playButton)) {
-			SDL_Log("hek");
 			GameManager::getInstance()->FireStateChange(GameState::PREPARING);
 
 			this->PlayFadeTransition(
-				[this](Animation* self) {
+				[this](TimerTask* self) {
+					SDL_Log("Starting game");
 					GameManager::getInstance()->FireStateChange(GameState::STARTING);
 				},
-				[this](Animation* self) {
+				[this](TimerTask* self) {
 					this->PlayTitleAnimationAndStartGame();
 				});
 		}
@@ -67,30 +67,31 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 	}
 }
 
-void Renderer::PlayFadeTransition(function<void(Animation* self)> onTransitioned, function<void(Animation* self)> onComplete) {
-	AnimationManager::getInstance()->Play(500,
-		[this](Animation* self) {
+void Renderer::PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete) {
+	TaskManager::getInstance()->RunTimerTask(500,
+		[this](TimerTask* self) {
 			SDL_Rect fillRect = { 0, 0, this->width, this->height };
-			int calculatedOpacity = (self->current * 255) / 500;
+			int calculatedOpacity = (self->counter * 255) / 500;
 			SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
 			SDL_RenderFillRect(this->gRenderer, &fillRect);
-		}, [this, onTransitioned, onComplete](Animation* self) {
+		}, [this, onTransitioned, onComplete](TimerTask* self) {
 			onTransitioned(self);
-			AnimationManager::getInstance()->Play(500,
-				[this](Animation* self) {
+			TaskManager::getInstance()->RunTimerTask(500,
+				[this](TimerTask* self) {
 					SDL_Rect fillRect = { 0, 0, this->width, this->height };
-					int calculatedOpacity = 255 - ((self->current * 255) / 500);
+					int calculatedOpacity = 255 - ((self->counter * 255) / 500);
 					SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
 					SDL_RenderFillRect(this->gRenderer, &fillRect);
-				}, onComplete);
+				},
+				onComplete);
 		});
 }
 
 void Renderer::PlayTitleAnimationAndStartGame() {
-	AnimationManager::getInstance()->Play(4 * 500, [this](Animation* self) {
-		int second = 3 - self->current / 500;
+	TaskManager::getInstance()->RunTimerTask(4 * 500, [this](TimerTask* self) {
+		int second = 3 - self->counter / 500;
 		GameTexture* texture;
-		int calculatedOpacity = 255 - ((self->current % 500) * 255) / 500;
+		int calculatedOpacity = 255 - ((self->counter % 500) * 255) / 500;
 		switch (second) {
 		case 1:
 			texture = this->GetTextureByName("ui/title_number_one");
@@ -108,7 +109,7 @@ void Renderer::PlayTitleAnimationAndStartGame() {
 		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
 		this->RenderText(texture, this->width / 2, this->height / 2, Alignment::CENTER);
 	},
-	[this](Animation* self) {
+	[this](TimerTask* self) {
 			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
 	});
 }
