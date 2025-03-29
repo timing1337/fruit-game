@@ -17,21 +17,13 @@ void Entity::onTick(int deltaTicks) {
 
 	float deltaSeconds = deltaTicks / 1000.0f;
 
-	if (this->direction.x <= 0) {
-		this->direction.x = 0;
-	}
-	else {
-		//Air resistance
-		this->direction.x -= 10 * deltaSeconds;
-	}
-
 	//Gravity
 	this->direction.y -= 100 * deltaSeconds;
 
 	this->position.x += this->direction.x * deltaSeconds;
 	this->position.y -= this->direction.y * deltaSeconds;
 
-	this->position.y += 10 * deltaSeconds;
+	this->position.y += 50 * deltaSeconds;
 }
 
 void Entity::despawn(EntityDeathType type) {

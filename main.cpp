@@ -37,8 +37,7 @@ int main(int argc, char* args[])
 	TaskManager* animation_mgr = TaskManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
 
-	entity_mgr->mt.seed(time(0));
-	entity_mgr->distribution = uniform_real_distribution<float>(0, 1);
+	EntityManager::Initialize();
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 

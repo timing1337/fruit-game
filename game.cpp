@@ -156,5 +156,7 @@ void GameManager::OnPostgame() {
 
 void GameManager::UpdateScore(int score) {
 	this->score += score;
+	//update spawn interval
+	EntityManager::getInstance()->spawnTask->interval = max((int)(500 - this->score * 0.06), 300);
 	MainScene::UpdateScoreText();
 }

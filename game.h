@@ -15,7 +15,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::WAITING;
+	GameState state = GameState::RUNNING;
 	int deltaTime = 0;
 
 	//Game Data
