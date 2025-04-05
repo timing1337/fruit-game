@@ -22,7 +22,6 @@ void Renderer::PreRender() {
 void Renderer::Render() {
 	switch (GameManager::getInstance()->state) {
 	case GameState::WAITING:
-	case GameState::PREPARING:
 		MainMenu::Show();
 		break;
 	case GameState::STARTING:
@@ -37,32 +36,15 @@ void Renderer::Render() {
 }
 
 void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
+	if (e.button != SDL_BUTTON_LEFT) {
+		return;
+	}
 	switch (GameManager::getInstance()->state) {
 	case GameState::WAITING:
-		if (e.button != SDL_BUTTON_LEFT) {
-			return;
-		}
-
-		const SDL_Point center{ width / 2, height / 2 };
-
-		SDL_Point mousePos{ e.x, e.y };
-
-		GameTexture* playButton = GetTextureByName("ui/button_play");
-
-		SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
-
-		if (isPointInRect(mousePos, playButtonPos, playButton)) {
-			GameManager::getInstance()->FireStateChange(GameState::PREPARING);
-
-			this->PlayFadeTransition(
-				[this](TimerTask* self) {
-					SDL_Log("Starting game");
-					GameManager::getInstance()->FireStateChange(GameState::STARTING);
-				},
-				[this](TimerTask* self) {
-					this->PlayTitleAnimationAndStartGame();
-				});
-		}
+		MainMenu::OnMouseClick(e);
+		break;
+	case GameState::ENDGAME:
+		DeathScene::OnMouseClick(e);
 		break;
 	}
 }

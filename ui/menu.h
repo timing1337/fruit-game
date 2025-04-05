@@ -10,5 +10,6 @@ class MainMenu
 public:
 	static void Initialize();
 	static void Show();
+	static void OnMouseClick(SDL_MouseButtonEvent& e);
 };
 

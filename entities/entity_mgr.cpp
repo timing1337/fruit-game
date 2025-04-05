@@ -21,7 +21,7 @@ void EntityManager::Initialize() {
 				return;
 			}
 			SDL_Log("Spawning enemy");
-			int direction = 0;
+			int direction = entity_mgr->spawnDirection(entity_mgr->mt);
 			float speed = 200 + game_mgr->score * 5;
 			float angle = 0;
 			vec2_t position;
@@ -48,7 +48,6 @@ void EntityManager::Initialize() {
 }
 
 void EntityManager::Heartbeat(int deltaTicks) {
-	//Only when the game is running otherwise
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {

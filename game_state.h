@@ -3,7 +3,6 @@
 enum GameState {
 	WAITING,
 
-	PREPARING,
 	STARTING,
 
 	RUNNING,

@@ -1,7 +1,7 @@
 #include "repeated_task.h"
 #include <iostream>
 
-RepeatedTask::RepeatedTask(int interval, function<void(RepeatedTask* self)> onUpdate, function<void(RepeatedTask* self)> onComplete) :
+RepeatedTask::RepeatedTask(int interval, function<void(RepeatedTask* self)> onUpdate, function<void(RepeatedTask* self)> onComplete) : 
 	BaseTask(
         [onUpdate](BaseTask* self) { onUpdate(static_cast<RepeatedTask*>(self)); }, 
         [onComplete](BaseTask* self) { onComplete(static_cast<RepeatedTask*>(self)); }
@@ -11,7 +11,6 @@ RepeatedTask::RepeatedTask(int interval, function<void(RepeatedTask* self)> onUp
 
 void RepeatedTask::Update(int deltaTime) {
 	if (counter >= interval) {
-		cout << "RepeatedTask::Update::counter == interval" << endl;
 		counter = 0;
 		onUpdate(this);
 	}

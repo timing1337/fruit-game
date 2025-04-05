@@ -36,7 +36,11 @@ void MainScene::Show() {
 			MousePath* point = &GameManager::getInstance()->mousePathRecord->paths[i];
 			MousePath* nextPoint = &GameManager::getInstance()->mousePathRecord->paths[i + 1];
 
-			if (nextPoint->longevity - point->longevity > 900) continue;
+			float distance = sqrt(pow(point->point.x - nextPoint->point.x, 2) + pow(point->point.y - nextPoint->point.y, 2));
+
+			if (distance > 120) {
+				continue;
+			}
 
 			int alpha = point->longevity * 255 / 1000;
 			SDL_SurfaceDrawLine(gameCanvas, point->point, nextPoint->point, 255, 255, 255, alpha, 1);

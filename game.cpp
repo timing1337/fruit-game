@@ -144,17 +144,30 @@ void GameManager::OnWaiting() {
 }
 
 void GameManager::OnStarting() {
+	SDL_Log("GAME STATUS: STARTING");
+	SDL_Log("RESETTING GAME DATA");
 	this->remainingLives = 3;
 	this->score = 0;
 }
 
 void GameManager::OnRunning() {
+	SDL_Log("GAME STATUS: RUNNING");
 }
 
 void GameManager::OnPostgame() {
+	SDL_Log("GAME STATUS: POSTGAME");
+	EntityManager* entity_mgr = EntityManager::getInstance();
+
+	for (int i = 0; i < entity_mgr->entities.size(); i++) {
+		Entity* entity = entity_mgr->entities[i];
+		if (entity->alive) {
+			entity->despawn(EntityDeathType::UNKNOWN);
+		}
+	}
 }
 
 void GameManager::UpdateScore(int score) {
+	SDL_Log("Updating score: %d", score);
 	this->score += score;
 	//update spawn interval
 	EntityManager::getInstance()->spawnTask->interval = max((int)(500 - this->score * 0.06), 300);

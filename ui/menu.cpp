@@ -24,3 +24,27 @@ void MainMenu::Show() {
 		renderer->RenderText("ui/button_play", center.x, center.y);
 	}
 }
+
+void MainMenu::OnMouseClick(SDL_MouseButtonEvent& e) {
+	Renderer* renderer = Renderer::getInstance();
+	const int width = renderer->width;
+	const int height = renderer->height;
+	const SDL_Point center{ width / 2, height / 2 };
+
+	SDL_Point mousePos{ e.x, e.y };
+
+	GameTexture* playButton = renderer->GetTextureByName("ui/button_play");
+
+	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
+
+	if (isPointInRect(mousePos, playButtonPos, playButton)) {
+		renderer->PlayFadeTransition(
+		[](TimerTask* self) {
+			SDL_Log("Starting game");
+			GameManager::getInstance()->FireStateChange(GameState::STARTING);
+		},
+		[renderer](TimerTask* self) {
+			renderer->PlayTitleAnimationAndStartGame();
+		});
+	}
+}
