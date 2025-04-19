@@ -15,7 +15,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::ENDGAME;
+	GameState state = GameState::RUNNING;
 	int deltaTime = 0;
 
 	//Game Data
@@ -39,7 +39,8 @@ public:
 	void OnRunning();
 	void OnPostgame();
 
-	void UpdateScore(int score);
+	void AddScore(int score);
+	void SetScore(int score);
 
 	static GameManager* getInstance() {
 		return instancePtr;

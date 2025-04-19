@@ -20,9 +20,9 @@ void MainScene::Show() {
 	Renderer* renderer = Renderer::getInstance();
 	int x = 40;
 	int y = 40;
-	renderer->RenderText("ui/score_text", x, y, Alignment::RIGHT);
-	x += renderer->GetTextureByName("ui/score_text")->text->width;
-	renderer->RenderText(scoreText, x, y, Alignment::RIGHT);
+	renderer->RenderTexture("ui/score_text", x, y, Alignment::RIGHT);
+	x += renderer->GetTextureByName("ui/score_text")->width;
+	renderer->RenderTexture(scoreText, x, y, Alignment::RIGHT);
 
 	SDL_FillRect(gameCanvas, NULL, 0x000000);
 

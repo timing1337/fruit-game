@@ -89,7 +89,7 @@ void Renderer::PlayTitleAnimationAndStartGame() {
 			break;
 		}
 		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
-		this->RenderText(texture, this->width / 2, this->height / 2, Alignment::CENTER);
+		this->RenderTexture(texture, this->width / 2, this->height / 2, Alignment::CENTER);
 	},
 	[this](TimerTask* self) {
 			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
@@ -124,7 +124,7 @@ bool Renderer::LoadTextureByName(const char* name) {
 	game_texture->sprite = new Sprite();
 	game_texture->sprite->texture = texture;
 
-	SDL_QueryTexture(texture, NULL, NULL, &game_texture->sprite->width, &game_texture->sprite->height);
+	SDL_QueryTexture(texture, NULL, NULL, &game_texture->width, &game_texture->height);
 
 	textures[name] = game_texture;
 	return true;
@@ -177,12 +177,12 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 
 	GameTexture* textureData = new GameTexture();
 	textureData->type = GameTextureType::TEXT;
+	textureData->width = surface->w;
+	textureData->height = surface->h;
 
 	textureData->text = new RenderedText();
 	textureData->text->font = font;
 	textureData->text->text = texture;
-	textureData->text->width = surface->w;
-	textureData->text->height = surface->h;
 	textureData->text->outline = outlineSize;
 
 	TTF_SetFontOutline(font, outlineSize);
@@ -212,32 +212,40 @@ void Renderer::SetBackgroundColor(const int r, const int g, const int b, const i
 	SDL_RenderClear(gRenderer);
 }
 
-void Renderer::RenderText(const char* textureId, int x, int y, const Alignment align) {
+void Renderer::RenderTexture(const char* textureId, int x, int y, const Alignment align) {
 	GameTexture* texture = GetTextureByName(textureId);
-	RenderText(texture, x, y, align);
+	RenderTexture(texture, x, y, align);
 }
 
-void Renderer::RenderText(GameTexture* texture, int x, int y, const Alignment align) {
-	RenderedText* text = texture->text;
-
-	y -= text->height / 2;
+void Renderer::RenderTexture(GameTexture* texture, int x, int y, const Alignment align) {
+	y -= texture->height / 2;
 
 	switch (align) {
 	case Alignment::LEFT:
-		x -= text->width;
+		x -= texture->width;
 		break;
 	case Alignment::CENTER:
-		x -= text->width / 2;
+		x -= texture->width / 2;
 		break;
 	case Alignment::RIGHT:
 		break;
 	}
 
-	if (text->outline != 0) {
-		SDL_Rect outlineRect = { x - text->outline, y - text->outline, text->width, text->height };
-		SDL_RenderCopy(gRenderer, text->outlineText, NULL, &outlineRect);
-	}
+	SDL_Rect rect = { x, y, texture->width, texture->height };
 
-	SDL_Rect rect = { x, y, text->width, text->height };
-	SDL_RenderCopy(gRenderer, text->text, NULL, &rect);
+	switch (texture->type) {
+		case GameTextureType::SPRITE:
+			SDL_RenderCopy(gRenderer, texture->sprite->texture, NULL, &rect);
+		break;
+		case GameTextureType::TEXT:
+			RenderedText* text = texture->text;
+
+			if (text->outline != 0) {
+				SDL_Rect outlineRect = { x - text->outline, y - text->outline, texture->width, texture->height };
+				SDL_RenderCopy(gRenderer, text->outlineText, NULL, &outlineRect);
+			}
+
+			SDL_RenderCopy(gRenderer, text->text, NULL, &rect);
+		break;
+	}
 }

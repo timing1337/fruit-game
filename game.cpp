@@ -34,7 +34,9 @@ void GameManager::Heartbeat() {
 					int x, y;
 					SDL_GetMouseState(&x, &y);
 					
-					EntityManager::getInstance()->spawnEntity<Enemy>(vec2_t(x, y), 0, 0);
+					Enemy* enemy = new Enemy(vec2_t(x, y), 0, 0);
+					enemy->SetHitbox({ 20, 20 });
+					EntityManager::getInstance()->spawnEntity(enemy);
 				break;
 			}
 			break;
@@ -112,7 +114,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		for (auto& point : linePoints) {
 			for (auto& entity : EntityManager::getInstance()->entities) {
 				if (!entity->alive) continue;
-				if (entity->IsCollidingWithPoint(point.x, point.y)) {
+				if (entity->IsColliding(point.x, point.y)) {
 					entity->onHit();
 				}
 			}
@@ -141,13 +143,17 @@ void GameManager::FireStateChange(GameState state) {
 }
 
 void GameManager::OnWaiting() {
+	SDL_Log("GAME STATUS: STARTING");
+	SDL_Log("RESETTING GAME DATA");
+	this->remainingLives = 3;
+	SetScore(0);
 }
 
 void GameManager::OnStarting() {
 	SDL_Log("GAME STATUS: STARTING");
 	SDL_Log("RESETTING GAME DATA");
 	this->remainingLives = 3;
-	this->score = 0;
+	SetScore(0);
 }
 
 void GameManager::OnRunning() {
@@ -166,10 +172,14 @@ void GameManager::OnPostgame() {
 	}
 }
 
-void GameManager::UpdateScore(int score) {
+void GameManager::SetScore(int score) {
 	SDL_Log("Updating score: %d", score);
-	this->score += score;
+	this->score = score;
 	//update spawn interval
 	EntityManager::getInstance()->spawnTask->interval = max((int)(500 - this->score * 0.06), 300);
 	MainScene::UpdateScoreText();
+}
+
+void GameManager::AddScore(int score) {
+	SetScore(this->score + score);
 }

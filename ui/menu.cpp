@@ -15,13 +15,13 @@ void MainMenu::Show() {
 
 	GameTexture* playButton = renderer->GetTextureByName("ui/button_play");
 
-	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
+	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->width / 2, center.y };
 
 	if (isPointInRect(mousePos, playButtonPos, playButton)) {
-		renderer->RenderText("ui/button_play_hover", center.x, center.y);
+		renderer->RenderTexture("ui/button_play_hover", center.x, center.y);
 	}
 	else {
-		renderer->RenderText("ui/button_play", center.x, center.y);
+		renderer->RenderTexture("ui/button_play", center.x, center.y);
 	}
 }
 
@@ -35,7 +35,7 @@ void MainMenu::OnMouseClick(SDL_MouseButtonEvent& e) {
 
 	GameTexture* playButton = renderer->GetTextureByName("ui/button_play");
 
-	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->text->width / 2, center.y };
+	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->width / 2, center.y };
 
 	if (isPointInRect(mousePos, playButtonPos, playButton)) {
 		renderer->PlayFadeTransition(

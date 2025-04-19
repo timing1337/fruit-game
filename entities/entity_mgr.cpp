@@ -40,7 +40,9 @@ void EntityManager::Initialize() {
 				break;
 			}
 
-			entity_mgr->spawnEntity<Enemy>(position, speed, angle);
+			Enemy* enemy = new Enemy(position, speed, angle);
+			enemy->SetHitbox({ 20, 20 });
+			entity_mgr->spawnEntity(enemy);
 		},
 		[](RepeatedTask* self) {
 		}

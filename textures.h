@@ -8,17 +8,12 @@
 
 struct Sprite {
 	SDL_Texture* texture;
-	int width;
-	int height;
 };
 
 struct RenderedText {
 	TTF_Font* font;
 
 	int outline;
-
-	int width;
-	int height;
 
 	SDL_Texture* text;
 	SDL_Texture* outlineText;
@@ -32,6 +27,10 @@ enum GameTextureType {
 
 struct GameTexture {
 	GameTextureType type;
+
+	int width;
+	int height;
+
 	Sprite* sprite;
 	RenderedText* text;
 };

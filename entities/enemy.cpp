@@ -4,6 +4,10 @@ void Enemy::onHit() {
 	this->despawn(EntityDeathType::PLAYER_INTERACTION);
 }
 
+void Enemy::onTick(int deltaTicks) {
+	Entity::onTick(deltaTicks);
+}
+
 void Enemy::onDespawn(EntityDeathType type) {
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
@@ -22,7 +26,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 		break;
 		//Reduce player life
 	case EntityDeathType::PLAYER_INTERACTION:
-		GameManager::getInstance()->UpdateScore(this->scoreBase);
+		GameManager::getInstance()->AddScore(this->scoreBase);
 		Renderer* renderer = Renderer::getInstance();
 
 		TaskManager::getInstance()->RunTimerTask(400,
@@ -38,14 +42,19 @@ void Enemy::onDespawn(EntityDeathType type) {
 	}
 }
 
+
+//this should be in the base class but because of circular dependencies, i have not been able to do so
+//this is not a BIG issue but its annoying as f
+//TODO: think of a way to move it to the base class
+
 void Enemy::onRender() {
 	Renderer* renderer = Renderer::getInstance();
-	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
-
-	SDL_FRect rect = { position.x - 15, position.y - 15, 30, 30 };
-	SDL_RenderFillRectF(renderer->gRenderer, &rect);
-}
-
-bool Enemy::IsCollidingWithPoint(int x, int y){
-	return isPointInRect({ x, y }, { (int)position.x - 15, (int)position.y - 15 }, { 30, 30 });
+	if (entityTexture == nullptr) {
+		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
+		SDL_FRect rect = { position.x - hitbox.x / 2, position.y - hitbox.y / 2, hitbox.x, hitbox.y };
+		SDL_RenderFillRectF(renderer->gRenderer, &rect);
+	}
+	else {
+		renderer->RenderTexture(entityTexture, position.x, position.y, Alignment::CENTER);
+	}
 }

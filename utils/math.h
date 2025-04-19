@@ -39,7 +39,7 @@ inline float deg2rad(float degrees) {
 }
 
 inline bool isPointInRect(SDL_Point point, SDL_Point position, GameTexture* gameTexture) {
-	return point.x >= position.x && point.x <= position.x + gameTexture->text->width && point.y >= position.y && point.y <= position.y + gameTexture->text->height;
+	return point.x >= position.x && point.x <= position.x + gameTexture->width && point.y >= position.y && point.y <= position.y + gameTexture->height;
 }
 
 inline bool isPointInRect(SDL_Point point, SDL_Point position, SDL_Point size) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entities/entity.h"
-#include "entities/enemy.h"
 #include "utils/math.h"
 
 #include "task/task.h"
@@ -40,18 +39,7 @@ public:
 	void spawnTaskCallback(RepeatedTask* self);
 
 	template <typename T>
-	void spawnEntity(vec2_t position, vec2_t direction, vec2_t rotation = vec2_t(0, 0)) {
-		T* entity = new T();
-		entity->position = position;
-		entity->direction = direction;
-		entity->rotation = rotation;
-
+	void spawnEntity(T* entity) {
 		entities.push_back(entity);
-	}
-
-	template <typename T>
-	void spawnEntity(vec2_t position, float speed, float angle, vec2_t rotation = vec2_t(0, 0)) {
-		float radian = deg2rad(angle);
-		EntityManager::spawnEntity<T>(position, vec2_t(speed * cos(radian), speed * sin(radian)), rotation);
 	}
 };
