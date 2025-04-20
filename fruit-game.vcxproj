@@ -161,6 +161,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="draw\downsampling.cpp" />
+    <ClCompile Include="utils\gradient.cpp" />
     <ClCompile Include="task\types\repeated_task.cpp" />
     <ClCompile Include="task\task_state.h" />
     <ClCompile Include="task\types\base_task.cpp" />
@@ -175,13 +177,12 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="draw\surface_draw.cpp" />
-    <ClCompile Include="draw\post_processing.cpp" />
     <ClCompile Include="ui\main_scene.cpp" />
     <ClCompile Include="ui\menu.cpp" />
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="draw\blur.h" />
+    <ClInclude Include="draw\downsampling.h" />
     <ClInclude Include="task\types\repeated_task.h" />
     <ClInclude Include="task\types\base_task.h" />
     <ClInclude Include="game_state.h" />
@@ -196,8 +197,8 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="mouse_path.h" />
     <ClInclude Include="draw\surface_draw.h" />
-    <ClInclude Include="draw\post_processing.h" />
     <ClInclude Include="ui\main_scene.h" />
+    <ClInclude Include="utils\gradient.h" />
     <ClInclude Include="utils\math.h" />
     <ClInclude Include="ui\menu.h" />
     <ClInclude Include="render.h" />

@@ -6,7 +6,6 @@
 
 #include "game.h"
 #include "draw/surface_draw.h"
-#include "draw/post_processing.h"
 #include "mouse_path.h"
 #include "task/task.h"
 #include "task/types/timer_task.h"

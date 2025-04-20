@@ -13,8 +13,21 @@ void Particle::onTick(int deltaTicks) {
 void Particle::onRender() {
 	Renderer* renderer = Renderer::getInstance();
 	int calculatedOpacity = max(255 - ((this->aliveTicks * 255) / 1000), 0);
-	SDL_Rect fillRect = { (int)this->position.x - (int)this->hitbox.x / 2, (int)this->position.y - (int)this->hitbox.y / 2, (int)this->hitbox.x, (int)this->hitbox.y };
-	SDL_FillRect(MainScene::gameCanvas, &fillRect, (0xFF << 24) | (0xFF << 16) | (0xFF << 8) | calculatedOpacity);
+	int color = (0xFF << 24) | (0xFF << 16) | (0xFF << 8) | calculatedOpacity;
+
+	//first pass
+
+	int hitboxX = this->hitbox.x;
+	int hitboxY = this->hitbox.y;
+
+	SDL_Rect fillRect = { this->position.x - hitboxX / 2, this->position.y - this->hitbox.y / 2, hitboxX, this->hitbox.y };
+	SDL_FillRect(MainScene::gameCanvas, &fillRect, color);
+
+	int upscaledHitboxX = this->hitbox.x * 1.5f;
+	int upscaledHitboxY = this->hitbox.y * 1.5f;
+	SDL_Rect downsampledFillRect = { this->position.x - upscaledHitboxX / 2, this->position.y - upscaledHitboxY / 2, upscaledHitboxX, upscaledHitboxY};
+
+	SDL_FillRect(MainScene::downsampledGameCanvas, &downsampledFillRect, color);
 }
 
 void Particle::onDespawn(EntityDeathType type) {}

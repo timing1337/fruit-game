@@ -4,6 +4,7 @@
 #include "SDL_ttf.h"
 #include "SDL_timer.h"
 
+#include "draw/downsampling.h"
 #include "entities/entity_mgr.h"
 #include "game.h"
 #include "render.h"
@@ -39,6 +40,8 @@ int main(int argc, char* args[])
 	renderer->Initialize();
 	game_mgr->Initialize();
 	entity_mgr->Initialize();
+
+	Downsampling::Initialize();
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 

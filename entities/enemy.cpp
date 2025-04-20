@@ -33,7 +33,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 			TaskManager::getInstance()->RunTimerTask(400,
 				[renderer](TimerTask* self) {
 					SDL_Rect fillRect = { 0, 0, renderer->width, renderer->height };
-					int calculatedOpacity = max(100 - ((int)(self->GetProgress()) * 100), 0);
+					int calculatedOpacity = max(100 - ((int)(self->GetProgress() * 100)), 0);
 					SDL_SetRenderDrawColor(renderer->gRenderer, 255, 101, 88, calculatedOpacity);
 					SDL_RenderFillRect(renderer->gRenderer, &fillRect);
 				}, [](BaseTask* self) {});

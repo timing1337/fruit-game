@@ -39,9 +39,6 @@
     <ClCompile Include="draw\surface_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="draw\post_processing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils\algorithm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,6 +69,12 @@
     <ClCompile Include="task\types\timer_task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="draw\downsampling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\gradient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -99,9 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="draw\surface_draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="draw\post_processing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\algorithm.h">
@@ -134,7 +134,10 @@
     <ClInclude Include="task\types\timer_task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="draw\blur.h">
+    <ClInclude Include="draw\downsampling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\gradient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -48,12 +48,34 @@ void GameManager::Heartbeat(int deltaTicks) {
 		}
 	}
 
-	for (int i = 0; i < this->mousePathRecord->paths.size(); i++) {
-		MousePath* path = &this->mousePathRecord->paths[i];
-		path->longevity -= this->deltaTime;
-		if (path->longevity < 0) {
-			this->mousePathRecord->paths.erase(this->mousePathRecord->paths.begin() + i);
+	for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
+		MousePathRecord* record = this->mousePathRecordsLeftover[i];
+		if (record->paths.size() == 0) {
+			delete record;
+			this->mousePathRecordsLeftover.erase(this->mousePathRecordsLeftover.begin() + i);
+			continue;
 		}
+
+		for (int j = 0; j < record->paths.size(); j++) {
+			MousePath* path = &record->paths[j];
+			path->longevity -= this->deltaTime;
+			if (path->longevity <= 0) {
+				record->paths.erase(record->paths.begin() + j);
+			}
+		}
+
+		record->RecalculateDistance();
+	}
+
+	if (this->mousePathRecord != nullptr) {
+		for (int i = 0; i < this->mousePathRecord->paths.size(); i++) {
+			MousePath* path = &this->mousePathRecord->paths[i];
+			path->longevity -= this->deltaTime;
+			if (path->longevity <= 0) {
+				this->mousePathRecord->paths.erase(this->mousePathRecord->paths.begin() + i);
+			}
+		}
+		this->mousePathRecord->RecalculateDistance();
 	}
 
 	if (comboExpirationTick <= 0) {
@@ -77,7 +99,7 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	this->mousePathRecord->isRecording = true;
+	this->mousePathRecord = new MousePathRecord();
 	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
 }
 
@@ -90,16 +112,17 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (!this->mousePathRecord->isRecording) {
+	if (this->mousePathRecord == nullptr) {
 		return;
 	}
-
-	this->mousePathRecord->isRecording = false;
 
 	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
 		return;
 	}
+
 	this->mousePathRecord->AddPoint(SDL_Point{ e.x, e.y });
+	this->mousePathRecordsLeftover.push_back(this->mousePathRecord);
+	this->mousePathRecord = nullptr;
 }
 
 void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
@@ -107,7 +130,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (!this->mousePathRecord->isRecording) {
+	if (this->mousePathRecord == nullptr) {
 		return;
 	}
 

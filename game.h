@@ -17,7 +17,7 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::WAITING;
+	GameState state = GameState::RUNNING;
 	int deltaTime = 0;
 
 	mt19937 mt;
@@ -36,6 +36,7 @@ public:
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = new MousePathRecord();
+	vector<MousePathRecord*> mousePathRecordsLeftover;
 
 	void Initialize();
 
