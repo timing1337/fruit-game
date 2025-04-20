@@ -1,5 +1,6 @@
 #pragma once
 
+#include "entities/particle.h"
 #include "entities/entity.h"
 #include "utils/math.h"
 
@@ -29,17 +30,20 @@ public:
 
 	RepeatedTask* spawnTask = nullptr;
 
-	static void Initialize();
+	void Initialize();
 
 	static EntityManager* getInstance() {
 		return instancePtr;
 	}
 
 	void Heartbeat(int deltaTicks);
+	void CleanUp();
 	void spawnTaskCallback(RepeatedTask* self);
 
 	template <typename T>
 	void spawnEntity(T* entity) {
 		entities.push_back(entity);
 	}
+
+	void spawnParticle(vec2_t position);
 };

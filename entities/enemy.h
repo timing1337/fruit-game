@@ -1,7 +1,6 @@
 #pragma once
 
 #include "game.h"
-#include "entities/shard.h"
 #include "entities/entity.h"
 #include "utils/math.h"
 

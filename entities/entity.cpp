@@ -64,6 +64,5 @@ void Entity::despawn(EntityDeathType type) {
 	onDespawn(type);
 }
 
-void Entity::onDespawn(EntityDeathType type){
-	//Spawn shard lol
+void Entity::onDespawn(EntityDeathType type) {
 }

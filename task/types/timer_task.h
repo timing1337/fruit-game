@@ -11,5 +11,6 @@ public:
 	TimerTask(int duration, function<void(TimerTask* self)> onUpdate, function<void(TimerTask* self)> onComplete);
 
 	void Update(int deltaTick) override;
+	float GetProgress();
 };
 

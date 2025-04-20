@@ -12,7 +12,9 @@ void SDL_SurfaceDrawLines(SDL_Surface* surface, const SDL_Point* points, const i
 void SDL_SurfaceDrawLine(SDL_Surface* surface, SDL_Point start, SDL_Point end, const Uint8 r, const Uint8 g, const Uint8 b, const Uint8 a, const int thickness){
 	SDL_LockSurface(surface);
 
-	int color = SDL_MapRGBA(surface->format, r, g, b, a);
+	//SDL_MapRGBA(surface->format, r, g, b, a); is slow as hell so..
+	int color = (r << 24) | (g << 16) | (b << 8) | a;
+
 	int pitch = surface->pitch / sizeof(unsigned int);
 
 	Uint32* pixels = (Uint32*)surface->pixels;

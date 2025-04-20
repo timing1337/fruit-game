@@ -49,7 +49,7 @@ public:
 
 	const string game_data_path = fs::current_path().string() + "/game_data/";
 
-	static void Initialize();
+	void Initialize();
 
 	static Renderer* getInstance() {
 		return instancePtr;

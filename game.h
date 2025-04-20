@@ -5,8 +5,10 @@
 #include "entities/entity_mgr.h"
 #include "entities/enemy.h"
 #include "mouse_path.h"
-#include "render.h"
 #include "game_state.h"
+
+#include <ctime>  
+#include <random> 
 
 class GameManager
 {
@@ -15,18 +17,29 @@ public:
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::RUNNING;
+	GameState state = GameState::WAITING;
 	int deltaTime = 0;
+
+	mt19937 mt;
+	uniform_real_distribution<float> comboDistribution;
 
 	//Game Data
 	int score = 0;
 	int remainingLives = 3;
 	int lastUpdatedTicks = 0;
+	int currentCombo = 0;
+	int maxComboReached = 0;
+	int comboExpirationTick = 0;
+
+	//fast hack
+	bool isOnStateChange = false;
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = new MousePathRecord();
 
-	void Heartbeat();
+	void Initialize();
+
+	void Heartbeat(int deltaTicks);
 
 	void FireStateChange(GameState state);
 
@@ -41,6 +54,10 @@ public:
 
 	void AddScore(int score);
 	void SetScore(int score);
+
+	void SetCombo(int combo);
+	void AddCombo(int combo);
+	void ResetCombo();
 
 	static GameManager* getInstance() {
 		return instancePtr;

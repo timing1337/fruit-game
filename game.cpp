@@ -2,7 +2,12 @@
 
 GameManager* GameManager::instancePtr = new GameManager();
 
-void GameManager::Heartbeat() {
+void GameManager::Initialize() {
+	this->mt.seed(time(0));
+	this->comboDistribution = uniform_real_distribution<float>(0, 1);
+}
+
+void GameManager::Heartbeat(int deltaTicks) {
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
@@ -49,6 +54,13 @@ void GameManager::Heartbeat() {
 		if (path->longevity < 0) {
 			this->mousePathRecord->paths.erase(this->mousePathRecord->paths.begin() + i);
 		}
+	}
+
+	if (comboExpirationTick <= 0) {
+		if (currentCombo != 0) SetCombo(0);
+	}
+	else {
+		comboExpirationTick -= deltaTicks;
 	}
 }
 
@@ -112,7 +124,9 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		vector<SDL_Point> linePoints = getLinePoints(paths[paths.size() - 1].point, currentPoint);
 
 		for (auto& point : linePoints) {
-			for (auto& entity : EntityManager::getInstance()->entities) {
+
+			for (int i = 0; i < entity_mgr->entities.size(); i++) {
+				Entity* entity = entity_mgr->entities[i];
 				if (!entity->alive) continue;
 				if (entity->IsColliding(point.x, point.y)) {
 					entity->onHit();
@@ -176,10 +190,34 @@ void GameManager::SetScore(int score) {
 	SDL_Log("Updating score: %d", score);
 	this->score = score;
 	//update spawn interval
-	EntityManager::getInstance()->spawnTask->interval = max((int)(500 - this->score * 0.06), 300);
+	EntityManager::getInstance()->spawnTask->interval = max((int)(1000 - this->score * 0.01), 600);
 	MainScene::UpdateScoreText();
 }
 
 void GameManager::AddScore(int score) {
-	SetScore(this->score + score);
+
+	float multiplicationChance = max(0.01f + currentCombo * 0.05f, 0.5f);
+	if (this->comboDistribution(this->mt) < multiplicationChance) {
+		score *= 2;
+	}
+	SetScore(this->score + score );
+}
+
+void GameManager::SetCombo(int combo) {
+	currentCombo = combo;
+
+	if (currentCombo == 0) {
+		comboExpirationTick = 0;
+	}
+	else {
+		comboExpirationTick = max(1000 + currentCombo * 20, 2000);
+		if (currentCombo > maxComboReached) {
+			maxComboReached = currentCombo;
+		}
+	}
+	MainScene::UpdateComboText();
+}
+
+void GameManager::AddCombo(int combo) {
+	SetCombo(currentCombo + combo);
 }

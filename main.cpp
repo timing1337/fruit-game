@@ -31,25 +31,24 @@ int main(int argc, char* args[])
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-	Renderer::Initialize();
-
 	Renderer* renderer = Renderer::getInstance();
 	GameManager* game_mgr = GameManager::getInstance();
 	TaskManager* animation_mgr = TaskManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
 
-	EntityManager::Initialize();
+	renderer->Initialize();
+	game_mgr->Initialize();
+	entity_mgr->Initialize();
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
 	while (game_mgr->running) {
 		Uint32 current = SDL_GetTicks();
 		renderer->PreRender();
-		game_mgr->Heartbeat();
-
 		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks);
 
 		entity_mgr->Heartbeat(game_mgr->deltaTime);
+		game_mgr->Heartbeat(game_mgr->deltaTime);
 
 		renderer->Render();
 
@@ -57,6 +56,8 @@ int main(int argc, char* args[])
 
 		renderer->UpdateRender();
 		game_mgr->lastUpdatedTicks = current;
+
+		entity_mgr->CleanUp();
 	}
 
 	return 0;

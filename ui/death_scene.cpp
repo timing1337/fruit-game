@@ -58,13 +58,20 @@ void DeathScene::OnMouseClick(SDL_MouseButtonEvent& e) {
 	GameTexture* tryAgainButton = renderer->GetTextureByName("ui/button_try_again");
 	SDL_Point tryAgainButtonPos = SDL_Point{ center.x - tryAgainButton->width / 2, y };
 
+	if (GameManager::getInstance()->isOnStateChange) {
+		return;
+	}
+
 	if (isPointInRect(mousePos, tryAgainButtonPos, tryAgainButton)) {
+		GameManager::getInstance()->isOnStateChange = true;
+
 		renderer->PlayFadeTransition(
 			[](TimerTask* self) {
 				GameManager::getInstance()->FireStateChange(GameState::STARTING);
 			},
 			[renderer](TimerTask* self) {
 				renderer->PlayTitleAnimationAndStartGame();
+				GameManager::getInstance()->isOnStateChange = false;
 			}
 		);
 	}
@@ -74,11 +81,13 @@ void DeathScene::OnMouseClick(SDL_MouseButtonEvent& e) {
 	GameTexture* backMenuButton = renderer->GetTextureByName("ui/button_back_menu");
 	SDL_Point backMenuButtonPos = SDL_Point{ center.x - backMenuButton->width / 2, y};
 	if (isPointInRect(mousePos, backMenuButtonPos, backMenuButton)) {
+		GameManager::getInstance()->isOnStateChange = true;
 		renderer->PlayFadeTransition(
 			[](TimerTask* self) {
 				GameManager::getInstance()->FireStateChange(GameState::WAITING);
 			},
 			[](TimerTask* self) {
+				GameManager::getInstance()->isOnStateChange = false;
 			}
 		);
 	}

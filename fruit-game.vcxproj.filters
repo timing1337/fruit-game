@@ -54,7 +54,7 @@
     <ClCompile Include="entities\enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\shard.cpp">
+    <ClCompile Include="entities\particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ui\death_scene.cpp">
@@ -116,7 +116,7 @@
     <ClInclude Include="entities\enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\shard.h">
+    <ClInclude Include="entities\particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\death_scene.h">
@@ -132,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="task\types\timer_task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="draw\blur.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

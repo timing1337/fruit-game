@@ -37,7 +37,12 @@ void MainMenu::OnMouseClick(SDL_MouseButtonEvent& e) {
 
 	SDL_Point playButtonPos = SDL_Point{ center.x - playButton->width / 2, center.y };
 
+	if (GameManager::getInstance()->isOnStateChange) {
+		return;
+	}
+
 	if (isPointInRect(mousePos, playButtonPos, playButton)) {
+		GameManager::getInstance()->isOnStateChange = true;
 		renderer->PlayFadeTransition(
 		[](TimerTask* self) {
 			SDL_Log("Starting game");
@@ -45,6 +50,7 @@ void MainMenu::OnMouseClick(SDL_MouseButtonEvent& e) {
 		},
 		[renderer](TimerTask* self) {
 			renderer->PlayTitleAnimationAndStartGame();
+			GameManager::getInstance()->isOnStateChange = false;
 		});
 	}
 }

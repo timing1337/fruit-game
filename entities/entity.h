@@ -10,6 +10,11 @@ enum EntityDeathType {
     PLAYER_INTERACTION
 };
 
+enum EntityType {
+	PARTICLE,
+	ENEMY,
+};
+
 class Entity
 {
 public:

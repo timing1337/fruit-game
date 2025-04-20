@@ -169,7 +169,7 @@
     <ClCompile Include="entities\enemy.cpp" />
     <ClCompile Include="entities\entity_mgr.cpp" />
     <ClCompile Include="entities\entity.cpp" />
-    <ClCompile Include="entities\shard.cpp" />
+    <ClCompile Include="entities\particle.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="task\task.cpp" />
     <ClCompile Include="game.cpp" />
@@ -181,6 +181,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="draw\blur.h" />
     <ClInclude Include="task\types\repeated_task.h" />
     <ClInclude Include="task\types\base_task.h" />
     <ClInclude Include="game_state.h" />
@@ -189,7 +190,7 @@
     <ClInclude Include="entities\enemy.h" />
     <ClInclude Include="entities\entity_mgr.h" />
     <ClInclude Include="entities\entity.h" />
-    <ClInclude Include="entities\shard.h" />
+    <ClInclude Include="entities\particle.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="task\task.h" />
     <ClInclude Include="game.h" />
