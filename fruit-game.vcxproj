@@ -182,6 +182,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constant.h" />
     <ClInclude Include="draw\downsampling.h" />
     <ClInclude Include="task\types\repeated_task.h" />
     <ClInclude Include="task\types\base_task.h" />

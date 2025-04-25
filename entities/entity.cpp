@@ -40,12 +40,12 @@ void Entity::onTick(int deltaTicks) {
 		return;
 	}
 
-	if (this->position.x < -50 || this->position.x > 1490) {//screen y bound
+	if (this->position.x < -50 || this->position.x > RENDERER_WIDTH) {//screen x bound
 		this->despawn(EntityDeathType::OUT_OF_BOUND);
 		return;
 	}
 
-	if (this->position.y < -50 || this->position.y > 860) { //screen x bound
+	if (this->position.y < -50 || this->position.y > RENDERER_HEIGHT) { //screen y bound
 		this->despawn(EntityDeathType::OUT_OF_BOUND);
 		return;
 	}
@@ -53,7 +53,7 @@ void Entity::onTick(int deltaTicks) {
 	float deltaSeconds = deltaTicks / 1000.0f;
 
 	//Gravity
-	this->direction.y -= 250 * deltaSeconds;
+	this->direction.y -= GRAVITY_SPEED * deltaSeconds;
 
 	this->position.x += this->direction.x * deltaSeconds;
 	this->position.y -= this->direction.y * deltaSeconds;

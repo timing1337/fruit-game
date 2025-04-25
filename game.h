@@ -53,6 +53,8 @@ public:
 	void OnRunning();
 	void OnPostgame();
 
+	void ResetGameData();
+
 	void AddScore(int score);
 	void SetScore(int score);
 

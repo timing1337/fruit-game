@@ -4,7 +4,7 @@ Renderer* Renderer::instancePtr = new Renderer();
 
 void Renderer::Initialize() {
 	Renderer* renderer = getInstance();
-	renderer->gWindow = SDL_CreateWindow("game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, renderer->width, renderer->height, SDL_WINDOW_OPENGL);
+	renderer->gWindow = SDL_CreateWindow("game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RENDERER_WIDTH, RENDERER_HEIGHT, SDL_WINDOW_OPENGL);
 	renderer->gRenderer = SDL_CreateRenderer(renderer->gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
 	SDL_SetRenderDrawBlendMode(renderer->gRenderer, SDL_BLENDMODE_BLEND);
@@ -49,33 +49,33 @@ void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
 	}
 }
 
+void Renderer::SetBackgroundColor(const int r, const int g, const int b, const int a) {
+	SDL_Rect fillRect = { 0, 0, RENDERER_WIDTH, RENDERER_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
+	SDL_RenderFillRect(gRenderer, &fillRect);
+}
+
 void Renderer::PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete) {
-	TaskManager::getInstance()->RunTimerTask(500,
+	TaskManager::getInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
 		[this](TimerTask* self) {
-			SDL_Rect fillRect = { 0, 0, this->width, this->height };
 			int calculatedOpacity = self->GetProgress() * 255;
-			SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
-			SDL_RenderFillRect(this->gRenderer, &fillRect);
+			SetBackgroundColor(0, 0, 0, self->GetProgress() * 255);
 		}, [this, onTransitioned, onComplete](TimerTask* self) {
 			onTransitioned(self);
-			TaskManager::getInstance()->RunTimerTask(500,
+			TaskManager::getInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
 				[this](TimerTask* self) {
-					SDL_Rect fillRect = { 0, 0, this->width, this->height };
-					int calculatedOpacity = 255 - (self->GetProgress() * 255);
-					SDL_SetRenderDrawColor(this->gRenderer, 0, 0, 0, calculatedOpacity);
-					SDL_RenderFillRect(this->gRenderer, &fillRect);
+					SetBackgroundColor(0, 0, 0, 255 - (self->GetProgress() * 255));
 				},
 				onComplete);
 		});
 }
 
 void Renderer::PlayTitleAnimationAndStartGame() {
-	TaskManager::getInstance()->RunTimerTask(4 * 500, [this](TimerTask* self) {
-		int second = 3 - self->counter / 500;
+	TaskManager::getInstance()->RunTimerTask(4 * TITLE_COOLDOWN_TICKS, [this](TimerTask* self) {
+		int second = 3 - self->counter / TITLE_COOLDOWN_TICKS;
 		GameTexture* texture;
-		//how many ticks left for fading
-		int fadingTicks = self->counter % 500;
-		float fadingProgress = (float)fadingTicks / 500;
+		int fadingTicks = self->counter % TITLE_COOLDOWN_TICKS;
+		float fadingProgress = (float)fadingTicks / TITLE_COOLDOWN_TICKS;
 		int calculatedOpacity = 255 - fadingProgress * 255;
 		switch (second) {
 		case 1:
@@ -92,7 +92,7 @@ void Renderer::PlayTitleAnimationAndStartGame() {
 			break;
 		}
 		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
-		this->RenderTexture(texture, this->width / 2, this->height / 2, Alignment::CENTER);
+		this->RenderTexture(texture, RENDERER_CENTER_X, RENDERER_CENTER_Y, Alignment::CENTER);
 	},
 	[this](TimerTask* self) {
 			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
@@ -208,11 +208,6 @@ void Renderer::RenderTextureBackground(const char* textureId) {
 	GameTexture* texture = GetTextureByName(textureId);
 	Sprite* sprite = texture->sprite;
 	SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
-}
-
-void Renderer::SetBackgroundColor(const int r, const int g, const int b, const int a) {
-	SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
-	SDL_RenderClear(gRenderer);
 }
 
 void Renderer::RenderTexture(const char* textureId, int x, int y, const Alignment align) {

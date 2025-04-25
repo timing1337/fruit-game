@@ -12,7 +12,7 @@ void DeathScene::Initialize() {
 
 void DeathScene::Show() {
 	Renderer* renderer = Renderer::getInstance();
-	const SDL_Point center = SDL_Point{ renderer->width / 2, renderer->height / 2 };
+	const SDL_Point center = SDL_Point{ RENDERER_CENTER_X, RENDERER_CENTER_Y };
 	int y = center.y - 150;
 	renderer->RenderTexture("ui/death_title", center.x, y);
 	y += 30;
@@ -47,10 +47,7 @@ void DeathScene::Show() {
 
 void DeathScene::OnMouseClick(SDL_MouseButtonEvent& e) {
 	Renderer* renderer = Renderer::getInstance();
-	const int width = renderer->width;
-	const int height = renderer->height;
-	const SDL_Point center{ width / 2, height / 2 };
-
+	const SDL_Point center{ RENDERER_WIDTH, RENDERER_HEIGHT };
 	SDL_Point mousePos{ e.x, e.y };
 
 	int y = center.y - 40;

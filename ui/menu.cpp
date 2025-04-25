@@ -8,7 +8,7 @@ void MainMenu::Initialize() {
 
 void MainMenu::Show() {
 	Renderer* renderer = Renderer::getInstance();
-	const SDL_Point center = SDL_Point{ renderer->width / 2, renderer->height / 2 };
+	const SDL_Point center = SDL_Point{ RENDERER_CENTER_X, RENDERER_CENTER_Y };
 	SDL_Point mousePos = SDL_Point{ 0, 0 };
 	
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
@@ -27,9 +27,7 @@ void MainMenu::Show() {
 
 void MainMenu::OnMouseClick(SDL_MouseButtonEvent& e) {
 	Renderer* renderer = Renderer::getInstance();
-	const int width = renderer->width;
-	const int height = renderer->height;
-	const SDL_Point center{ width / 2, height / 2 };
+	const SDL_Point center{ RENDERER_CENTER_X, RENDERER_CENTER_Y };
 
 	SDL_Point mousePos{ e.x, e.y };
 

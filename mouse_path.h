@@ -1,6 +1,6 @@
 #pragma once
 
-#
+#include "constant.h"
 #include "utils/math.h"
 
 #include <vector>
@@ -21,7 +21,7 @@ struct MousePathRecord {
 	void AddPoint(SDL_Point point) {
 		MousePath path;
 		path.point = point;
-		path.longevity = 500;
+		path.longevity = POINT_LONGEVITY;
 		paths.push_back(path);
 	}
 
@@ -33,7 +33,7 @@ struct MousePathRecord {
 		for (int i = 0; i < this->paths.size() - 1; i++) {
 			MousePath& path = this->paths[i];
 			MousePath& lastPath = this->paths[i + 1];
-			this->distance += sqrt(pow(path.point.x - lastPath.point.x, 2) + pow(path.point.y - lastPath.point.y, 2));
+			this->distance += (float)sqrt(pow(path.point.x - lastPath.point.x, 2) + pow(path.point.y - lastPath.point.y, 2));
 
 		}
 	}

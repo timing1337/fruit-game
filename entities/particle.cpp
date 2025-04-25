@@ -2,7 +2,7 @@
 
 void Particle::onTick(int deltaTicks) {
 	this->aliveTicks += deltaTicks;
-	if (this->aliveTicks > 1000) {
+	if (this->aliveTicks >= PARTICLE_ALIVE_TICK) {
 		SDL_Log("Particle despawned due to time limit");
 		this->despawn(EntityDeathType::UNKNOWN);
 		return;
@@ -12,8 +12,9 @@ void Particle::onTick(int deltaTicks) {
 
 void Particle::onRender() {
 	Renderer* renderer = Renderer::getInstance();
-	int calculatedOpacity = max(255 - ((this->aliveTicks * 255) / 1000), 0);
-	int color = (0xFF << 24) | (0xFF << 16) | (0xFF << 8) | calculatedOpacity;
+	float progress = (float)this->aliveTicks / PARTICLE_ALIVE_TICK;
+	int calculatedOpacity = max(0, (int)(255 - (progress * 255)));
+	int color = (255 << 24) | (255 << 16) | (255 << 8) | calculatedOpacity;
 
 	//first pass
 

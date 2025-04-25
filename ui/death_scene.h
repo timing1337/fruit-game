@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constant.h"
 #include "render.h"
 
 class DeathScene

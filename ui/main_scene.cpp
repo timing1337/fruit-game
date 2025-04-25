@@ -17,9 +17,9 @@ void MainScene::Initialize() {
 
 	scoreText = renderer->CreateText("0", "Helvetica-Bold", 24, { 255, 255, 255, 255 });
 	comboText = renderer->CreateText("0", "Helvetica-Bold", 20, { 255, 255, 255, 255 });
-	gameCanvas = SDL_CreateRGBSurfaceWithFormat(0, renderer->width, renderer->height, 32, SDL_PIXELFORMAT_RGBA8888);
+	gameCanvas = SDL_CreateRGBSurfaceWithFormat(0, RENDERER_WIDTH, RENDERER_HEIGHT, 32, SDL_PIXELFORMAT_RGBA8888);
 	SDL_SetSurfaceBlendMode(gameCanvas, SDL_BLENDMODE_BLEND);
-	downsampledGameCanvas = SDL_CreateRGBSurfaceWithFormat(0, renderer->width, renderer->height, 32, SDL_PIXELFORMAT_RGBA8888);
+	downsampledGameCanvas = SDL_CreateRGBSurfaceWithFormat(0, RENDERER_WIDTH, RENDERER_HEIGHT, 32, SDL_PIXELFORMAT_RGBA8888);
 	SDL_SetSurfaceBlendMode(downsampledGameCanvas, SDL_BLENDMODE_BLEND);
 
 }
@@ -70,14 +70,14 @@ void MainScene::Show() {
 	//purely because we missing the blurring step so it looks inconsistent and really blocky
 	//theres no "fast" way to do this since doing this w/o shader is basically burning your cpu
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->gRenderer, gameCanvas);
-	SDL_Texture* downsampledGameCanvasTexture = SDL_CreateTextureFromSurface(renderer->gRenderer, downsampledGameCanvas);
-	Downsampling::Downsample(downsampledGameCanvasTexture);
-	Downsampling::Render();
+	//SDL_Texture* downsampledGameCanvasTexture = SDL_CreateTextureFromSurface(renderer->gRenderer, downsampledGameCanvas);
+	//Downsampling::Downsample(downsampledGameCanvasTexture);
+	//Downsampling::Render();
 
 	SDL_RenderCopy(renderer->gRenderer, texture, NULL, NULL);
 	
 	SDL_DestroyTexture(texture);
-	SDL_DestroyTexture(downsampledGameCanvasTexture);
+	//SDL_DestroyTexture(downsampledGameCanvasTexture);
 
 	int x = 40;
 	int y = 40;
@@ -92,13 +92,13 @@ void MainScene::Show() {
 
 		GameTexture* comboTitleText = renderer->GetTextureByName("ui/combo_text");
 
-		int comboX = renderer->width / 2;
+		int comboX = RENDERER_CENTER_X;
 		renderer->RenderTexture(comboTitleText, comboX, 40, Alignment::RIGHT);
 		comboX += comboTitleText->width;
 		renderer->RenderTexture(comboText, comboX, 40, Alignment::RIGHT);
 
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
-		SDL_Rect fillRect = { renderer->width / 2 - 100, 40 + comboTitleText->height / 2, width, 15 };
+		SDL_Rect fillRect = { RENDERER_CENTER_X - 100, 40 + comboTitleText->height / 2, width, 15 };
 		SDL_RenderFillRect(renderer->gRenderer, &fillRect);
 	}
 }

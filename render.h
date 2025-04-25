@@ -43,9 +43,6 @@ public:
 	unordered_map<string, TTF_Font*> fonts;
 	unordered_map<string, GameTexture*> textures;
 
-	const int width = 1440;
-	const int height = 810;
-
 	const string game_data_path = fs::current_path().string() + "/game_data/";
 
 	void Initialize();

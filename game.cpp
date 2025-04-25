@@ -95,7 +95,7 @@ void GameManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
+	if (e.x < 0 || e.y < 0 || e.x > RENDERER_WIDTH || e.y > RENDERER_HEIGHT) {
 		return;
 	}
 
@@ -116,7 +116,7 @@ void GameManager::OnMouseRelease(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
+	if (e.x < 0 || e.y < 0 || e.x > RENDERER_WIDTH || e.y > RENDERER_HEIGHT) {
 		return;
 	}
 
@@ -134,7 +134,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	if (e.x < 0 || e.y < 0 || e.x > Renderer::getInstance()->width || e.y > Renderer::getInstance()->height) {
+	if (e.x < 0 || e.y < 0 || e.x > RENDERER_WIDTH || e.y > RENDERER_HEIGHT) {
 		return;
 	}
 
@@ -179,18 +179,23 @@ void GameManager::FireStateChange(GameState state) {
 	}
 }
 
+
+void GameManager::ResetGameData() {
+	SetScore(0);
+	SetCombo(0);
+	this->remainingLives = MAX_LIVES;
+}
+
 void GameManager::OnWaiting() {
 	SDL_Log("GAME STATUS: STARTING");
 	SDL_Log("RESETTING GAME DATA");
-	this->remainingLives = 3;
-	SetScore(0);
+	GameManager::ResetGameData();
 }
 
 void GameManager::OnStarting() {
 	SDL_Log("GAME STATUS: STARTING");
 	SDL_Log("RESETTING GAME DATA");
-	this->remainingLives = 3;
-	SetScore(0);
+	GameManager::ResetGameData();
 }
 
 void GameManager::OnRunning() {
@@ -219,7 +224,7 @@ void GameManager::SetScore(int score) {
 
 void GameManager::AddScore(int score) {
 
-	float multiplicationChance = max(0.01f + currentCombo * 0.05f, 0.5f);
+	float multiplicationChance = max(COMBO_MULTIPLICATION_BASE + currentCombo * COMBO_MULTIPLICATION_MULTIPLIER, COMBO_MULTIPLICATION_MAX);
 	if (this->comboDistribution(this->mt) < multiplicationChance) {
 		score *= 2;
 	}
@@ -233,7 +238,7 @@ void GameManager::SetCombo(int combo) {
 		comboExpirationTick = 0;
 	}
 	else {
-		comboExpirationTick = max(1000 + currentCombo * 20, 2000);
+		comboExpirationTick = max(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
 		if (currentCombo > maxComboReached) {
 			maxComboReached = currentCombo;
 		}

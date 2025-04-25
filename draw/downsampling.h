@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constant.h"
 #include "SDL.h"
 #include "render.h"
 

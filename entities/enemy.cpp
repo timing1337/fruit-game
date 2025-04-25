@@ -15,27 +15,21 @@ void Enemy::onDespawn(EntityDeathType type) {
 
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
-		if (game_mgr->state != GameState::RUNNING) return;
-		SDL_Log("Enemy despawned due to out of bound. Reducing lives");
 		game_mgr->remainingLives--;
 
 		game_mgr->SetCombo(0);
 
 		if (game_mgr->remainingLives == 0) {
-			SDL_Log("Triggering post game");
 			game_mgr->FireStateChange(GameState::POSTGAME);
 			renderer->PlayFadeTransition([this, game_mgr](BaseTask* self) {
 				game_mgr->FireStateChange(GameState::ENDGAME);
-				SDL_Log("Game ended");
 			}, [this](BaseTask* self) {});
 		}
 		else {
-			TaskManager::getInstance()->RunTimerTask(400,
+			TaskManager::getInstance()->RunTimerTask(ENTITY_DEATH_IMPACT,
 				[renderer](TimerTask* self) {
-					SDL_Rect fillRect = { 0, 0, renderer->width, renderer->height };
 					int calculatedOpacity = max(100 - ((int)(self->GetProgress() * 100)), 0);
-					SDL_SetRenderDrawColor(renderer->gRenderer, 255, 101, 88, calculatedOpacity);
-					SDL_RenderFillRect(renderer->gRenderer, &fillRect);
+					renderer->SetBackgroundColor(255, 101, 88, calculatedOpacity);
 				}, [](BaseTask* self) {});
 		}
 		break;
@@ -43,12 +37,10 @@ void Enemy::onDespawn(EntityDeathType type) {
 	case EntityDeathType::PLAYER_INTERACTION:
 		game_mgr->AddScore(this->scoreBase);
 		game_mgr->AddCombo(1);
-		TaskManager::getInstance()->RunTimerTask(400,
+		TaskManager::getInstance()->RunTimerTask(ENTITY_KILL_IMPACT,
 			[renderer](TimerTask* self) {
-				SDL_Rect fillRect = { 0, 0, renderer->width, renderer->height };
 				int calculatedOpacity = max(100 - ((int)(self->GetProgress() * 100)), 0);
-				SDL_SetRenderDrawColor(renderer->gRenderer, 127, 250, 160, calculatedOpacity);
-				SDL_RenderFillRect(renderer->gRenderer, &fillRect);
+				renderer->SetBackgroundColor(127, 250, 160, calculatedOpacity);
 			}, [](BaseTask* self) {});
 
 		EntityManager::getInstance()->spawnParticle(this->position);

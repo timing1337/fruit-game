@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constant.h"
 #include "textures.h"
 #include "utils/algorithm.h"
 #include "utils/math.h"
