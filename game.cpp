@@ -5,6 +5,7 @@ GameManager* GameManager::instancePtr = new GameManager();
 void GameManager::Initialize() {
 	this->mt.seed(time(0));
 	this->comboDistribution = uniform_real_distribution<float>(0, 1);
+	this->gameData = new GameData("game_data.dat");
 }
 
 void GameManager::Heartbeat(int deltaTicks) {
@@ -206,29 +207,35 @@ void GameManager::OnPostgame() {
 	SDL_Log("GAME STATUS: POSTGAME");
 	EntityManager* entity_mgr = EntityManager::getInstance();
 
+	SDL_Log("Force killing the remaining entities");
 	for (int i = 0; i < entity_mgr->entities.size(); i++) {
 		Entity* entity = entity_mgr->entities[i];
 		if (entity->alive) {
 			entity->despawn(EntityDeathType::UNKNOWN);
 		}
 	}
+
+	SDL_Log("Saving game data file");
+	this->gameData->Save();
 }
 
 void GameManager::SetScore(int score) {
 	SDL_Log("Updating score: %d", score);
 	this->score = score;
 	//update spawn interval
+	if (this->score > this->gameData->highestScore) {
+		this->gameData->highestScore = this->score;
+	}
 	EntityManager::getInstance()->spawnTask->interval = max((int)(1000 - this->score * 0.01), 600);
 	MainScene::UpdateScoreText();
 }
 
 void GameManager::AddScore(int score) {
-
 	float multiplicationChance = max(COMBO_MULTIPLICATION_BASE + currentCombo * COMBO_MULTIPLICATION_MULTIPLIER, COMBO_MULTIPLICATION_MAX);
 	if (this->comboDistribution(this->mt) < multiplicationChance) {
 		score *= 2;
 	}
-	SetScore(this->score + score );
+	SetScore(this->score + score);
 }
 
 void GameManager::SetCombo(int combo) {
@@ -239,8 +246,8 @@ void GameManager::SetCombo(int combo) {
 	}
 	else {
 		comboExpirationTick = max(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
-		if (currentCombo > maxComboReached) {
-			maxComboReached = currentCombo;
+		if (currentCombo > this->gameData->highestComboAchived) {
+			this->gameData->highestComboAchived = currentCombo;
 		}
 	}
 	MainScene::UpdateComboText();

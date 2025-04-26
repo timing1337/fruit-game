@@ -75,6 +75,9 @@
     <ClCompile Include="utils\gradient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="game_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -141,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="constant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

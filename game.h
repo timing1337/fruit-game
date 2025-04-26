@@ -9,6 +9,7 @@
 
 #include <ctime>  
 #include <random> 
+#include <game_data.h>
 
 class GameManager
 {
@@ -24,11 +25,11 @@ public:
 	uniform_real_distribution<float> comboDistribution;
 
 	//Game Data
+	GameData* gameData;
 	int score = 0;
 	int remainingLives = 3;
 	int lastUpdatedTicks = 0;
 	int currentCombo = 0;
-	int maxComboReached = 0;
 	int comboExpirationTick = 0;
 
 	//fast hack

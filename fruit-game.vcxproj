@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="draw\downsampling.cpp" />
+    <ClCompile Include="game_data.cpp" />
     <ClCompile Include="utils\gradient.cpp" />
     <ClCompile Include="task\types\repeated_task.cpp" />
     <ClCompile Include="task\task_state.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="constant.h" />
     <ClInclude Include="draw\downsampling.h" />
+    <ClInclude Include="game_data.h" />
     <ClInclude Include="task\types\repeated_task.h" />
     <ClInclude Include="task\types\base_task.h" />
     <ClInclude Include="game_state.h" />

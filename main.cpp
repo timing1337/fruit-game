@@ -37,8 +37,8 @@ int main(int argc, char* args[])
 	TaskManager* animation_mgr = TaskManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
 
-	renderer->Initialize();
 	game_mgr->Initialize();
+	renderer->Initialize();
 	entity_mgr->Initialize();
 
 	Downsampling::Initialize();

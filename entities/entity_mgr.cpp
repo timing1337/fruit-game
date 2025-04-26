@@ -13,8 +13,6 @@ void EntityManager::Initialize() {
 	entity_mgr->spawnTask = TaskManager::getInstance()->RunRepeatedTask(1000,
 		[entity_mgr, game_mgr](RepeatedTask* self) {
 			if (game_mgr->state != GameState::RUNNING) return;
-			//spawn successful rate
-			//base rate 0.4 + 0.03 per 1 score
 			float baseRate = max(ENEMY_SPAWN_BASE_RATE + game_mgr->score * ENEMY_SPAWN_RATE_MULTIPLIER, ENEMY_SPAWN_RATE_MAX);
 			SDL_Log("Base rate: %f", baseRate);
 			float rate = entity_mgr->distribution(entity_mgr->mt);
