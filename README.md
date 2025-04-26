@@ -1,6 +1,6 @@
 # fruit-game
-## A game project for my Advance Programming class @ UET-VNU
 
+## A game project for my Advance Programming class @ UET-VNU
 
 ### File-save
 * Structure:
