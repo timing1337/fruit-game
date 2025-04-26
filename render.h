@@ -4,16 +4,11 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 
-#include "game.h"
 #include "draw/surface_draw.h"
 #include "mouse_path.h"
 #include "task/task.h"
 #include "task/types/timer_task.h"
 #include "textures.h"
-
-#include "ui/menu.h"
-#include "ui/main_scene.h"
-#include "ui/death_scene.h"
 
 #include <functional>
 #include <filesystem>
@@ -30,7 +25,6 @@ enum Alignment{
 };
 
 class BaseTask;
-enum GameState;
 
 class Renderer {
 private:

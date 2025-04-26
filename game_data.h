@@ -17,7 +17,7 @@ public:
 
 	uint32_t highestScore = 0;
 	uint32_t highestComboAchived = 0;
-	uint32_t longestTimeAlive = 0;
+	uint64_t longestTimeAlive = 0;
 
 	GameData(string path);
 	void Save();

@@ -2,9 +2,6 @@
 
 #include "SDL.h"
 
-#include "game.h"
-#include "render.h"
-
 #include "task/types/base_task.h"
 #include "task/types/timer_task.h"
 #include "task/types/repeated_task.h"

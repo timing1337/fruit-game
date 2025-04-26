@@ -8,45 +8,11 @@ void Renderer::Initialize() {
 	renderer->gRenderer = SDL_CreateRenderer(renderer->gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
 	SDL_SetRenderDrawBlendMode(renderer->gRenderer, SDL_BLENDMODE_BLEND);
-
-	MainMenu::Initialize();
-	MainScene::Initialize();
-	DeathScene::Initialize();
 }
 
 void Renderer::PreRender() {
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
 	SDL_RenderClear(this->gRenderer);
-}
-
-void Renderer::Render() {
-	switch (GameManager::getInstance()->state) {
-	case GameState::WAITING:
-		MainMenu::Show();
-		break;
-	case GameState::STARTING:
-	case GameState::RUNNING:
-	case GameState::POSTGAME:
-		MainScene::Show();
-		break;
-	case GameState::ENDGAME:
-		DeathScene::Show();
-		break;
-	}
-}
-
-void Renderer::OnMouseClick(SDL_MouseButtonEvent& e) {
-	if (e.button != SDL_BUTTON_LEFT) {
-		return;
-	}
-	switch (GameManager::getInstance()->state) {
-	case GameState::WAITING:
-		MainMenu::OnMouseClick(e);
-		break;
-	case GameState::ENDGAME:
-		DeathScene::OnMouseClick(e);
-		break;
-	}
 }
 
 void Renderer::SetBackgroundColor(const int r, const int g, const int b, const int a) {
@@ -177,6 +143,7 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 	SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(gRenderer, surface);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
 	GameTexture* textureData = new GameTexture();
 	textureData->type = GameTextureType::TEXT;
@@ -193,6 +160,7 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 	if (outlineSize != 0) {
 		SDL_Surface* outlineSurface = TTF_RenderText_Blended(font, text, outlineColor);
 		SDL_Texture* outlineTexture = SDL_CreateTextureFromSurface(gRenderer, outlineSurface);
+		SDL_SetTextureBlendMode(outlineTexture, SDL_BLENDMODE_BLEND);
 
 		textureData->text->outlineText = outlineTexture;
 

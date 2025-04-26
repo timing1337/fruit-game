@@ -20,7 +20,7 @@ void Particle::onRender() {
 
 	int hitboxX = this->hitbox.x;
 	int hitboxY = this->hitbox.y;
-
+	/*
 	SDL_Rect fillRect = { this->position.x - hitboxX / 2, this->position.y - this->hitbox.y / 2, hitboxX, this->hitbox.y };
 	SDL_FillRect(MainScene::gameCanvas, &fillRect, color);
 
@@ -29,6 +29,7 @@ void Particle::onRender() {
 	SDL_Rect downsampledFillRect = { this->position.x - upscaledHitboxX / 2, this->position.y - upscaledHitboxY / 2, upscaledHitboxX, upscaledHitboxY};
 
 	SDL_FillRect(MainScene::downsampledGameCanvas, &downsampledFillRect, color);
+	*/
 }
 
 void Particle::onDespawn(EntityDeathType type) {}

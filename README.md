@@ -1,6 +1,9 @@
 # fruit-game
 ## A game project for my Advance Programming class @ UET-VNU
 
+## Game data structure
+
+
 ### References
 > General setup
 1. [Lazyfoo's SDL guide](https://lazyfoo.net/tutorials/SDL/index.php)

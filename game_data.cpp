@@ -32,7 +32,7 @@ GameData::GameData(string path) {
 	
 	this->highestScore = *(uint32_t*)(buffer);
 	this->highestComboAchived = *(uint32_t*)(buffer + 4);
-	this->longestTimeAlive = *(uint32_t*)(buffer + 8);
+	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
 
 	SDL_Log("Highest score: %d", this->highestScore);
 	SDL_Log("Highest combo: %d", this->highestComboAchived);
@@ -53,12 +53,12 @@ GameData::GameData(string path) {
 
 void GameData::Save() {
 	SDL_Log("Saving game data");
-	uint32_t size = 4 + 4 + 4;
+	uint32_t size = 4 + 4 + 8;
 	uint8_t* buffer = new uint8_t[size];
 	
 	*(uint32_t*)(buffer) = this->highestScore;
 	*(uint32_t*)(buffer + 4) = this->highestComboAchived;
-	*(uint32_t*)(buffer + 8) = this->longestTimeAlive;
+	*(uint64_t*)(buffer + 8) = this->longestTimeAlive;
 
 	this->timestamp = time(0);
 	this->signature = this->timestamp ^ this->highestScore | this->highestComboAchived ^ this->longestTimeAlive;

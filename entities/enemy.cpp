@@ -20,7 +20,6 @@ void Enemy::onDespawn(EntityDeathType type) {
 		game_mgr->SetCombo(0);
 
 		if (game_mgr->remainingLives == 0) {
-			game_mgr->FireStateChange(GameState::POSTGAME);
 			renderer->PlayFadeTransition([this, game_mgr](BaseTask* self) {
 				game_mgr->FireStateChange(GameState::ENDGAME);
 			}, [this](BaseTask* self) {});

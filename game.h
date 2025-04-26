@@ -4,25 +4,29 @@
 
 #include "entities/entity_mgr.h"
 #include "entities/enemy.h"
+#include "scene/scene_manager.h"
 #include "mouse_path.h"
 #include "game_state.h"
+#include "game_data.h"
 
 #include <ctime>  
-#include <random> 
-#include <game_data.h>
+#include <random>
 
 class GameManager
 {
+private:
+	mt19937 mt;
+	uniform_real_distribution<float> comboDistribution;
 public:
 	static GameManager* instancePtr;
+	static GameManager* getInstance() {
+		return instancePtr;
+	}
 
 	//Game state
 	bool running = true;
-	GameState state = GameState::RUNNING;
+	GameState state = GameState::WAITING;
 	int deltaTime = 0;
-
-	mt19937 mt;
-	uniform_real_distribution<float> comboDistribution;
 
 	//Game Data
 	GameData* gameData;
@@ -31,9 +35,6 @@ public:
 	int lastUpdatedTicks = 0;
 	int currentCombo = 0;
 	int comboExpirationTick = 0;
-
-	//fast hack
-	bool isOnStateChange = false;
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = new MousePathRecord();
@@ -62,9 +63,5 @@ public:
 	void SetCombo(int combo);
 	void AddCombo(int combo);
 	void ResetCombo();
-
-	static GameManager* getInstance() {
-		return instancePtr;
-	}
 };
 

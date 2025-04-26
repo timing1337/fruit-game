@@ -4,10 +4,11 @@
 #include "SDL_ttf.h"
 #include "SDL_timer.h"
 
-#include "draw/downsampling.h"
-#include "entities/entity_mgr.h"
 #include "game.h"
 #include "render.h"
+#include "draw/downsampling.h"
+#include "entities/entity_mgr.h"
+#include "scene/scene_manager.h"
 
 int main(int argc, char* args[])
 {
@@ -36,10 +37,12 @@ int main(int argc, char* args[])
 	GameManager* game_mgr = GameManager::getInstance();
 	TaskManager* animation_mgr = TaskManager::getInstance();
 	EntityManager* entity_mgr = EntityManager::getInstance();
+	SceneManager* scene_mgr = SceneManager::getInstance();
 
 	game_mgr->Initialize();
 	renderer->Initialize();
 	entity_mgr->Initialize();
+	scene_mgr->Initialize();
 
 	Downsampling::Initialize();
 
@@ -51,9 +54,38 @@ int main(int argc, char* args[])
 		game_mgr->deltaTime = (current - game_mgr->lastUpdatedTicks);
 
 		entity_mgr->Heartbeat(game_mgr->deltaTime);
-		game_mgr->Heartbeat(game_mgr->deltaTime);
 
-		renderer->Render();
+		SDL_Event e;
+		while (SDL_PollEvent(&e) != 0)
+		{
+			switch (e.type) {
+			case SDL_QUIT:
+				game_mgr->running = false;
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				game_mgr->OnMouseClick(e.button);
+				scene_mgr->OnMouseClick(e.button);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				game_mgr->OnMouseRelease(e.button);
+				break;
+			case SDL_MOUSEMOTION:
+				game_mgr->OnMouseMove(e.button);
+				break;
+			case SDL_KEYDOWN:
+
+				switch (e.key.keysym.sym) {
+				case SDLK_SPACE:
+					game_mgr->running = false;
+					break;
+				}
+				break;
+			}
+		}
+
+		game_mgr->Heartbeat(game_mgr->deltaTime);
+		
+		scene_mgr->Render();
 
 		animation_mgr->Heartbeat(game_mgr->deltaTime);
 

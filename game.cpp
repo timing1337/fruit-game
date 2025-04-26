@@ -9,46 +9,6 @@ void GameManager::Initialize() {
 }
 
 void GameManager::Heartbeat(int deltaTicks) {
-	SDL_Event e;
-	while (SDL_PollEvent(&e) != 0)
-	{
-		switch (e.type) {
-		case SDL_QUIT:
-			this->running = false;
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			Renderer::getInstance()->OnMouseClick(e.button);
-			this->OnMouseClick(e.button);
-			break;
-		case SDL_MOUSEBUTTONUP:
-			this->OnMouseRelease(e.button);
-			break;
-		case SDL_MOUSEMOTION:
-			this->OnMouseMove(e.button);
-			break;
-		case SDL_KEYDOWN:
-
-			switch (e.key.keysym.sym) {
-				case SDLK_SPACE:
-					this->running = false;
-				break;
-				case SDLK_INSERT:
-					//Spawn entity
-					if (this->state != GameState::RUNNING) {
-						break;
-					}
-					int x, y;
-					SDL_GetMouseState(&x, &y);
-					
-					Enemy* enemy = new Enemy(vec2_t(x, y), 0, 0);
-					enemy->SetHitbox({ 20, 20 });
-					EntityManager::getInstance()->spawnEntity(enemy);
-				break;
-			}
-			break;
-		}
-	}
-
 	for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
 		MousePathRecord* record = this->mousePathRecordsLeftover[i];
 		if (record->paths.size() == 0) {
@@ -165,69 +125,17 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 void GameManager::FireStateChange(GameState state) {
 	this->state = state;
 	switch (state) {
-	case GameState::WAITING:
-		OnWaiting();
-		break;
 	case GameState::STARTING:
 		OnStarting();
 		break;
 	case GameState::RUNNING:
 		OnRunning();
 		break;
-	case GameState::POSTGAME:
-		OnPostgame();
-		break;
 	}
-}
-
-
-void GameManager::ResetGameData() {
-	SetScore(0);
-	SetCombo(0);
-	this->remainingLives = MAX_LIVES;
-}
-
-void GameManager::OnWaiting() {
-	SDL_Log("GAME STATUS: STARTING");
-	SDL_Log("RESETTING GAME DATA");
-	GameManager::ResetGameData();
 }
 
 void GameManager::OnStarting() {
-	SDL_Log("GAME STATUS: STARTING");
-	SDL_Log("RESETTING GAME DATA");
-	GameManager::ResetGameData();
-}
-
-void GameManager::OnRunning() {
-	SDL_Log("GAME STATUS: RUNNING");
-}
-
-void GameManager::OnPostgame() {
-	SDL_Log("GAME STATUS: POSTGAME");
-	EntityManager* entity_mgr = EntityManager::getInstance();
-
-	SDL_Log("Force killing the remaining entities");
-	for (int i = 0; i < entity_mgr->entities.size(); i++) {
-		Entity* entity = entity_mgr->entities[i];
-		if (entity->alive) {
-			entity->despawn(EntityDeathType::UNKNOWN);
-		}
-	}
-
-	SDL_Log("Saving game data file");
-	this->gameData->Save();
-}
-
-void GameManager::SetScore(int score) {
-	SDL_Log("Updating score: %d", score);
-	this->score = score;
-	//update spawn interval
-	if (this->score > this->gameData->highestScore) {
-		this->gameData->highestScore = this->score;
-	}
-	EntityManager::getInstance()->spawnTask->interval = max((int)(1000 - this->score * 0.01), 600);
-	MainScene::UpdateScoreText();
+	ResetGameData();
 }
 
 void GameManager::AddScore(int score) {
@@ -236,6 +144,18 @@ void GameManager::AddScore(int score) {
 		score *= 2;
 	}
 	SetScore(this->score + score);
+}
+
+void GameManager::SetScore(int score) {
+	this->score = score;
+	if (this->score > this->gameData->highestScore) {
+		this->gameData->highestScore = this->score;
+	}
+	EntityManager::getInstance()->spawnTask->interval = max((int)(1000 - this->score * 0.01), 600);
+}
+
+void GameManager::AddCombo(int combo) {
+	SetCombo(currentCombo + combo);
 }
 
 void GameManager::SetCombo(int combo) {
@@ -250,9 +170,4 @@ void GameManager::SetCombo(int combo) {
 			this->gameData->highestComboAchived = currentCombo;
 		}
 	}
-	MainScene::UpdateComboText();
-}
-
-void GameManager::AddCombo(int combo) {
-	SetCombo(currentCombo + combo);
 }
