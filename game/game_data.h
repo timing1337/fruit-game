@@ -22,5 +22,5 @@ public:
 	GameData(string path);
 	void Save();
 private:
-	mt19937 mt;
+	mt19937_64 randomSeed;
 };

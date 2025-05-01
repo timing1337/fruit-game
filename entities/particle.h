@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game.h"
+#include "game/game.h"
 #include "entity.h"
 
 class Particle : public Entity
@@ -9,7 +9,7 @@ public:
 
 	int aliveTicks = 0;
 
-	Particle(vec2_t position, vec2_t direction, vec2_t rotation) : Entity(position, direction, rotation) {};
+	Particle(vec2_t position, vec2_t direction, vec2_t rotation) : Entity(position, direction) {};
 	Particle(vec2_t position, float speed, float angle) : Entity(position, speed, angle) {};
 
 	void onTick(int deltaTicks) override;

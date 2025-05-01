@@ -161,12 +161,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="scene\types\main_stage.cpp" />
     <ClCompile Include="scene\elements\types\button_element.cpp" />
     <ClCompile Include="scene\types\main_menu.cpp" />
     <ClCompile Include="scene\elements\basic_element.cpp" />
     <ClCompile Include="scene\base_scene.cpp" />
     <ClCompile Include="draw\downsampling.cpp" />
-    <ClCompile Include="game_data.cpp" />
+    <ClCompile Include="game\game_data.cpp" />
     <ClCompile Include="scene\scene_manager.cpp" />
     <ClCompile Include="scene\elements\types\text_element.cpp" />
     <ClCompile Include="utils\gradient.cpp" />
@@ -180,24 +181,26 @@
     <ClCompile Include="entities\particle.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="task\task.cpp" />
-    <ClCompile Include="game.cpp" />
+    <ClCompile Include="game\game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="draw\surface_draw.cpp" />
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alignment.h" />
+    <ClInclude Include="scene\types\main_stage.h" />
     <ClInclude Include="scene\elements\types\button_element.h" />
     <ClInclude Include="scene\types\main_menu.h" />
     <ClInclude Include="scene\elements\basic_element.h" />
     <ClInclude Include="scene\base_scene.h" />
     <ClInclude Include="constant.h" />
     <ClInclude Include="draw\downsampling.h" />
-    <ClInclude Include="game_data.h" />
+    <ClInclude Include="game\game_data.h" />
     <ClInclude Include="scene\scene_id.h" />
     <ClInclude Include="scene\scene_manager.h" />
     <ClInclude Include="task\types\repeated_task.h" />
     <ClInclude Include="task\types\base_task.h" />
-    <ClInclude Include="game_state.h" />
+    <ClInclude Include="game\game_state.h" />
     <ClInclude Include="task\types\timer_task.h" />
     <ClInclude Include="scene\elements\types\text_element.h" />
     <ClInclude Include="entities\enemy.h" />
@@ -206,8 +209,8 @@
     <ClInclude Include="entities\particle.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="task\task.h" />
-    <ClInclude Include="game.h" />
-    <ClInclude Include="mouse_path.h" />
+    <ClInclude Include="game\game.h" />
+    <ClInclude Include="mouse_record\mouse_path.h" />
     <ClInclude Include="draw\surface_draw.h" />
     <ClInclude Include="utils\gradient.h" />
     <ClInclude Include="utils\math.h" />

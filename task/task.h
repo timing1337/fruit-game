@@ -19,7 +19,7 @@ public:
 	int timerId = 0;
 	int lastUpdatedTick = 0;
 	vector<BaseTask*> animations;
-	static TaskManager* getInstance() {
+	static TaskManager* GetInstance() {
 		return instancePtr;
 	}
 

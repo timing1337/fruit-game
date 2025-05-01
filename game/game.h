@@ -5,21 +5,15 @@
 #include "entities/entity_mgr.h"
 #include "entities/enemy.h"
 #include "scene/scene_manager.h"
-#include "mouse_path.h"
+#include "mouse_record/mouse_path.h"
 #include "game_state.h"
 #include "game_data.h"
 
-#include <ctime>  
-#include <random>
-
 class GameManager
 {
-private:
-	mt19937 mt;
-	uniform_real_distribution<float> comboDistribution;
 public:
 	static GameManager* instancePtr;
-	static GameManager* getInstance() {
+	static GameManager* GetInstance() {
 		return instancePtr;
 	}
 

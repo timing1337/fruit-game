@@ -5,8 +5,12 @@ SceneManager* SceneManager::instancePtr = new SceneManager();
 void SceneManager::Initialize() {
 	MainMenu* mainMenu = new MainMenu();
 	mainMenu->SetActive(true);
-	this->scenes.push_back(mainMenu);
 
+	MainStage* mainStage = new MainStage();
+	mainStage->SetActive(false);
+
+	this->scenes.push_back(mainMenu);
+	this->scenes.push_back(mainStage);
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {
@@ -20,7 +24,7 @@ BaseScene* SceneManager::GetScene(SceneId sceneId) {
 
 void SceneManager::Render() {
 	for (auto& scene : this->scenes) {
-		if (scene->isActive) {
+		if (scene->active) {
 			scene->Render();
 		}
 	}
@@ -28,7 +32,7 @@ void SceneManager::Render() {
 
 void SceneManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 	for (auto& scene : this->scenes) {
-		if (scene->isActive) {
+		if (scene->active) {
 			scene->OnMouseClick(e);
 		}
 	}

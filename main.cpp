@@ -4,7 +4,7 @@
 #include "SDL_ttf.h"
 #include "SDL_timer.h"
 
-#include "game.h"
+#include "game/game.h"
 #include "render.h"
 #include "draw/downsampling.h"
 #include "entities/entity_mgr.h"
@@ -33,11 +33,11 @@ int main(int argc, char* args[])
 
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-	Renderer* renderer = Renderer::getInstance();
-	GameManager* game_mgr = GameManager::getInstance();
-	TaskManager* animation_mgr = TaskManager::getInstance();
-	EntityManager* entity_mgr = EntityManager::getInstance();
-	SceneManager* scene_mgr = SceneManager::getInstance();
+	Renderer* renderer = Renderer::GetInstance();
+	GameManager* game_mgr = GameManager::GetInstance();
+	TaskManager* animation_mgr = TaskManager::GetInstance();
+	EntityManager* entity_mgr = EntityManager::GetInstance();
+	SceneManager* scene_mgr = SceneManager::GetInstance();
 
 	game_mgr->Initialize();
 	renderer->Initialize();

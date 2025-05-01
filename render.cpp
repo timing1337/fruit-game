@@ -3,7 +3,7 @@
 Renderer* Renderer::instancePtr = new Renderer();
 
 void Renderer::Initialize() {
-	Renderer* renderer = getInstance();
+	Renderer* renderer = GetInstance();
 	renderer->gWindow = SDL_CreateWindow("game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, RENDERER_WIDTH, RENDERER_HEIGHT, SDL_WINDOW_OPENGL);
 	renderer->gRenderer = SDL_CreateRenderer(renderer->gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
@@ -22,47 +22,18 @@ void Renderer::SetBackgroundColor(const int r, const int g, const int b, const i
 }
 
 void Renderer::PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete) {
-	TaskManager::getInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
+	TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
 		[this](TimerTask* self) {
 			int calculatedOpacity = self->GetProgress() * 255;
 			SetBackgroundColor(0, 0, 0, self->GetProgress() * 255);
 		}, [this, onTransitioned, onComplete](TimerTask* self) {
 			onTransitioned(self);
-			TaskManager::getInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
+			TaskManager::GetInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
 				[this](TimerTask* self) {
 					SetBackgroundColor(0, 0, 0, 255 - (self->GetProgress() * 255));
 				},
 				onComplete);
 		});
-}
-
-void Renderer::PlayTitleAnimationAndStartGame() {
-	TaskManager::getInstance()->RunTimerTask(4 * TITLE_COOLDOWN_TICKS, [this](TimerTask* self) {
-		int second = 3 - self->counter / TITLE_COOLDOWN_TICKS;
-		GameTexture* texture;
-		int fadingTicks = self->counter % TITLE_COOLDOWN_TICKS;
-		float fadingProgress = (float)fadingTicks / TITLE_COOLDOWN_TICKS;
-		int calculatedOpacity = 255 - fadingProgress * 255;
-		switch (second) {
-		case 1:
-			texture = this->GetTextureByName("ui/title_number_one");
-			break;
-		case 2:
-			texture = this->GetTextureByName("ui/title_number_two");
-			break;
-		case 3:
-			texture = this->GetTextureByName("ui/title_number_three");
-			break;
-		default:
-			texture = this->GetTextureByName("ui/title_go");
-			break;
-		}
-		SDL_SetTextureAlphaMod(texture->text->text, calculatedOpacity);
-		this->RenderTexture(texture, RENDERER_CENTER_X, RENDERER_CENTER_Y, Alignment::CENTER);
-	},
-	[this](TimerTask* self) {
-			GameManager::getInstance()->FireStateChange(GameState::RUNNING);
-	});
 }
 
 void Renderer::UpdateRender() {
@@ -137,6 +108,11 @@ void Renderer::FreeGameTexture(GameTexture* texture) {
 
 GameTexture* Renderer::CreateText(const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
 	TTF_Font* font = GetFontByName(fontId);
+
+	if (font == NULL) {
+		SDL_Log("Font not found: %s", fontId);
+		return NULL;
+	}
 
 	TTF_SetFontSize(font, size);
 

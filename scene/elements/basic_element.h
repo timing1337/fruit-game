@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 
+#include "alignment.h"
 #include "utils/math.h"
 
 class Element
@@ -14,9 +15,15 @@ public:
 	/* Depend on which kind of element, this will be changed on Prepare() */
 	vec2_t bound;
 
-	bool allowHoveredRender = false;
+	Alignment alignment = Alignment::CENTER;
+
+	bool active = true;
 
 	Element(const char* id, vec2_t position) : id(id), position(position) {}
+
+	void SetPosition(vec2_t position);
+	void SetAlignment(Alignment alignment);
+	void SetActive(bool active);
 
 	/* Preloading textures*/
 	virtual void Prepare();
@@ -29,4 +36,3 @@ public:
 
 	virtual bool IsHovered();
 };
-

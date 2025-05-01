@@ -1,17 +1,15 @@
 #include "entity.h"
 
-Entity::Entity(vec2_t position, vec2_t direction, vec2_t rotation) {
+Entity::Entity(vec2_t position, vec2_t direction) {
 	this->position = position;
 	this->direction = direction;
-	this->rotation = rotation;
 	this->hitbox = vec2_t(0, 0);
 };
 
-Entity::Entity(vec2_t position, float speed, float angle, vec2_t rotation) {
+Entity::Entity(vec2_t position, float speed, float angle) {
 	float radian = deg2rad(angle);
 	this->position = position;
 	this->direction = vec2_t(speed * cos(radian), speed * sin(radian));
-	this->rotation = rotation;
 	this->hitbox = vec2_t(0, 0);
 };
 
@@ -31,8 +29,14 @@ void Entity::SetTexture(GameTexture* texture) {
 	this->hitbox.y = this->entityTexture->height;
 }
 
+
+//this is kinda bad? only works well if entity bounding box is square
+
 bool Entity::IsColliding(int x, int y) {
-	return isPointInRect({ x, y }, { (int)this->position.x - (int)this->hitbox.x / 2, (int)this->position.y - (int)this->hitbox.y / 2 }, { (int)this->hitbox.x, (int)this->hitbox.y });
+	int halfBoundX = this->hitbox.x / 2;
+	int halfBoundY = this->hitbox.y / 2;
+
+	return x >= position.x - halfBoundX && x <= position.x + halfBoundX && y >= position.y - halfBoundY && y <= position.y + halfBoundY;
 }
 
 void Entity::onTick(int deltaTicks) {
@@ -51,7 +55,6 @@ void Entity::onTick(int deltaTicks) {
 	}
 
 	float deltaSeconds = deltaTicks / 1000.0f;
-
 	//Gravity
 	this->direction.y -= GRAVITY_SPEED * deltaSeconds;
 

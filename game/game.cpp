@@ -1,10 +1,8 @@
-#include "game.h"
+#include "game/game.h"
 
 GameManager* GameManager::instancePtr = new GameManager();
 
 void GameManager::Initialize() {
-	this->mt.seed(time(0));
-	this->comboDistribution = uniform_real_distribution<float>(0, 1);
 	this->gameData = new GameData("game_data.dat");
 }
 
@@ -99,7 +97,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		return;
 	}
 
-	EntityManager* entity_mgr = EntityManager::getInstance();
+	EntityManager* entity_mgr = EntityManager::GetInstance();
 
 	SDL_Point currentPoint{ e.x, e.y };
 
@@ -124,25 +122,19 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 
 void GameManager::FireStateChange(GameState state) {
 	this->state = state;
-	switch (state) {
-	case GameState::STARTING:
-		OnStarting();
-		break;
-	case GameState::RUNNING:
-		OnRunning();
-		break;
-	}
 }
 
 void GameManager::OnStarting() {
 	ResetGameData();
 }
 
+void GameManager::ResetGameData() {
+	this->score = 0;
+	this->currentCombo = 0;
+	this->remainingLives = 3;
+}
+
 void GameManager::AddScore(int score) {
-	float multiplicationChance = max(COMBO_MULTIPLICATION_BASE + currentCombo * COMBO_MULTIPLICATION_MULTIPLIER, COMBO_MULTIPLICATION_MAX);
-	if (this->comboDistribution(this->mt) < multiplicationChance) {
-		score *= 2;
-	}
 	SetScore(this->score + score);
 }
 
@@ -151,7 +143,12 @@ void GameManager::SetScore(int score) {
 	if (this->score > this->gameData->highestScore) {
 		this->gameData->highestScore = this->score;
 	}
-	EntityManager::getInstance()->spawnTask->interval = max((int)(1000 - this->score * 0.01), 600);
+	EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+
+	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
+	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
+
+	scoreElement->SetText(to_string(this->score).c_str());
 }
 
 void GameManager::AddCombo(int combo) {
@@ -161,13 +158,19 @@ void GameManager::AddCombo(int combo) {
 void GameManager::SetCombo(int combo) {
 	currentCombo = combo;
 
+	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
+	TextElement* comboElement = (TextElement*)mainStage->GetElementById("combo");
+	comboElement->SetText(to_string(currentCombo).c_str());
+
 	if (currentCombo == 0) {
 		comboExpirationTick = 0;
+		comboElement->SetActive(false);
 	}
 	else {
 		comboExpirationTick = max(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
-		if (currentCombo > this->gameData->highestComboAchived) {
-			this->gameData->highestComboAchived = currentCombo;
+		if (currentCombo > gameData->highestComboAchived) {
+			gameData->highestComboAchived = currentCombo;
 		}
+		comboElement->SetActive(true);
 	}
 }

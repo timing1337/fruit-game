@@ -14,7 +14,7 @@ ButtonElement::ButtonElement(const char* id, vec2_t position,
 }
 
 void ButtonElement::Prepare() {
-	Renderer* renderer = Renderer::getInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	this->texture = renderer->CreateText(this->text, this->fontId, this->size, this->color, this->outlineSize, this->outlineColor);
 
 	bound.x = this->texture->width + boxPadding * 2;
@@ -22,12 +22,12 @@ void ButtonElement::Prepare() {
 }
 
 void ButtonElement::Render() {
-	Renderer* renderer = Renderer::getInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	renderer->RenderTexture(this->texture, this->position.x, this->position.y);
 }
 
 void ButtonElement::OnHoveredRender() {
-	Renderer* renderer = Renderer::getInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	SDL_SetTextureAlphaMod(this->texture->text->text, 200);
 	renderer->RenderTexture(this->texture, this->position.x, this->position.y);
 	SDL_SetTextureAlphaMod(this->texture->text->text, 255);
@@ -41,7 +41,7 @@ void ButtonElement::OnHoveredRender() {
 }
 
 void ButtonElement::Release() {
-	Renderer* renderer = Renderer::getInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	renderer->FreeGameTexture(this->texture);
 	this->bound = vec2_t(0, 0);
 	this->texture = nullptr;
@@ -52,9 +52,9 @@ void ButtonElement::OnMouseClick(SDL_MouseButtonEvent& e) {
 }
 
 bool ButtonElement::IsHovered() {
-	vec2_t pos;
-	SDL_GetMouseState(&pos.x, &pos.y);
+	int mouseX, mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
 	int halfBoundX = this->bound.x / 2;
 	int halfBoundY = this->bound.y / 2;
-	return pos.x >= position.x - halfBoundX && pos.x <= position.x + halfBoundX && pos.y >= position.y - halfBoundY && pos.y <= position.y + halfBoundY;
+	return mouseX >= position.x - halfBoundX && mouseX <= position.x + halfBoundX && mouseY >= position.y - halfBoundY && mouseY <= position.y + halfBoundY;
 }

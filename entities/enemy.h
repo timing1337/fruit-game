@@ -1,6 +1,6 @@
 #pragma once
 
-#include "game.h"
+#include "game/game.h"
 #include "entities/entity.h"
 #include "utils/math.h"
 
@@ -9,7 +9,7 @@ class Enemy: public Entity
 public:
 	int scoreBase = 1;
 
-	Enemy(vec2_t position, vec2_t direction, vec2_t rotation) : Entity(position, direction, rotation) {};
+	Enemy(vec2_t position, vec2_t direction) : Entity(position, direction) {};
 	Enemy(vec2_t position, float speed, float angle) : Entity(position, speed, angle) {};
 
 	void onTick(int deltaTicks) override;

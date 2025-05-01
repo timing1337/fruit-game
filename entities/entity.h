@@ -22,13 +22,12 @@ public:
     GameTexture* entityTexture;
     vec2_t position;
     vec2_t direction;
-    vec2_t rotation;
     vec2_t hitbox;
 
     bool alive = true;
 
-    Entity(vec2_t position, vec2_t direction, vec2_t rotation = vec2_t(0, 0));
-    Entity(vec2_t position, float speed, float angle, vec2_t rotation = vec2_t(0, 0));
+    Entity(vec2_t position, vec2_t direction);
+    Entity(vec2_t position, float speed, float angle);
 
     void SetTexture(GameTexture* texture);
     void SetHitbox(vec2_t hitbox);

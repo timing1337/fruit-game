@@ -4,6 +4,7 @@
 #include "base_scene.h"
 
 #include "scene/types/main_menu.h"
+#include "scene/types/main_stage.h"
 
 #include <vector>
 
@@ -16,7 +17,7 @@ public:
 
 	static SceneManager* instancePtr;
 
-	static SceneManager* getInstance() {
+	static SceneManager* GetInstance() {
 		return instancePtr;
 	}
 

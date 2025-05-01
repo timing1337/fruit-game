@@ -24,7 +24,7 @@
     <ClCompile Include="render.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game.cpp">
+    <ClCompile Include="game\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="task\task.cpp">
@@ -66,7 +66,7 @@
     <ClCompile Include="utils\gradient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_data.cpp">
+    <ClCompile Include="game\game_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="scene\base_scene.cpp">
@@ -87,6 +87,9 @@
     <ClCompile Include="scene\elements\types\button_element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scene\types\main_stage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -95,7 +98,7 @@
     <ClInclude Include="render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
+    <ClInclude Include="game\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\math.h">
@@ -104,7 +107,7 @@
     <ClInclude Include="task\task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mouse_path.h">
+    <ClInclude Include="mouse_record\mouse_path.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="draw\surface_draw.h">
@@ -125,7 +128,7 @@
     <ClInclude Include="entities\particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_state.h">
+    <ClInclude Include="game\game_state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="task\types\base_task.h">
@@ -146,7 +149,7 @@
     <ClInclude Include="constant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game_data.h">
+    <ClInclude Include="game\game_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="scene\base_scene.h">
@@ -168,6 +171,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="scene\elements\types\button_element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\types\main_stage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="alignment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
