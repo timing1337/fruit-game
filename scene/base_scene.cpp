@@ -8,6 +8,11 @@ ButtonElement* BaseScene::AddButton(const char* id, vec2_t position, const char*
 	return element;
 }
 
+TextElement* BaseScene::AddText(const char* id, vec2_t position, string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
+	TextElement* element = new TextElement(id, position, text, fontId, size, color, outlineSize, outlineColor);
+	this->elements.push_back(element);
+	return element;
+}
 TextElement* BaseScene::AddText(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
 	TextElement* element = new TextElement(id, position, text, fontId, size, color, outlineSize, outlineColor);
 	this->elements.push_back(element);

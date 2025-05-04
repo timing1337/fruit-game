@@ -17,6 +17,12 @@ GameData::GameData(string path) {
 	uint8_t* buffer = new uint8_t[size];
 	file.read((char*)buffer, size);
 
+	/*
+	* Simple XOR encryption for game-data to prevent player from tampering with scores
+	* Using signature as a seed
+	* For each byte it will generate an ulong and select a byte (depends on the position of the byte) and xor it with encrypted byte
+	*/
+
 	randomSeed.seed(this->signature);
 
 	uint64_t key = randomSeed();

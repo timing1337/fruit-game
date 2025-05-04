@@ -2,14 +2,18 @@
 
 MainStage::MainStage() : BaseScene(SceneId::GAME) {
 	//fast hack
-	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 20 }, "", "Helvetica-Bold", 20, { 255, 255, 255, 255 });
+	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 20 }, "0", "Helvetica-Bold", 20, { 255, 255, 255, 255 });
 	comboElement->active = false;
 
-	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 40 }, "score_icon.png");
-	scoreIcon->SetAlignment(Alignment::LEFT);
+	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png");
+	scoreIcon->SetAlignmentVertical(AlignmentVertical::TOP);
 
-	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreIcon->bound.x + 15, 40 }, "0", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
-	scoreElement->SetAlignment(Alignment::LEFT);
+	float scoreX = 10 + scoreIcon->bound.x + 5;
+
+	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreX, 10 }, "0", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
+	GameManager* game_mgr = GameManager::GetInstance();
+
+	TextElement* highestScoreElement = this->AddText("highest_score", vec2_t{ scoreX, 10 + scoreElement->bound.y + 2 }, "Record: " + to_string(game_mgr->gameData->highestScore), "Helvetica-Bold", 20, { 255, 255, 255, 255 });
 }
 
 void MainStage::Prepare() {
@@ -45,14 +49,13 @@ void MainStage::Render() {
 	}
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->gRenderer, gameCanvas);
-	Downsampling::Downsample(texture);
-	Downsampling::Render();
+	//Downsampling::Downsample(texture);
+	//Downsampling::Render();
 	SDL_RenderCopy(renderer->gRenderer, texture, NULL, NULL);
 	SDL_DestroyTexture(texture);
 
 	if (game_mgr->currentCombo > 0 && game_mgr->comboExpirationTick > 0) {
-		int height = 50;
-		int maxComboDuration = max(1000 + game_mgr->currentCombo * 50, 2000);
+		int maxComboDuration = max(COMBO_DURATION_BASE + game_mgr->currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
 		int width = ((float)game_mgr->comboExpirationTick / maxComboDuration) * 200;
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
 		SDL_Rect fillRect = { RENDERER_CENTER_X - 100, 40, width, 15 };

@@ -5,3 +5,9 @@ enum Alignment {
 	CENTER,
 	RIGHT
 };
+
+enum AlignmentVertical {
+	TOP,
+	MIDDLE,
+	BOTTOM
+};

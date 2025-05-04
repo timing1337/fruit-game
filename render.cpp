@@ -158,22 +158,32 @@ void Renderer::RenderTextureBackground(const char* textureId) {
 	SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
 }
 
-void Renderer::RenderTexture(const char* textureId, int x, int y, const Alignment align) {
+void Renderer::RenderTexture(const char* textureId, int x, int y, const Alignment align, const AlignmentVertical alignmentVertical) {
 	GameTexture* texture = GetTextureByName(textureId);
-	RenderTexture(texture, x, y, align);
+	RenderTexture(texture, x, y, align, alignmentVertical);
 }
 
-void Renderer::RenderTexture(GameTexture* texture, int x, int y, const Alignment align) {
-	y -= texture->height / 2;
+void Renderer::RenderTexture(GameTexture* texture, int x, int y, const Alignment align, const AlignmentVertical alignmentVertical) {
+
+	switch (alignmentVertical) {
+	case AlignmentVertical::TOP:
+		break;
+	case AlignmentVertical::MIDDLE:
+		y -= texture->height / 2;
+		break;
+	case AlignmentVertical::BOTTOM:
+		y -= texture->height;
+		break;
+	}
 
 	switch (align) {
+	case Alignment::LEFT:
+		break;
 	case Alignment::RIGHT:
 		x -= texture->width;
 		break;
 	case Alignment::CENTER:
 		x -= texture->width / 2;
-		break;
-	case Alignment::LEFT:
 		break;
 	}
 

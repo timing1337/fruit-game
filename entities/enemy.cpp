@@ -36,6 +36,6 @@ void Enemy::onRender() {
 		SDL_RenderFillRect(renderer->gRenderer, &rect);
 	}
 	else {
-		renderer->RenderTexture(entityTexture, position.x, position.y, Alignment::CENTER);
+		renderer->RenderTexture(entityTexture, position.x, position.y, Alignment::CENTER, AlignmentVertical::MIDDLE);
 	}
 }

@@ -11,6 +11,13 @@ ButtonElement::ButtonElement(const char* id, vec2_t position,
 	this->outlineSize = outlineSize;
 	this->outlineColor = outlineColor;
 	this->boxPadding = boxPadding;
+
+	//For calculating bound
+	this->Prepare();
+	this->Release();
+
+	this->alignment = Alignment::CENTER;
+	this->alignmentVertical = AlignmentVertical::MIDDLE;
 }
 
 void ButtonElement::Prepare() {
@@ -23,19 +30,44 @@ void ButtonElement::Prepare() {
 
 void ButtonElement::Render() {
 	Renderer* renderer = Renderer::GetInstance();
-	renderer->RenderTexture(this->texture, this->position.x, this->position.y);
+	renderer->RenderTexture(this->texture, this->position.x, this->position.y, this->alignment, this->alignmentVertical);
 }
 
 void ButtonElement::OnHoveredRender() {
 	Renderer* renderer = Renderer::GetInstance();
 	SDL_SetTextureAlphaMod(this->texture->text->text, 200);
-	renderer->RenderTexture(this->texture, this->position.x, this->position.y);
+	renderer->RenderTexture(this->texture, this->position.x, this->position.y, this->alignment, this->alignmentVertical);
 	SDL_SetTextureAlphaMod(this->texture->text->text, 255);
 
 	int halfBoundX = this->bound.x / 2;
 	int halfBoundY = this->bound.y / 2;
 
-	SDL_Rect rect = { (int)(this->position.x - halfBoundX), (int)(this->position.y - halfBoundY), this->bound.x, this->bound.y };
+	int boxStartX = this->position.x;
+	int boxStartY = this->position.y;
+
+	switch (alignmentVertical) {
+	case AlignmentVertical::TOP:
+		break;
+	case AlignmentVertical::MIDDLE:
+		boxStartY -= this->bound.y / 2;
+		break;
+	case AlignmentVertical::BOTTOM:
+		boxStartY -= this->bound.y;
+		break;
+	}
+
+	switch (this->alignment) {
+	case Alignment::LEFT:
+		break;
+	case Alignment::RIGHT:
+		boxStartX -= this->bound.x;
+		break;
+	case Alignment::CENTER:
+		boxStartX -= this->bound.x / 2;
+		break;
+	}
+
+	SDL_Rect rect = { boxStartX, boxStartY, this->bound.x, this->bound.y };
 	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 200);
 	SDL_RenderDrawRect(renderer->gRenderer, &rect);
 }
@@ -43,7 +75,6 @@ void ButtonElement::OnHoveredRender() {
 void ButtonElement::Release() {
 	Renderer* renderer = Renderer::GetInstance();
 	renderer->FreeGameTexture(this->texture);
-	this->bound = vec2_t(0, 0);
 	this->texture = nullptr;
 }
 

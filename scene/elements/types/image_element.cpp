@@ -11,5 +11,5 @@ ImageElement::ImageElement(const char* id, vec2_t position, GameTexture* texture
 
 void ImageElement::Render() {
 	Renderer* renderer = Renderer::GetInstance();
-	renderer->RenderTexture(this->texture, this->position.x, this->position.y, this->alignment);
+	renderer->RenderTexture(this->texture, this->position.x, this->position.y, this->alignment, this->alignmentVertical);
 }

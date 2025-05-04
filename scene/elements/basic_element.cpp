@@ -21,6 +21,10 @@ void Element::SetAlignment(Alignment alignment) {
 	this->alignment = alignment;
 }
 
+void Element::SetAlignmentVertical(AlignmentVertical alignmentVertical) {
+	this->alignmentVertical = alignmentVertical;
+}
+
 void Element::SetActive(bool active) {
 	if (active) {
 		if (!this->active) this->Prepare();

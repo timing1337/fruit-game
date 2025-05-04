@@ -61,6 +61,6 @@ public:
 	void RenderTextureBackground(const char* textureId);
 	void SetBackgroundColor(const int r, const int g, const int b, const int a);
 
-	void RenderTexture(const char* textureId, int x, int y, const Alignment align = Alignment::CENTER);
-	void RenderTexture(GameTexture* texture, int x, int y, const Alignment align = Alignment::CENTER);
+	void RenderTexture(const char* textureId, int x, int y, const Alignment align = Alignment::LEFT, const AlignmentVertical alignmentVertical = AlignmentVertical::TOP);
+	void RenderTexture(GameTexture* texture, int x, int y, const Alignment align = Alignment::LEFT, const AlignmentVertical alignmentVertical = AlignmentVertical::TOP);
 };

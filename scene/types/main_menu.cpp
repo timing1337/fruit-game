@@ -1,8 +1,8 @@
 #include "main_menu.h"
 
 MainMenu::MainMenu() : BaseScene(SceneId::MAIN_MENU) {
-	this->AddText("main_title", vec2_t{ RENDERER_CENTER_X, 100 }, "FRUIT NINJA", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
-
+	TextElement* mainTitle = this->AddText("main_title", vec2_t{ RENDERER_CENTER_X, 100 }, "FRUIT NINJA", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
+	mainTitle->SetAlignment(Alignment::CENTER);
 	this->AddButton("start_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y - 60 }, "START", "NoyhR-Light", 25, { 255, 255, 255, 255 }, [this]() {
 		OnStart();
 	}, 0, {0, 0, 0, 255}, 10);

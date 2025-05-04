@@ -15,7 +15,8 @@ public:
 	/* Depend on which kind of element, this will be changed on Prepare() */
 	vec2_t bound;
 
-	Alignment alignment = Alignment::CENTER;
+	Alignment alignment = Alignment::LEFT;
+	AlignmentVertical alignmentVertical = AlignmentVertical::TOP;
 
 	bool active = true;
 
@@ -23,6 +24,7 @@ public:
 
 	void SetPosition(vec2_t position);
 	void SetAlignment(Alignment alignment);
+	void SetAlignmentVertical(AlignmentVertical alignmentVertical);
 	void SetActive(bool active);
 
 	/* Preloading textures*/

@@ -140,15 +140,18 @@ void GameManager::AddScore(int score) {
 
 void GameManager::SetScore(int score) {
 	this->score = score;
+	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
+
 	if (this->score > this->gameData->highestScore) {
 		this->gameData->highestScore = this->score;
+
+		TextElement* highestScoreElement = (TextElement*)mainStage->GetElementById("highest_score");
+		highestScoreElement->SetText("Record: " + to_string(this->score));
 	}
-	EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
-
-	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
+	scoreElement->SetText(to_string(this->score));
 
-	scoreElement->SetText(to_string(this->score).c_str());
+	EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
 }
 
 void GameManager::AddCombo(int combo) {
@@ -160,8 +163,7 @@ void GameManager::SetCombo(int combo) {
 
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 	TextElement* comboElement = (TextElement*)mainStage->GetElementById("combo");
-	std::string comboCount = std::to_string(currentCombo);
-	comboElement->SetText(comboCount.c_str());
+	comboElement->SetText(to_string(currentCombo));
 
 	if (currentCombo == 0) {
 		comboExpirationTick = 0;
