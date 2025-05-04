@@ -160,7 +160,8 @@ void GameManager::SetCombo(int combo) {
 
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 	TextElement* comboElement = (TextElement*)mainStage->GetElementById("combo");
-	comboElement->SetText(to_string(currentCombo).c_str());
+	std::string comboCount = std::to_string(currentCombo);
+	comboElement->SetText(comboCount.c_str());
 
 	if (currentCombo == 0) {
 		comboExpirationTick = 0;

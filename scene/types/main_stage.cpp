@@ -1,11 +1,15 @@
 #include "main_stage.h"
 
 MainStage::MainStage() : BaseScene(SceneId::GAME) {
-	TextElement* scoreElement = this->AddText("score", vec2_t{ 20, 20 }, "0", "Helvetica-Bold", 30, { 255, 255, 255, 255 });
 	//fast hack
 	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 20 }, "", "Helvetica-Bold", 20, { 255, 255, 255, 255 });
-	scoreElement->SetAlignment(Alignment::RIGHT);
 	comboElement->active = false;
+
+	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 40 }, "score_icon.png");
+	scoreIcon->SetAlignment(Alignment::LEFT);
+
+	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreIcon->bound.x + 15, 40 }, "0", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
+	scoreElement->SetAlignment(Alignment::LEFT);
 }
 
 void MainStage::Prepare() {

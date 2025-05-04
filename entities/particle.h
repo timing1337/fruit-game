@@ -7,6 +7,8 @@ class Particle : public Entity
 {
 public:
 
+	SDL_Color color = { 255, 255, 255, 255 };
+
 	int aliveTicks = 0;
 
 	Particle(vec2_t position, vec2_t direction, vec2_t rotation) : Entity(position, direction) {};

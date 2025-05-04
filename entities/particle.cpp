@@ -13,11 +13,11 @@ void Particle::onRender() {
 	Renderer* renderer = Renderer::GetInstance();
 	float progress = (float)this->aliveTicks / PARTICLE_ALIVE_TICK;
 	int calculatedOpacity = max(0, (int)(255 - (progress * 255)));
-	int color = (255 << 24) | (255 << 16) | (255 << 8) | calculatedOpacity;
+	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
+
+	int color = SDL_MapRGBA(mainStage->gameCanvas->format, this->color.r, this->color.g, this->color.b, calculatedOpacity);
 
 	//first pass
-
-	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 
 	int hitboxX = this->hitbox.x;
 	int hitboxY = this->hitbox.y;

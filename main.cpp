@@ -48,6 +48,8 @@ int main(int argc, char* args[])
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
 
+	srand(time(0));
+
 	while (game_mgr->running) {
 		Uint32 current = SDL_GetTicks();
 		renderer->PreRender();

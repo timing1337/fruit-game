@@ -71,21 +71,25 @@ bool Renderer::LoadTextureByName(const char* name) {
 }
 
 TTF_Font* Renderer::GetFontByName(const char* name) {
-	if (fonts.find(name) == fonts.end()) {
-		if (!LoadFontByName(name)) {
-			return NULL;
+	for (auto& font : fonts) {
+		if (strcmp(font.first, name) == 0) {
+			return font.second;
 		}
-		return fonts[name];
+	}
+	if (!LoadFontByName(name)) {
+		return NULL;
 	}
 	return fonts[name];
 }
 
 GameTexture* Renderer::GetTextureByName(const char* name) {
-	if (textures.find(name) == textures.end()) {
-		if (!LoadTextureByName(name)) {
-			return NULL;
+	for (auto& texture : textures) {
+		if (strcmp(texture.first, name) == 0) {
+			return texture.second;
 		}
-		return textures[name];
+	}
+	if (!LoadTextureByName(name)) {
+		return NULL;
 	}
 	return textures[name];
 }
@@ -163,13 +167,13 @@ void Renderer::RenderTexture(GameTexture* texture, int x, int y, const Alignment
 	y -= texture->height / 2;
 
 	switch (align) {
-	case Alignment::LEFT:
+	case Alignment::RIGHT:
 		x -= texture->width;
 		break;
 	case Alignment::CENTER:
 		x -= texture->width / 2;
 		break;
-	case Alignment::RIGHT:
+	case Alignment::LEFT:
 		break;
 	}
 

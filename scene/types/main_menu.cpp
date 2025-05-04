@@ -9,7 +9,14 @@ MainMenu::MainMenu() : BaseScene(SceneId::MAIN_MENU) {
 	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y }, "SETTINGS", "NoyhR-Light", 24, { 255, 255, 255, 255 }, []() {
 		
 	}, 0, { 0, 0, 0, 255 }, 10);
-	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "QUIT", "NoyhR-Light", 24, { 255, 255, 255, 255 }, []() {}, 0, { 0, 0, 0, 255 }, 10);
+	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "QUIT", "NoyhR-Light", 24, { 255, 255, 255, 255 }, [this]() {
+		OnQuit();
+	}, 0, { 0, 0, 0, 255 }, 10);
+}
+
+void MainMenu::OnQuit() {
+	GameManager* game_mgr = GameManager::GetInstance();
+	game_mgr->running = false;
 }
 
 void MainMenu::OnStart() {

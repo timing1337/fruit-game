@@ -8,7 +8,7 @@ class TextElement : public Element
 private:
 	GameTexture* texture;
 public:
-	char* text;
+	const char* text;
 	const char* fontId;
 	int size;
 	SDL_Color color;
@@ -17,7 +17,6 @@ public:
 
 	TextElement(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 });
 
-	void SetText(char* text);
 	void SetText(const char* text);
 	void SetFont(const char* fontId);
 	void SetSize(int size);

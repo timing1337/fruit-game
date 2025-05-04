@@ -3,10 +3,14 @@
 SceneManager* SceneManager::instancePtr = new SceneManager();
 
 void SceneManager::Initialize() {
+	GameTexture* backgroundTexture = Renderer::GetInstance()->GetTextureByName("background.png");
+
 	MainMenu* mainMenu = new MainMenu();
+	mainMenu->SetBackgroundTexture(backgroundTexture);
 	mainMenu->SetActive(true);
 
 	MainStage* mainStage = new MainStage();
+	mainStage->SetBackgroundTexture(backgroundTexture);
 	mainStage->SetActive(false);
 
 	this->scenes.push_back(mainMenu);

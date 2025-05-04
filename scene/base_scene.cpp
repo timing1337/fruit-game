@@ -14,6 +14,22 @@ TextElement* BaseScene::AddText(const char* id, vec2_t position, const char* tex
 	return element;
 }
 
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* textureId) {
+	GameTexture* texture = Renderer::GetInstance()->GetTextureByName(textureId);
+	if (texture == nullptr) {
+		printf("Error: Texture with id %s not found\n", textureId);
+		return nullptr;
+	}
+	return BaseScene::AddImage(id, position, texture);
+}
+
+
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* texture) {
+	ImageElement* element = new ImageElement(id, position, texture);
+	this->elements.push_back(element);
+	return element;
+}
+
 Element* BaseScene::GetElementById(const char* id) {
 	for (auto& element : this->elements) {
 		if (strcmp(element->id, id) == 0) {
@@ -32,6 +48,12 @@ void BaseScene::Prepare() {
 }
 
 void BaseScene::Render() {
+	Renderer* renderer = Renderer::GetInstance();
+
+	if (this->backgroundTexture != nullptr) {
+		SDL_RenderCopy(renderer->gRenderer, this->backgroundTexture->sprite->texture, NULL, NULL);
+	}
+
 	for (auto& element : this->elements) {
 		if (element->active) {
 			if (element->IsHovered()) {
@@ -50,6 +72,10 @@ void BaseScene::Release() {
 			element->Release();
 		}
 	}
+}
+
+void BaseScene::SetBackgroundTexture(GameTexture* texture) {
+	this->backgroundTexture = texture;
 }
 
 void BaseScene::SetActive(bool active) {

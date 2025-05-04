@@ -90,6 +90,12 @@
     <ClCompile Include="scene\types\main_stage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="config\fruit_data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\elements\types\image_element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -177,6 +183,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="alignment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\fruit_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\elements\types\image_element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

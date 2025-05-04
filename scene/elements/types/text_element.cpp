@@ -7,15 +7,11 @@ TextElement::TextElement(const char* id, vec2_t position, const char* text, cons
 	this->color = color;
 	this->outlineSize = outlineSize;
 	this->outlineColor = outlineColor;
-	this->text = new char[strlen(text) + 1];
-	strcpy_s(this->text, strlen(text) + 1, text);
+	this->text = text;
 }
 
 void TextElement::Prepare() {
 	Renderer* renderer = Renderer::GetInstance();
-	SDL_Log(this->id);
-	SDL_Log("prepare");
-	SDL_Log(this->text);
 	this->texture = renderer->CreateText(this->text, this->fontId, this->size, this->color, this->outlineSize, this->outlineColor);
 
 	bound.x = this->texture->width;
@@ -24,7 +20,7 @@ void TextElement::Prepare() {
 
 void TextElement::Render() {
 	Renderer* renderer = Renderer::GetInstance();
-	renderer->RenderTexture(this->texture, this->position.x, this->position.y);
+	renderer->RenderTexture(this->texture, this->position.x, this->position.y, this->alignment);
 }
 
 void TextElement::Release() {
@@ -34,19 +30,8 @@ void TextElement::Release() {
 	this->texture = nullptr;
 }
 
-void TextElement::SetText(char* text) {
-	this->text = text;
-	Update();
-}
-
 void TextElement::SetText(const char* text) {
-	if (this->text != nullptr) {
-		delete[] this->text;
-	}
-
-	this->text = new char[strlen(text) + 1];
-	strcpy_s(this->text, strlen(text) + 1, text);
-
+	this->text = text;
 	Update();
 }
 

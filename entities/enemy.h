@@ -7,7 +7,9 @@
 class Enemy: public Entity
 {
 public:
-	int scoreBase = 1;
+	int score;
+
+	SDL_Color deathParticleColor = { 255, 255, 255, 255 };
 
 	Enemy(vec2_t position, vec2_t direction) : Entity(position, direction) {};
 	Enemy(vec2_t position, float speed, float angle) : Entity(position, speed, angle) {};

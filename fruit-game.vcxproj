@@ -161,6 +161,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="config\fruit_data.cpp" />
+    <ClCompile Include="scene\elements\types\image_element.cpp" />
     <ClCompile Include="scene\types\main_stage.cpp" />
     <ClCompile Include="scene\elements\types\button_element.cpp" />
     <ClCompile Include="scene\types\main_menu.cpp" />
@@ -188,6 +190,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alignment.h" />
+    <ClInclude Include="config\fruit_data.h" />
+    <ClInclude Include="scene\elements\types\image_element.h" />
     <ClInclude Include="scene\types\main_stage.h" />
     <ClInclude Include="scene\elements\types\button_element.h" />
     <ClInclude Include="scene\types\main_menu.h" />

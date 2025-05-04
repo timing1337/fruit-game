@@ -2,7 +2,7 @@
 
 void Enemy::onHit() {
 	this->despawn(EntityDeathType::PLAYER_INTERACTION);
-	EntityManager::GetInstance()->spawnParticle(this->position);
+	EntityManager::GetInstance()->spawnParticle(this->position, deathParticleColor);
 }
 
 void Enemy::onTick(int deltaTicks) {
@@ -18,7 +18,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 	case EntityDeathType::OUT_OF_BOUND:
 		break;
 	case EntityDeathType::PLAYER_INTERACTION:
-		game_mgr->AddScore(this->scoreBase);
+		game_mgr->AddScore(this->score);
 		game_mgr->AddCombo(1);
 		break;
 	}

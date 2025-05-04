@@ -1,5 +1,7 @@
 #pragma once
 
+#include "config/fruit_data.h"
+
 #include "entities/particle.h"
 #include "entities/entity.h"
 #include "utils/math.h"
@@ -19,14 +21,6 @@ private:
 public:
 	static EntityManager* instancePtr;
 	vector<Entity*> entities;
-
-	mt19937_64 entity_random_mt;
-
-	//entity random gen
-	uniform_real_distribution<float> entityDistribution;
-	uniform_int_distribution<int> spawnDirection;
-	uniform_int_distribution<int> xBound;
-	uniform_int_distribution<int> yBound;
 
 	//particle random
 	uniform_real_distribution<float> particleRandomPosition;
@@ -50,5 +44,5 @@ public:
 		entities.push_back(entity);
 	}
 
-	void spawnParticle(vec2_t position);
+	void spawnParticle(vec2_t position, SDL_Color deathParticleColor);
 };

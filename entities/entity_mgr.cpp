@@ -3,20 +3,6 @@
 EntityManager* EntityManager::instancePtr = new EntityManager();
 
 void EntityManager::Initialize() {
-	entity_random_mt.seed(time(0));
-
-	entityDistribution = uniform_real_distribution<float>(0, 1);
-	spawnDirection = uniform_int_distribution<int>(1, 3);
-	xBound = uniform_int_distribution<int>(0, RENDERER_WIDTH);
-	yBound = uniform_int_distribution<int>(100, RENDERER_HEIGHT - 100);
-
-	particleRandomPosition = uniform_real_distribution<float>(-15, 15);
-	particleRandomAngle = uniform_real_distribution<float>(20, 150);
-	particleRandonSpeed = uniform_real_distribution<float>(200, 300);
-
-	//TODO: only start this when the game is running & kill it when we get to post game status
-	//honestly we can let it run throughout the game, just a premature optimization if we do as above
-
 	spawnTask = TaskManager::GetInstance()->RunRepeatedTask(1000,
 		[](RepeatedTask* self) {
 			EntityManager::GetInstance()->RandomizeSpawningEntity();
@@ -32,32 +18,39 @@ void EntityManager::RandomizeSpawningEntity() {
 
 	float spawnRate = max(ENEMY_SPAWN_BASE_RATE + game_mgr->score * ENEMY_SPAWN_RATE_MULTIPLIER, ENEMY_SPAWN_RATE_MAX);
 
-	float rate = entityDistribution(entity_random_mt);
+	float rate = rand() % 100 / 100.0f;
 	if (rate > spawnRate) {
 		return;
 	}
 
-	int direction = spawnDirection(entity_random_mt);
+	int direction = rand() % 3;
 	float speed = min(ENEMY_BASE_SPEED + game_mgr->score * ENEMY_SPEED_MULTIPLIER, ENEMY_SPEED_MAX);
-	float angle = 0; // degree
+	float angle = 0;
 	vec2_t position;
 	switch (direction) {
 	case 0: //RIGHT
-		position = vec2_t(0, yBound(entity_random_mt));
+		//preferably in the middle
+		position = vec2_t(0, (RENDERER_CENTER_Y - 50) + rand() % 200);
 		angle = 20.0f;
 		break;
 	case 1: //LEFT
-		position = vec2_t(xBound.max(), yBound(entity_random_mt));
+		position = vec2_t(RENDERER_WIDTH, (RENDERER_CENTER_Y - 50) + rand() % 200);
 		angle = 150.0f;
 		break;
 	case 2: //BOTTOM
-		position = vec2_t(xBound(entity_random_mt), yBound.max());
+		position = vec2_t((RENDERER_CENTER_Y - 50) + rand() % 300, RENDERER_HEIGHT);
 		angle = 90.0f;
 		break;
 	}
 
+	FruitConfig fruitConfig = FruitData::GetRandomFruitConfig();
+	GameTexture* texture = Renderer::GetInstance()->GetTextureByName(fruitConfig.texture);
+
 	Enemy* enemy = new Enemy(position, speed, angle);
-	enemy->SetHitbox({ 20, 20 });
+	enemy->SetTexture(texture);
+	enemy->score = fruitConfig.score;
+	enemy->deathParticleColor = fruitConfig.color;
+
 	spawnEntity(enemy);
 }
 
@@ -81,11 +74,17 @@ void EntityManager::CleanUp() {
 	}
 }
 
-void EntityManager::spawnParticle(vec2_t position) {
+void EntityManager::spawnParticle(vec2_t position, SDL_Color deathParticleColor) {
 	for (int i = 0; i < 7; i++) {
-		vec2_t randomizedPosition = vec2_t(position.x + particleRandomPosition(entity_random_mt), position.y + particleRandomPosition(entity_random_mt));
-		Particle* particle = new Particle(randomizedPosition, particleRandonSpeed(entity_random_mt), particleRandomAngle(entity_random_mt));
+		int randomX = (rand() % 31) - 15;
+		int randomY = (rand() % 31) - 15;
+		int randomSpeed = 200 + rand() % 100;
+		int randomAngle = 20 + (rand() % 130);
+		vec2_t randomizedPosition = vec2_t(position.x + randomX, position.y + randomY);
+		Particle* particle = new Particle(randomizedPosition, randomSpeed, randomAngle);
+		particle->color = deathParticleColor;
 		particle->SetHitbox({ 5, 5 });
+
 		spawnEntity(particle);
 	}
 }
