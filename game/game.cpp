@@ -99,14 +99,19 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 
 	EntityManager* entity_mgr = EntityManager::GetInstance();
 
-	SDL_Point currentPoint{ e.x, e.y };
+	this->mousePathRecord->AddPoint({ e.x, e.y });
 
-	if (this->mousePathRecord->paths.size() >= 2) {
-		vector<MousePath> paths = this->mousePathRecord->paths;
-		vector<SDL_Point> linePoints = getLinePoints(paths[paths.size() - 1].point, currentPoint);
+	for (int i = 0; i < this->mousePathRecord->paths.size() - 1; i++) {
+		MousePath* path = &this->mousePathRecord->paths[i];
+		if (path->longevity <= 350) {
+			continue;
+		}
+		SDL_Point lastPoint = path->point;
+		SDL_Point currentPoint = this->mousePathRecord->paths[i + 1].point;
+		vector<SDL_Point> points = Algorithm_GetPoints(lastPoint, currentPoint, 1);
 
-		for (auto& point : linePoints) {
-
+		for (int i = 0; i < points.size(); i++) {
+			SDL_Point point = points[i];
 			for (int i = 0; i < entity_mgr->entities.size(); i++) {
 				Entity* entity = entity_mgr->entities[i];
 				if (!entity->alive) continue;
@@ -116,8 +121,6 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 			}
 		}
 	}
-
-	this->mousePathRecord->AddPoint(currentPoint);
 }
 
 void GameManager::FireStateChange(GameState state) {

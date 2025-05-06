@@ -161,6 +161,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="config\fruit_data.cpp" />
     <ClCompile Include="scene\types\end_stage.cpp" />
     <ClCompile Include="scene\elements\types\image_element.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="alignment.h" />
     <ClInclude Include="config\fruit_data.h" />
     <ClInclude Include="scene\types\end_stage.h" />

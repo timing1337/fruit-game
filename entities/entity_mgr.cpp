@@ -49,6 +49,10 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->SetTexture(texture);
 	enemy->score = fruitConfig.score;
 	enemy->deathParticleColor = fruitConfig.color;
+	enemy->hp = fruitConfig.maxHp;
+	
+	SDL_Log("Spawned enemy at %f, %f", position.x, position.y);
+	SDL_Log("Hp: %d", enemy->hp);
 
 	spawnEntity(enemy);
 }

@@ -1,8 +1,13 @@
 #include "enemy.h"
 
 void Enemy::onHit() {
-	this->despawn(EntityDeathType::PLAYER_INTERACTION);
-	EntityManager::GetInstance()->spawnParticle(this->position, deathParticleColor);
+	this->hp -= 1;
+
+	SDL_Log("Enemy hit! Remaining HP: %d", this->hp);
+	if (this->hp <= 0) {
+		EntityManager::GetInstance()->spawnParticle(this->position, deathParticleColor);
+		this->despawn(EntityDeathType::PLAYER_INTERACTION);
+	}
 }
 
 void Enemy::onTick(int deltaTicks) {

@@ -10,6 +10,7 @@ struct FruitConfig {
 	const char* name;
 	const char* texture;
 	int score;
+	int maxHp;
 	SDL_Color color;
 
 };

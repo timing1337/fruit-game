@@ -8,6 +8,7 @@
 #include "mouse_record/mouse_path.h"
 #include "game_state.h"
 #include "game_data.h"
+#include "utils/algorithm.h"
 
 class GameManager
 {
