@@ -30,12 +30,6 @@
     <ClCompile Include="task\task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="draw\surface_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="utils\algorithm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="entities\entity_mgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,6 +90,9 @@
     <ClCompile Include="scene\elements\types\image_element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scene\types\end_stage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -114,12 +111,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mouse_record\mouse_path.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="draw\surface_draw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils\algorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="entities\entity_mgr.h">
@@ -189,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="scene\elements\types\image_element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\types\end_stage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

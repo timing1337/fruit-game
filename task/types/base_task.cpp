@@ -7,7 +7,6 @@ BaseTask::BaseTask(function<void(BaseTask* self)> onUpdate, function<void(BaseTa
 
 BaseTask::~BaseTask() {
 	if (this->state != TaskState::KILLED) {
-		//task got disposed before it kills
 		this->Kill();
 	}
 }

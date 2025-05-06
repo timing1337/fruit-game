@@ -2,7 +2,6 @@
 
 
 #include "draw/downsampling.h"
-#include "draw/surface_draw.h"
 #include "constant.h"
 #include "game/game.h"
 #include "scene/base_scene.h"
@@ -14,7 +13,14 @@ class MainStage : public BaseScene
 {
 public:
 
-	SDL_Surface* gameCanvas;
+	//Used for glow.
+	SDL_Texture* glowCanvas;
+	//seperate canvas so we can apply shakes :D
+	SDL_Texture* gameCanvas;
+
+	int shakeIntensity = 0;
+	float shakeFrequency = 0;
+	int redColorOverlayOpacity = 0;
 
 	MainStage();
 

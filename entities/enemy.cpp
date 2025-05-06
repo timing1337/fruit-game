@@ -16,6 +16,8 @@ void Enemy::onDespawn(EntityDeathType type) {
 
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
+		game_mgr->SetRemainingLives(game_mgr->remainingLives - 1);
+		game_mgr->SetCombo(0);
 		break;
 	case EntityDeathType::PLAYER_INTERACTION:
 		game_mgr->AddScore(this->score);
@@ -24,12 +26,10 @@ void Enemy::onDespawn(EntityDeathType type) {
 	}
 }
 
-
-//this should be in the base class but because of circular dependencies, i have not been able to do so
-//this is not a BIG issue but its annoying as f
-//TODO: think of a way to move it to the base class
 void Enemy::onRender() {
 	Renderer* renderer = Renderer::GetInstance();
+	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
+	SDL_SetRenderTarget(renderer->gRenderer, mainStage->gameCanvas);
 	if (entityTexture == nullptr) {
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
 		SDL_Rect rect = { position.x - hitbox.x / 2, position.y - hitbox.y / 2, hitbox.x, hitbox.y };

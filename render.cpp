@@ -41,7 +41,6 @@ void Renderer::UpdateRender() {
 }
 
 bool Renderer::LoadFontByName(const char* name) {
-	//todo: hardcoded to ttf :p
 	TTF_Font* font = TTF_OpenFont((game_data_path + "fonts/" + name + ".ttf").c_str(), 10);
 	if (font == NULL) {
 		SDL_Log(TTF_GetError());

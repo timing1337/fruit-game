@@ -5,7 +5,6 @@
 #include "SDL_ttf.h"
 
 #include "alignment.h"
-#include "draw/surface_draw.h"
 #include "mouse_record/mouse_path.h"
 #include "task/task.h"
 #include "task/types/timer_task.h"

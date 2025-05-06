@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="config\fruit_data.cpp" />
+    <ClCompile Include="scene\types\end_stage.cpp" />
     <ClCompile Include="scene\elements\types\image_element.cpp" />
     <ClCompile Include="scene\types\main_stage.cpp" />
     <ClCompile Include="scene\elements\types\button_element.cpp" />
@@ -181,16 +182,15 @@
     <ClCompile Include="entities\entity_mgr.cpp" />
     <ClCompile Include="entities\entity.cpp" />
     <ClCompile Include="entities\particle.cpp" />
-    <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="task\task.cpp" />
     <ClCompile Include="game\game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="draw\surface_draw.cpp" />
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alignment.h" />
     <ClInclude Include="config\fruit_data.h" />
+    <ClInclude Include="scene\types\end_stage.h" />
     <ClInclude Include="scene\elements\types\image_element.h" />
     <ClInclude Include="scene\types\main_stage.h" />
     <ClInclude Include="scene\elements\types\button_element.h" />
@@ -211,11 +211,9 @@
     <ClInclude Include="entities\entity_mgr.h" />
     <ClInclude Include="entities\entity.h" />
     <ClInclude Include="entities\particle.h" />
-    <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="task\task.h" />
     <ClInclude Include="game\game.h" />
     <ClInclude Include="mouse_record\mouse_path.h" />
-    <ClInclude Include="draw\surface_draw.h" />
     <ClInclude Include="utils\gradient.h" />
     <ClInclude Include="utils\math.h" />
     <ClInclude Include="render.h" />

@@ -22,11 +22,6 @@ public:
 	static EntityManager* instancePtr;
 	vector<Entity*> entities;
 
-	//particle random
-	uniform_real_distribution<float> particleRandomPosition;
-	uniform_real_distribution<float> particleRandomAngle;
-	uniform_real_distribution<float> particleRandonSpeed;
-
 	RepeatedTask* spawnTask = nullptr;
 
 	void Initialize();

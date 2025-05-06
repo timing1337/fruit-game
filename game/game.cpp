@@ -122,16 +122,96 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 
 void GameManager::FireStateChange(GameState state) {
 	this->state = state;
+	switch (state) {
+	case GameState::WAITING:
+		break;
+	case GameState::STARTING:
+		ResetGameData();
+		break;
+	case GameState::POSTGAME:
+		this->gameData->Save();
+		break;
+	case GameState::ENDGAME:
+		//clear out old entities and mouse path
+		for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
+			MousePathRecord* record = this->mousePathRecordsLeftover[i];
+			delete record;
+		}
+		this->mousePathRecordsLeftover.clear();
+
+		delete this->mousePathRecord;
+		this->mousePathRecord = nullptr;
+
+		EntityManager* entity_mgr = EntityManager::GetInstance();
+
+		for (int i = 0; i < entity_mgr->entities.size(); i++) {
+			Entity* entity = entity_mgr->entities[i];
+			if (entity->alive) {
+				delete entity;
+			}
+		}
+		entity_mgr->entities.clear();
+		break;
+	}
 }
 
-void GameManager::OnStarting() {
-	ResetGameData();
+void GameManager::SetRemainingLives(int lives) {
+	if (lives < 0) return;
+	SDL_Log("Remaining lives: %d", lives);
+	SceneManager* scene_mgr = SceneManager::GetInstance();
+	this->remainingLives = lives;
+	MainStage* mainStage = (MainStage*)scene_mgr->GetScene(SceneId::GAME);
+	MainMenu* mainMenu = (MainMenu*)scene_mgr->GetScene(SceneId::MAIN_MENU);
+	TaskManager* task_mgr = TaskManager::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
+
+	if (this->remainingLives == 0) {
+		GameManager::GetInstance()->FireStateChange(GameState::POSTGAME);
+		TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
+			[renderer](TimerTask* self) {
+				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * 255);
+			}, [renderer, mainStage, mainMenu](TimerTask* self) {
+				mainStage->redColorOverlayOpacity = 0;
+				mainStage->shakeIntensity = 0;
+				mainStage->shakeFrequency = 0;
+
+				mainMenu->SetActive(true);
+				mainStage->SetActive(false);
+
+				TaskManager::GetInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
+					[renderer](TimerTask* self) {
+						renderer->SetBackgroundColor(255, 0, 0, 255 - (self->GetProgress() * 255));
+					},
+					[](TimerTask* self) {
+						GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
+						GameManager::GetInstance()->FireStateChange(GameState::WAITING);
+					});
+				});
+
+		return;
+	}
+
+	int amount = MAX_LIVES - this->remainingLives;
+	if (amount != 0) {
+		int calculatedRedOpacity = amount * 30;
+		int shakeIntensity = amount * 3;
+		mainStage->shakeFrequency = 0.2f + (amount * 0.1f);
+		mainStage->shakeIntensity = shakeIntensity;
+
+		task_mgr->RunTimerTask(150,
+			[renderer, calculatedRedOpacity, mainStage](TimerTask* self) {
+				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * calculatedRedOpacity);
+			},
+			[mainStage, calculatedRedOpacity](TimerTask* self) {
+				mainStage->redColorOverlayOpacity = calculatedRedOpacity;
+			});
+	}
 }
 
 void GameManager::ResetGameData() {
-	this->score = 0;
-	this->currentCombo = 0;
-	this->remainingLives = 3;
+	SetScore(0);
+	SetCombo(0);
+	SetRemainingLives(MAX_LIVES);
 }
 
 void GameManager::AddScore(int score) {

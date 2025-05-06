@@ -31,7 +31,7 @@ public:
 	int comboExpirationTick = 0;
 
 	//Mouse path recording
-	MousePathRecord* mousePathRecord = new MousePathRecord();
+	MousePathRecord* mousePathRecord = nullptr;
 	vector<MousePathRecord*> mousePathRecordsLeftover;
 
 	void Initialize();
@@ -44,11 +44,6 @@ public:
 	void OnMouseRelease(SDL_MouseButtonEvent& e);
 	void OnMouseMove(SDL_MouseButtonEvent& e);
 
-	void OnWaiting();
-	void OnStarting();
-	void OnRunning();
-	void OnPostgame();
-
 	void ResetGameData();
 
 	void AddScore(int score);
@@ -57,5 +52,7 @@ public:
 	void SetCombo(int combo);
 	void AddCombo(int combo);
 	void ResetCombo();
+
+	void SetRemainingLives(int lives);
 };
 

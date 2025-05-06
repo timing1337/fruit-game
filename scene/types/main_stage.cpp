@@ -19,40 +19,32 @@ MainStage::MainStage() : BaseScene(SceneId::GAME) {
 void MainStage::Prepare() {
 	BaseScene::Prepare();
 
-	gameCanvas = SDL_CreateRGBSurfaceWithFormat(0, RENDERER_WIDTH, RENDERER_HEIGHT, 32, SDL_PIXELFORMAT_RGBA8888);
-	SDL_SetSurfaceBlendMode(gameCanvas, SDL_BLENDMODE_BLEND);
+	Renderer* renderer = Renderer::GetInstance();
+
+	glowCanvas = SDL_CreateTexture(renderer->gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, RENDERER_WIDTH, RENDERER_HEIGHT);
+	SDL_SetTextureBlendMode(glowCanvas, SDL_BLENDMODE_BLEND);
+
+	gameCanvas = SDL_CreateTexture(renderer->gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, RENDERER_WIDTH, RENDERER_HEIGHT);
+	SDL_SetTextureBlendMode(gameCanvas, SDL_BLENDMODE_BLEND);
 }
 
 void MainStage::Render() {
-	BaseScene::Render();
-	
-	SDL_FillRect(gameCanvas, NULL, 0);
-
 	GameManager* game_mgr = GameManager::GetInstance();
 	EntityManager* entity_mgr = EntityManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
+	
 
-	for (int i = 0; i < entity_mgr->entities.size(); i++) {
-		Entity* entity = entity_mgr->entities[i];
-		if (!entity->alive) {
-			continue;
-		}
-		entity->onRender();
-	}
+	SDL_SetRenderTarget(renderer->gRenderer, glowCanvas);
+	SDL_SetRenderDrawColor(renderer->gRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(renderer->gRenderer);
 
-	for (auto& record : game_mgr->mousePathRecordsLeftover) {
-		DrawMousePathRecord(record);
-	}
+	//Clear canvas
+	SDL_SetRenderTarget(renderer->gRenderer, gameCanvas);
+	SDL_SetRenderDrawColor(renderer->gRenderer, 0, 0, 0, 0);
+	SDL_RenderClear(renderer->gRenderer);
 
-	if (game_mgr->mousePathRecord != nullptr) {
-		DrawMousePathRecord(game_mgr->mousePathRecord);
-	}
-
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer->gRenderer, gameCanvas);
-	//Downsampling::Downsample(texture);
-	//Downsampling::Render();
-	SDL_RenderCopy(renderer->gRenderer, texture, NULL, NULL);
-	SDL_DestroyTexture(texture);
+	//ui elements | gameCanvas
+	BaseScene::Render();
 
 	if (game_mgr->currentCombo > 0 && game_mgr->comboExpirationTick > 0) {
 		int maxComboDuration = max(COMBO_DURATION_BASE + game_mgr->currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
@@ -61,18 +53,58 @@ void MainStage::Render() {
 		SDL_Rect fillRect = { RENDERER_CENTER_X - 100, 40, width, 15 };
 		SDL_RenderFillRect(renderer->gRenderer, &fillRect);
 	}
+
+	//entities
+	for (int i = 0; i < entity_mgr->entities.size(); i++) {
+		Entity* entity = entity_mgr->entities[i];
+		if (!entity->alive) {
+			continue;
+		}
+		entity->onRender();
+	}
+
+	SDL_SetRenderTarget(renderer->gRenderer, glowCanvas);
+	for (auto& record : game_mgr->mousePathRecordsLeftover) {
+		DrawMousePathRecord(record);
+	}
+
+	if (game_mgr->mousePathRecord != nullptr) {
+		DrawMousePathRecord(game_mgr->mousePathRecord);
+	}
+
+	SDL_SetRenderTarget(renderer->gRenderer, NULL);
+	float shakeRate = rand() % 100 / 100.0f;
+
+	if (shakeRate < shakeFrequency) {
+		SDL_Rect destRect = { rand() % 6 + shakeIntensity, rand() % 6 + shakeIntensity, RENDERER_WIDTH, RENDERER_HEIGHT };
+		SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, &destRect);
+		SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
+	}
+	else {
+		SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, NULL);
+		SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
+	}
+
+	Downsampling::Downsample(glowCanvas);
+	Downsampling::Render();
+
+	renderer->SetBackgroundColor(255, 0, 0, redColorOverlayOpacity);
 }
 
 void MainStage::Release() {
 	BaseScene::Release();
+	SDL_DestroyTexture(gameCanvas);
+	SDL_DestroyTexture(glowCanvas);
 
-	SDL_FreeSurface(gameCanvas);
-
+	glowCanvas = nullptr;
 	gameCanvas = nullptr;
 }
 
 void MainStage::DrawMousePathRecord(MousePathRecord* record) {
+	Renderer* renderer = Renderer::GetInstance();
 	float distance = 0;
+
+	int thickness = 1;
 	vector<MousePath> paths = record->paths;
 	if (paths.size() > 2) {
 		for (int i = 0; i < record->paths.size() - 1; i++) {
@@ -87,9 +119,18 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 
 			int alpha = ((float)point->longevity / 500) * 255;
 
-			SDL_SurfaceDrawLine(gameCanvas, point->point, nextPoint->point, color.r, color.g, color.b, alpha, 1);
+			SDL_SetRenderDrawColor(renderer->gRenderer, color.r, color.g, color.b, alpha);
+
+			for (int j = -thickness; j <= thickness; j++) {
+				SDL_RenderDrawLineF(renderer->gRenderer, point->point.x, point->point.y + j, nextPoint->point.x, nextPoint->point.y + j);
+			}
+
+			for (int j = -thickness; j <= thickness; j++) {
+				SDL_RenderDrawLineF(renderer->gRenderer, point->point.x + j, point->point.y, nextPoint->point.x + j, nextPoint->point.y);
+			}
 
 			distance += sqrt(pow(point->point.x - nextPoint->point.x, 2) + pow(point->point.y - nextPoint->point.y, 2));
 		}
 	}
+	SDL_SetRenderDrawColor(renderer->gRenderer, 0, 0, 0, 0);
 }

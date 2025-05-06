@@ -29,7 +29,6 @@ void EntityManager::RandomizeSpawningEntity() {
 	vec2_t position;
 	switch (direction) {
 	case 0: //RIGHT
-		//preferably in the middle
 		position = vec2_t(0, (RENDERER_CENTER_Y - 50) + rand() % 200);
 		angle = 20.0f;
 		break;

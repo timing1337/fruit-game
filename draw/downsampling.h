@@ -7,11 +7,11 @@
 class Downsampling
 {
 private:
-	static SDL_Texture* downsampledTextures[6];
+	static SDL_Texture* downsampledTextures[4];
 
 public:
 	static void Initialize();
-	static void Downsample(SDL_Texture* texture);
+	static void Downsample(SDL_Texture* texture, SDL_Texture* fallbackTarget = nullptr);
 	static void Render();
 	static void Free();
 };

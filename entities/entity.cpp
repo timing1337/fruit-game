@@ -13,7 +13,6 @@ Entity::Entity(vec2_t position, float speed, float angle) {
 	this->hitbox = vec2_t(0, 0);
 };
 
-//we only allow custom hitbox for non-textured entities
 void Entity::SetHitbox(vec2_t hitbox) {
 	if (this->entityTexture == nullptr) {
 		this->hitbox = hitbox;
@@ -31,7 +30,6 @@ void Entity::SetTexture(GameTexture* texture) {
 
 
 //this is kinda bad? only works well if entity bounding box is square
-
 bool Entity::IsColliding(int x, int y) {
 	int halfBoundX = this->hitbox.x / 2;
 	int halfBoundY = this->hitbox.y / 2;
