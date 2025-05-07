@@ -34,8 +34,7 @@ public:
 	void RandomizeSpawningEntity();
 	void CleanUp();
 
-	template <typename T>
-	void spawnEntity(T* entity) {
+	void spawnEntity(Entity* entity) {
 		entities.push_back(entity);
 	}
 

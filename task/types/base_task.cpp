@@ -5,12 +5,6 @@ BaseTask::BaseTask(function<void(BaseTask* self)> onUpdate, function<void(BaseTa
 	this->onComplete = onComplete;
 }
 
-BaseTask::~BaseTask() {
-	if (this->state != TaskState::KILLED) {
-		this->Kill();
-	}
-}
-
 void BaseTask::Update(int deltaTick){
 }
 

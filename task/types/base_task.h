@@ -15,7 +15,7 @@ public:
 	function<void(BaseTask* self)> onComplete;
 
 	BaseTask(function<void(BaseTask* self)> onUpdate, function<void(BaseTask* self)> onComplete);
-	~BaseTask();
+	virtual ~BaseTask() = default;
 
 	void Start();
 	virtual void Update(int deltaTick);

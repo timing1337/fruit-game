@@ -43,11 +43,15 @@ void Entity::onTick(int deltaTicks) {
 	}
 
 	if (this->position.x < -50 || this->position.x > RENDERER_WIDTH) {//screen x bound
+		SDL_Log("Entity out of bound X");
+		SDL_Log("Entity position: %f, %f", this->position.x, this->position.y);
 		this->despawn(EntityDeathType::OUT_OF_BOUND);
 		return;
 	}
 
 	if (this->position.y < -50 || this->position.y > RENDERER_HEIGHT) { //screen y bound
+		SDL_Log("Entity out of bound Y");
+		SDL_Log("Entity position: %f, %f", this->position.x, this->position.y);
 		this->despawn(EntityDeathType::OUT_OF_BOUND);
 		return;
 	}

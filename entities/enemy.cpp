@@ -21,6 +21,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
+		SDL_Log("Enemy out of bound");
 		game_mgr->SetRemainingLives(game_mgr->remainingLives - 1);
 		game_mgr->SetCombo(0);
 		break;
