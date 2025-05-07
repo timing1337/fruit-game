@@ -11,5 +11,6 @@ public:
 	RepeatedTask(int interval, function<void(RepeatedTask* self)> onUpdate, function<void(RepeatedTask* self)> onComplete);
 
 	void Update(int deltaTick) override;
+	void Cleanup() override;
 };
 

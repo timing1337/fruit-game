@@ -24,7 +24,7 @@ public:
 	int deltaTime = 0;
 
 	//Game Data
-	GameData* gameData;
+	GameData* gameData = new GameData("game_data.dat");
 	int score = 0;
 	int remainingLives = 3;
 	int lastUpdatedTicks = 0;
@@ -34,8 +34,6 @@ public:
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;
 	vector<MousePathRecord*> mousePathRecordsLeftover;
-
-	void Initialize();
 
 	void Heartbeat(int deltaTicks);
 
@@ -52,7 +50,6 @@ public:
 
 	void SetCombo(int combo);
 	void AddCombo(int combo);
-	void ResetCombo();
 
 	void SetRemainingLives(int lives);
 };

@@ -7,8 +7,8 @@
 class Enemy: public Entity
 {
 public:
-	int score;
-	int hp;
+	int score = 1;
+	int hp = 100;
 
 	SDL_Color deathParticleColor = { 255, 255, 255, 255 };
 

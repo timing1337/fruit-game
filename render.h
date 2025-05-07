@@ -23,8 +23,8 @@ private:
 	static Renderer* instancePtr;
 public:
 
-	SDL_Window* gWindow;
-	SDL_Renderer* gRenderer;
+	SDL_Window* gWindow = nullptr;
+	SDL_Renderer* gRenderer = nullptr;
 
 	unordered_map<const char*, TTF_Font*> fonts;
 	unordered_map<const char*, GameTexture*> textures;
@@ -38,14 +38,9 @@ public:
 	}
 
 	void PreRender();
-	void Render();
 	void UpdateRender();
 
-	void OnMouseClick(SDL_MouseButtonEvent& e);
-	void OnMousePathRecorded(MousePathRecord record);
-
 	void PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete);
-	void PlayTitleAnimationAndStartGame();
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);

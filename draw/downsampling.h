@@ -7,7 +7,7 @@
 class Downsampling
 {
 private:
-	static SDL_Texture* downsampledTextures[4];
+	static SDL_Texture* downsampledTextures[5];
 
 public:
 	static void Initialize();

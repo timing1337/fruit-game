@@ -15,8 +15,8 @@ public:
 	uint64_t timestamp;
 	uint64_t signature;
 
-	uint32_t highestScore = 0;
-	uint32_t highestComboAchived = 0;
+	int highestScore = 0;
+	int highestComboAchived = 0;
 	uint64_t longestTimeAlive = 0;
 
 	GameData(string path);

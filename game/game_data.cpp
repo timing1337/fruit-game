@@ -27,17 +27,14 @@ GameData::GameData(string path) {
 
 	uint64_t key = randomSeed();
 
-	SDL_Log("Timestamp: %llu", this->timestamp);
-	SDL_Log("Signature: %llu", this->signature);
-
 	for (int i = 0; i < size; i++) {
 		uint8_t keyByte = ((uint8_t*)&key)[i % 8];
 		buffer[i] ^= keyByte;
 		key = randomSeed();
 	}
 	
-	this->highestScore = *(uint32_t*)(buffer);
-	this->highestComboAchived = *(uint32_t*)(buffer + 4);
+	this->highestScore = *(int*)(buffer);
+	this->highestComboAchived = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
 
 	uint64_t signature = this->timestamp ^ this->highestScore | this->highestComboAchived ^ this->longestTimeAlive;
@@ -54,12 +51,11 @@ GameData::GameData(string path) {
 }
 
 void GameData::Save() {
-	SDL_Log("Saving game data");
 	uint32_t size = 16;
 	uint8_t* buffer = new uint8_t[size];
 	
-	*(uint32_t*)(buffer) = this->highestScore;
-	*(uint32_t*)(buffer + 4) = this->highestComboAchived;
+	*(int*)(buffer) = this->highestScore;
+	*(int*)(buffer + 4) = this->highestComboAchived;
 	*(uint64_t*)(buffer + 8) = this->longestTimeAlive;
 
 	this->timestamp = time(0);
@@ -68,8 +64,6 @@ void GameData::Save() {
 	this->randomSeed.seed(this->signature);
 
 	uint64_t key = randomSeed();
-	SDL_Log("Timestamp: %llu", this->timestamp);
-	SDL_Log("Signature: %llu", this->signature);
 
 	for (int i = 0; i < size; i++) {
 		uint8_t keyByte = ((uint8_t*)&key)[i % 8];

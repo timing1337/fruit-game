@@ -2,10 +2,6 @@
 
 GameManager* GameManager::instancePtr = new GameManager();
 
-void GameManager::Initialize() {
-	this->gameData = new GameData("game_data.dat");
-}
-
 void GameManager::Heartbeat(int deltaTicks) {
 	for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
 		MousePathRecord* record = this->mousePathRecordsLeftover[i];

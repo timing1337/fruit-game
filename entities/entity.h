@@ -18,7 +18,7 @@ enum EntityType {
 class Entity
 {
 public:
-    GameTexture* entityTexture;
+    GameTexture* entityTexture = nullptr;
     vec2_t position;
     vec2_t direction;
     vec2_t hitbox;

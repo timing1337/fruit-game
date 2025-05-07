@@ -13,8 +13,13 @@ void SceneManager::Initialize() {
 	mainStage->SetBackgroundTexture(backgroundTexture);
 	mainStage->SetActive(false);
 
+	EndStage* endStage = new EndStage();
+	endStage->SetBackgroundTexture(backgroundTexture);
+	endStage->SetActive(false);
+
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);
+	this->scenes.push_back(endStage);
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {

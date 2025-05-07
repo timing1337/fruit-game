@@ -39,7 +39,6 @@ int main(int argc, char* args[])
 	EntityManager* entity_mgr = EntityManager::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 
-	game_mgr->Initialize();
 	renderer->Initialize();
 	entity_mgr->Initialize();
 	scene_mgr->Initialize();
