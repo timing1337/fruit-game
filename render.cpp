@@ -148,6 +148,8 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 
 	SDL_FreeSurface(surface);
 
+	TTF_SetFontOutline(font, 0);
+
 	return textureData;
 }
 

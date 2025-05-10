@@ -191,5 +191,11 @@
     <ClInclude Include="utils\algorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="task\task_type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\scene_appear_type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

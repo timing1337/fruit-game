@@ -25,11 +25,20 @@ public:
 
 	//Game Data
 	GameData* gameData = new GameData("game_data.dat");
-	int score = 0;
-	int remainingLives = 3;
+
+	//Timing
 	int lastUpdatedTicks = 0;
+
+	//Runtime game data
+	int remainingLives = 3;
+
+	int score = 0;
+
 	int currentCombo = 0;
+	int highestComboRecorded = 0;
 	int comboExpirationTick = 0;
+
+	int slicedFruit = 0;
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;

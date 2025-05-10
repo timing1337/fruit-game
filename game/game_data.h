@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <random>
+#include <string>
 
 using namespace std;
 
@@ -13,14 +14,17 @@ public:
 	string path;
 
 	uint64_t timestamp;
-	uint64_t signature;
 
 	int highestScore = 0;
-	int highestComboAchived = 0;
+	int highestComboAchieved = 0;
 	uint64_t longestTimeAlive = 0;
 
 	GameData(string path);
 	void Save();
+	string ToString() {
+		return to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" +
+			to_string(longestTimeAlive);
+	}
 private:
 	mt19937_64 randomSeed;
 };

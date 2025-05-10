@@ -128,6 +128,10 @@ void GameManager::FireStateChange(GameState state) {
 		ResetGameData();
 		break;
 	case GameState::POSTGAME:
+		if (this->highestComboRecorded > this->gameData->highestComboAchieved) {
+			this->gameData->highestComboAchieved = this->highestComboRecorded;
+		}
+
 		this->gameData->Save();
 		break;
 	case GameState::ENDGAME:
@@ -160,7 +164,7 @@ void GameManager::SetRemainingLives(int lives) {
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 	this->remainingLives = lives;
 	MainStage* mainStage = (MainStage*)scene_mgr->GetScene(SceneId::GAME);
-	MainMenu* mainMenu = (MainMenu*)scene_mgr->GetScene(SceneId::MAIN_MENU);
+	MainMenu* endStage = (MainMenu*)scene_mgr->GetScene(SceneId::END_GAME);
 	TaskManager* task_mgr = TaskManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
 
@@ -169,12 +173,10 @@ void GameManager::SetRemainingLives(int lives) {
 		TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
 			[renderer](TimerTask* self) {
 				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * 255);
-			}, [renderer, mainStage, mainMenu](TimerTask* self) {
+			}, [renderer, mainStage, endStage](TimerTask* self) {
 				mainStage->redColorOverlayOpacity = 0;
-				mainStage->shakeIntensity = 0;
-				mainStage->shakeFrequency = 0;
 
-				mainMenu->SetActive(true);
+				endStage->SetActive(true);
 				mainStage->SetActive(false);
 
 				TaskManager::GetInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
@@ -183,7 +185,6 @@ void GameManager::SetRemainingLives(int lives) {
 					},
 					[](TimerTask* self) {
 						GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
-						GameManager::GetInstance()->FireStateChange(GameState::WAITING);
 					});
 				});
 
@@ -193,10 +194,6 @@ void GameManager::SetRemainingLives(int lives) {
 	int amount = MAX_LIVES - this->remainingLives;
 	if (amount != 0) {
 		int calculatedRedOpacity = amount * 30;
-		int shakeIntensity = amount * 3;
-		mainStage->shakeFrequency = 0.2f + (amount * 0.1f);
-		mainStage->shakeIntensity = shakeIntensity;
-
 		task_mgr->RunTimerTask(150,
 			[renderer, calculatedRedOpacity, mainStage](TimerTask* self) {
 				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * calculatedRedOpacity);
@@ -211,6 +208,8 @@ void GameManager::ResetGameData() {
 	SetScore(0);
 	SetCombo(0);
 	SetRemainingLives(MAX_LIVES);
+	this->highestComboRecorded = 0;
+	this->slicedFruit = 0;
 }
 
 void GameManager::AddScore(int score) {
@@ -223,10 +222,10 @@ void GameManager::SetScore(int score) {
 
 	if (this->score > this->gameData->highestScore) {
 		this->gameData->highestScore = this->score;
-
 		TextElement* highestScoreElement = (TextElement*)mainStage->GetElementById("highest_score");
 		highestScoreElement->SetText("Record: " + to_string(this->score));
 	}
+
 	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
 	scoreElement->SetText(to_string(this->score));
 
@@ -250,9 +249,8 @@ void GameManager::SetCombo(int combo) {
 	}
 	else {
 		comboExpirationTick = max(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
-		if (currentCombo > gameData->highestComboAchived) {
-			gameData->highestComboAchived = currentCombo;
-		}
 		comboElement->SetActive(true);
+
+		this->highestComboRecorded = max(this->highestComboRecorded, currentCombo);
 	}
 }

@@ -4,6 +4,7 @@ SceneManager* SceneManager::instancePtr = new SceneManager();
 
 void SceneManager::Initialize() {
 	GameTexture* backgroundTexture = Renderer::GetInstance()->GetTextureByName("background.png");
+	GameTexture* backgroundBlurredTexture = Renderer::GetInstance()->GetTextureByName("background_blurred.png");
 
 	MainMenu* mainMenu = new MainMenu();
 	mainMenu->SetBackgroundTexture(backgroundTexture);
@@ -14,7 +15,7 @@ void SceneManager::Initialize() {
 	mainStage->SetActive(false);
 
 	EndStage* endStage = new EndStage();
-	endStage->SetBackgroundTexture(backgroundTexture);
+	endStage->SetBackgroundTexture(backgroundBlurredTexture);
 	endStage->SetActive(false);
 
 	this->scenes.push_back(mainMenu);

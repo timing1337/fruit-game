@@ -2,7 +2,7 @@
 
 MainStage::MainStage() : BaseScene(SceneId::GAME) {
 	//fast hack
-	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 20 }, "0", "Helvetica-Bold", 20, { 255, 255, 255, 255 });
+	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 16 }, "0", "genshin", 25, { 255, 255, 255, 255 });
 	comboElement->active = false;
 
 	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png");
@@ -10,10 +10,10 @@ MainStage::MainStage() : BaseScene(SceneId::GAME) {
 
 	float scoreX = 10 + scoreIcon->bound.x + 5;
 
-	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreX, 10 }, "0", "Helvetica-Bold", 40, { 255, 255, 255, 255 });
+	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreX, 12 }, "0", "genshin", 30, { 255, 255, 255, 255 });
 	GameManager* game_mgr = GameManager::GetInstance();
 
-	TextElement* highestScoreElement = this->AddText("highest_score", vec2_t{ scoreX, 10 + scoreElement->bound.y + 2 }, "Record: " + to_string(game_mgr->gameData->highestScore), "Helvetica-Bold", 20, { 255, 255, 255, 255 });
+	TextElement* highestScoreElement = this->AddText("highest_score", vec2_t{ scoreX, 12 + scoreElement->bound.y + 2 }, "Record: " + to_string(game_mgr->gameData->highestScore), "genshin", 20, { 255, 255, 255, 255 });
 }
 
 void MainStage::Prepare() {
@@ -47,10 +47,12 @@ void MainStage::Render() {
 	BaseScene::Render();
 
 	if (game_mgr->currentCombo > 0 && game_mgr->comboExpirationTick > 0) {
+		int maxComboBarWidth = 200;
+		TextElement* comboElement = (TextElement*)this->GetElementById("combo");
 		int maxComboDuration = max(COMBO_DURATION_BASE + game_mgr->currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
-		int width = ((float)game_mgr->comboExpirationTick / maxComboDuration) * 200;
+		int width = ((float)game_mgr->comboExpirationTick / maxComboDuration) * maxComboBarWidth;
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
-		SDL_Rect fillRect = { RENDERER_CENTER_X - 100, 40, width, 15 };
+		SDL_Rect fillRect = { comboElement->position.x - maxComboBarWidth/2, comboElement->position.y + comboElement->bound.y + 3, width, 15 };
 		SDL_RenderFillRect(renderer->gRenderer, &fillRect);
 	}
 
@@ -73,17 +75,8 @@ void MainStage::Render() {
 	}
 
 	SDL_SetRenderTarget(renderer->gRenderer, NULL);
-	float shakeRate = rand() % 100 / 100.0f;
-
-	if (shakeRate < shakeFrequency) {
-		SDL_Rect destRect = { rand() % 6 + shakeIntensity, rand() % 6 + shakeIntensity, RENDERER_WIDTH, RENDERER_HEIGHT };
-		SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, &destRect);
-		SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
-	}
-	else {
-		SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, NULL);
-		SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
-	}
+	SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, NULL);
+	SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
 
 	Downsampling::Downsample(glowCanvas);
 	Downsampling::Render();
@@ -111,8 +104,8 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 			MousePath* point = &record->paths[i];
 			MousePath* nextPoint = &record->paths[i + 1];
 
-			SDL_Color color1 = { 200, 90, 90, 255 };
-			SDL_Color color2 = { 120, 255, 90, 255 };
+			SDL_Color color1 = { 102, 0, 204, 255 };
+			SDL_Color color2 = { 255, 153, 255, 255 };
 
 			float ratio = distance / record->distance;
 			SDL_Color color = GradientColorMix(color1, color2, ratio);

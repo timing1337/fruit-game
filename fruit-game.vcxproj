@@ -191,6 +191,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="scene\scene_appear_type.h" />
     <ClInclude Include="task\task_type.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="alignment.h" />

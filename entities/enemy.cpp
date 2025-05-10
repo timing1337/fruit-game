@@ -28,6 +28,8 @@ void Enemy::onDespawn(EntityDeathType type) {
 	case EntityDeathType::PLAYER_INTERACTION:
 		game_mgr->AddScore(this->score);
 		game_mgr->AddCombo(1);
+
+		game_mgr->slicedFruit++;
 		break;
 	}
 }

@@ -18,8 +18,6 @@ public:
 	//seperate canvas so we can apply shakes :D
 	SDL_Texture* gameCanvas;
 
-	int shakeIntensity = 0;
-	float shakeFrequency = 0;
 	int redColorOverlayOpacity = 0;
 
 	MainStage();

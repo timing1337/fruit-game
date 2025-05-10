@@ -1,5 +1,20 @@
 #include "game_data.h"
 
+//fn1v hash
+inline const uint32_t HashGameDataString(string gameDataStr) {
+
+	uint32_t hash = 0x811c9dc5;
+	uint32_t prime = 0x1000193;
+
+	for (int i = 0; i < gameDataStr.length(); ++i) {
+		uint8_t value = gameDataStr[i];
+		hash = hash ^ value;
+		hash *= prime;
+	}
+
+	return hash;
+}
+
 GameData::GameData(string path) {
 	this->path = path;
 	fstream file(path, ios::in | ios::binary);
@@ -9,21 +24,18 @@ GameData::GameData(string path) {
 		return;
 	}
 
+	uint64_t signature;
+
 	file.read((char*)&this->timestamp, sizeof(uint64_t));
-	file.read((char*)&this->signature, sizeof(uint64_t));
+	file.read((char*)&signature, sizeof(uint64_t));
 
 	uint32_t size;
 	file.read((char*)&size, sizeof(uint32_t));
 	uint8_t* buffer = new uint8_t[size];
 	file.read((char*)buffer, size);
 
-	/*
-	* Simple XOR encryption for game-data to prevent player from tampering with scores
-	* Using signature as a seed
-	* For each byte it will generate an ulong and select a byte (depends on the position of the byte) and xor it with encrypted byte
-	*/
-
-	randomSeed.seed(this->signature);
+	//Encryption
+	randomSeed.seed(this->timestamp);
 
 	uint64_t key = randomSeed();
 
@@ -34,20 +46,21 @@ GameData::GameData(string path) {
 	}
 	
 	this->highestScore = *(int*)(buffer);
-	this->highestComboAchived = *(int*)(buffer + 4);
+	this->highestComboAchieved = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
 
-	uint64_t signature = this->timestamp ^ this->highestScore | this->highestComboAchived ^ this->longestTimeAlive;
-
-	if (signature != this->signature) {
-		SDL_Log("Signature mismatch, resetting game data");
-		this->highestScore = 0;
-		this->highestComboAchived = 0;
-		this->longestTimeAlive = 0;
-	}
-
+	//Cleanup
 	delete[] buffer;
 	file.close();
+
+	//Signature checking
+	if (signature != HashGameDataString(this->ToString())) {
+		SDL_Log("Signature mismatch, resetting game data, stop cheating bruh");
+		this->highestScore = 0;
+		this->highestComboAchieved = 0;
+		this->longestTimeAlive = 0;
+		this->Save();
+	}
 }
 
 void GameData::Save() {
@@ -55,13 +68,12 @@ void GameData::Save() {
 	uint8_t* buffer = new uint8_t[size];
 	
 	*(int*)(buffer) = this->highestScore;
-	*(int*)(buffer + 4) = this->highestComboAchived;
+	*(int*)(buffer + 4) = this->highestComboAchieved;
 	*(uint64_t*)(buffer + 8) = this->longestTimeAlive;
 
 	this->timestamp = time(0);
-	this->signature = this->timestamp ^ this->highestScore | this->highestComboAchived ^ this->longestTimeAlive;
 
-	this->randomSeed.seed(this->signature);
+	this->randomSeed.seed(this->timestamp);
 
 	uint64_t key = randomSeed();
 
@@ -71,6 +83,8 @@ void GameData::Save() {
 		key = randomSeed();
 	}
 
+	uint64_t signature = HashGameDataString(this->ToString());
+
 	fstream file(path, ios::out | ios::binary);
 
 	if (!file.is_open()) {
@@ -79,7 +93,7 @@ void GameData::Save() {
 	}
 
 	file.write((char*)&this->timestamp, sizeof(uint64_t));
-	file.write((char*)&this->signature, sizeof(uint64_t));	
+	file.write((char*)&signature, sizeof(uint64_t));	
 	file.write((char*)&size, sizeof(uint32_t));
 	file.write((char*)buffer, size);
 	delete[] buffer;

@@ -68,7 +68,7 @@ void ButtonElement::OnHoveredRender() {
 	}
 
 	SDL_Rect rect = { boxStartX, boxStartY, this->bound.x, this->bound.y };
-	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 200);
+	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 150);
 	SDL_RenderDrawRect(renderer->gRenderer, &rect);
 }
 
