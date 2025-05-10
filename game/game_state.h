@@ -5,5 +5,6 @@ enum GameState {
 	STARTING,
 	RUNNING,
 	POSTGAME,
-	ENDGAME
+	ENDGAME,
+	PAUSED,
 };

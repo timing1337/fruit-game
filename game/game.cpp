@@ -3,6 +3,9 @@
 GameManager* GameManager::instancePtr = new GameManager();
 
 void GameManager::Heartbeat(int deltaTicks) {
+	if (this->state != GameState::RUNNING) {
+		return;
+	}
 	for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
 		MousePathRecord* record = this->mousePathRecordsLeftover[i];
 		if (record->paths.size() == 0) {
@@ -174,7 +177,6 @@ void GameManager::SetRemainingLives(int lives) {
 			[renderer](TimerTask* self) {
 				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * 255);
 			}, [renderer, mainStage, endStage](TimerTask* self) {
-				mainStage->redColorOverlayOpacity = 0;
 
 				endStage->SetActive(true);
 				mainStage->SetActive(false);

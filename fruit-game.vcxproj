@@ -163,6 +163,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="scene\types\pause_screen.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="config\fruit_data.cpp" />
     <ClCompile Include="scene\types\end_stage.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="scene\types\pause_screen.h" />
     <ClInclude Include="scene\scene_appear_type.h" />
     <ClInclude Include="task\task_type.h" />
     <ClInclude Include="utils\algorithm.h" />

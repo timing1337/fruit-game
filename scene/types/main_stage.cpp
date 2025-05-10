@@ -91,6 +91,8 @@ void MainStage::Release() {
 
 	glowCanvas = nullptr;
 	gameCanvas = nullptr;
+
+	this->redColorOverlayOpacity = 0;
 }
 
 void MainStage::DrawMousePathRecord(MousePathRecord* record) {

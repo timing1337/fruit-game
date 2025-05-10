@@ -18,9 +18,13 @@ void SceneManager::Initialize() {
 	endStage->SetBackgroundTexture(backgroundBlurredTexture);
 	endStage->SetActive(false);
 
+	PauseScreen* pauseScreen = new PauseScreen();
+	pauseScreen->SetActive(false);
+
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);
 	this->scenes.push_back(endStage);
+	this->scenes.push_back(pauseScreen);
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {

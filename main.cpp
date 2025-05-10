@@ -74,10 +74,18 @@ int main(int argc, char* args[])
 				game_mgr->OnMouseMove(e.button);
 				break;
 			case SDL_KEYDOWN:
-
 				switch (e.key.keysym.sym) {
-				case SDLK_SPACE:
-					game_mgr->running = false;
+				case SDLK_ESCAPE:
+					if (game_mgr->state == GameState::RUNNING) {
+						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
+						pauseScreen->SetActive(true);
+						game_mgr->FireStateChange(GameState::PAUSED);
+					}
+					else if (game_mgr->state == GameState::PAUSED) {
+						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
+						pauseScreen->SetActive(false);
+						game_mgr->FireStateChange(GameState::RUNNING);
+					}
 					break;
 				}
 				break;

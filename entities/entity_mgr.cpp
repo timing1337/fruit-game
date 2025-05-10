@@ -58,6 +58,10 @@ void EntityManager::RandomizeSpawningEntity() {
 }
 
 void EntityManager::Heartbeat(int deltaTicks) {
+	GameManager* game_mgr = GameManager::GetInstance();
+	if (game_mgr->state != GameState::RUNNING) {
+		return;
+	}
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {

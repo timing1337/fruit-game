@@ -6,6 +6,7 @@
 #include "scene/types/main_menu.h"
 #include "scene/types/main_stage.h"
 #include "scene/types/end_stage.h"
+#include "scene/types/pause_screen.h"
 
 #include <vector>
 
