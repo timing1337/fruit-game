@@ -106,8 +106,8 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 			MousePath* point = &record->paths[i];
 			MousePath* nextPoint = &record->paths[i + 1];
 
-			SDL_Color color1 = { 102, 0, 204, 255 };
-			SDL_Color color2 = { 255, 153, 255, 255 };
+			SDL_Color color1 = { 0, 0, 0, 255 };
+			SDL_Color color2 = { 255, 255, 255, 255 };
 
 			float ratio = distance / record->distance;
 			SDL_Color color = GradientColorMix(color1, color2, ratio);

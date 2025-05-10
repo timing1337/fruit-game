@@ -9,8 +9,8 @@ class MainMenu : public BaseScene
 public:
 	MainMenu();
 
-	void OnStart();
-	void OnSettings();
-	void OnQuit();
+	void OnStart(ButtonElement* button);
+	void OnSettings(ButtonElement* button);
+	void OnQuit(ButtonElement* button);
 };
 

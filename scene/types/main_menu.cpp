@@ -28,28 +28,31 @@ MainMenu::MainMenu() : BaseScene(SceneId::MAIN_MENU) {
 	TextElement* letterA = this->AddText("main_title_a", vec2_t{ mainTitlePosX, 100 }, "A", "SuperMario256", 40, { 232, 229, 209, 255 }, 2);
 	mainTitlePosX += letterA->bound.x + 2;
 
-	this->AddButton("start_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y - 60 }, "START", "genshin", 25, { 245, 236, 233, 255 }, [this]() {
-		OnStart();
+	this->AddButton("start_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y - 60 }, "Start", "genshin", 25, { 245, 236, 233, 255 }, [this](ButtonElement* button) {
+		OnStart(button);
 	}, 0, {0, 0, 0, 255}, 10);
-	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y }, "SETTINGS", "genshin", 24, { 245, 236, 233, 255 }, []() {
-		
+
+	this->AddButton("cosmetics_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y }, "Cosmetics", "genshin", 24, { 245, 236, 233, 255 }, [](ButtonElement* button) {
 	}, 0, { 0, 0, 0, 255 }, 10);
-	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "QUIT", "genshin", 24, { 245, 236, 233, 255 }, [this]() {
-		OnQuit();
+
+	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "Settings", "genshin", 24, { 245, 236, 233, 255 }, [](ButtonElement* button) {
+		}, 0, { 0, 0, 0, 255 }, 10);
+
+	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 120 }, "Quit", "genshin", 24, { 245, 236, 233, 255 }, [this](ButtonElement* button) {
+		OnQuit(button);
 	}, 0, { 0, 0, 0, 255 }, 10);
 }
 
-void MainMenu::OnQuit() {
+void MainMenu::OnQuit(ButtonElement* button) {
 	GameManager* game_mgr = GameManager::GetInstance();
 	game_mgr->running = false;
+	button->isClicked = false;
 }
 
-void MainMenu::OnStart() {
+void MainMenu::OnStart(ButtonElement* button) {
 	Renderer* renderer = Renderer::GetInstance();
 	GameManager* game_mgr = GameManager::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
-
-	if (game_mgr->state != GameState::WAITING) return;
 
 	game_mgr->FireStateChange(GameState::STARTING);
 
@@ -58,7 +61,8 @@ void MainMenu::OnStart() {
 			this->SetActive(false);
 			scene_mgr->GetScene(SceneId::GAME)->SetActive(true);
 		},
-		[](TimerTask* self) {
+		[button](TimerTask* self) {
 			GameManager::GetInstance()->FireStateChange(GameState::RUNNING);
+			button->isClicked = false;
 		});
 }

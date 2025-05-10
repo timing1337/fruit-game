@@ -11,6 +11,6 @@ public:
 	void Prepare() override;
 	void Render() override;
 
-	void PlayAgain();
-	void ReturnToMenu();
+	void PlayAgain(ButtonElement* button);
+	void ReturnToMenu(ButtonElement* button);
 };

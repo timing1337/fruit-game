@@ -17,10 +17,13 @@ public:
 	int outlineSize;
 	SDL_Color outlineColor;
 	int boxPadding;
+	
+	//this is for preventing double click
+	bool isClicked = false;
 
-	function<void()> onClick = nullptr;
+	function<void(ButtonElement* button)> onClick = nullptr;
 
-	ButtonElement(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void ()> onClick, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 }, const int boxPadding = 0);
+	ButtonElement(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void (ButtonElement* button)> onClick, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 }, const int boxPadding = 0);
 
 	void Prepare() override;
 	void Render() override;

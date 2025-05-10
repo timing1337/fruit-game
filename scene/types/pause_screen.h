@@ -10,5 +10,5 @@ public:
 	PauseScreen();
 	void Render() override;
 
-	void OnQuit();
+	void OnQuit(ButtonElement* button);
 };

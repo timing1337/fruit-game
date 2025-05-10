@@ -2,7 +2,7 @@
 
 BaseScene::BaseScene(SceneId sceneId) : sceneId(sceneId) {}
 
-ButtonElement* BaseScene::AddButton(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void()> onClick, const int outlineSize, const SDL_Color outlineColor, const int boxPadding) {
+ButtonElement* BaseScene::AddButton(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void(ButtonElement* button)> onClick, const int outlineSize, const SDL_Color outlineColor, const int boxPadding) {
 	ButtonElement* element = new ButtonElement(id, position, text, fontId, size, color, onClick, outlineSize, outlineColor, boxPadding);
 	this->elements.push_back(element);
 	return element;

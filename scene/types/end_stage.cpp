@@ -17,12 +17,12 @@ EndStage::EndStage() : BaseScene(SceneId::END_GAME)
 	TextElement* maxComboAchievedValue = this->AddText("max_combo_achieved_value", vec2_t{ RENDERER_CENTER_X + 250, 380 }, "0", "genshin", 20, { 255, 255, 204, 255 });
 	TextElement* amountOfFruitSlicedValue = this->AddText("amount_of_fruit_sliced_value", vec2_t{ RENDERER_CENTER_X + 250, 430 }, "0", "genshin", 20, { 255, 255, 204, 255 });
 
-	ButtonElement* mainMenuButton = this->AddButton("main_menu_button", vec2_t{ RENDERER_CENTER_X + 250, 620 }, "Return to menu", "genshin", 20, { 255, 255, 255, 255 }, [this]() {
-		ReturnToMenu();
+	ButtonElement* mainMenuButton = this->AddButton("main_menu_button", vec2_t{ RENDERER_CENTER_X + 250, 620 }, "Return to menu", "genshin", 20, { 255, 255, 255, 255 }, [this](ButtonElement* button) {
+		ReturnToMenu(button);
 		}, 0, { 0, 0, 0, 255 }, 10);
 
-	ButtonElement* playAgainButton = this->AddButton("play_again_button", vec2_t{ RENDERER_CENTER_X - 250, 620 }, "Play again", "genshin", 20, { 255, 255, 255, 255 }, [this]() {
-		PlayAgain();
+	ButtonElement* playAgainButton = this->AddButton("play_again_button", vec2_t{ RENDERER_CENTER_X - 250, 620 }, "Play again", "genshin", 20, { 255, 255, 255, 255 }, [this](ButtonElement* button) {
+		PlayAgain(button);
 	
 		}, 0, { 0, 0, 0, 255 }, 10);
 }
@@ -39,12 +39,10 @@ void EndStage::Prepare() {
 	BaseScene::Prepare();
 }
 
-void EndStage::PlayAgain() {
+void EndStage::PlayAgain(ButtonElement* button) {
 	Renderer* renderer = Renderer::GetInstance();
 	GameManager* game_mgr = GameManager::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
-
-	if (game_mgr->state != GameState::ENDGAME) return;
 
 	game_mgr->FireStateChange(GameState::STARTING);
 
@@ -53,17 +51,16 @@ void EndStage::PlayAgain() {
 			this->SetActive(false);
 			scene_mgr->GetScene(SceneId::GAME)->SetActive(true);
 		},
-		[](TimerTask* self) {
+		[button](TimerTask* self) {
 			GameManager::GetInstance()->FireStateChange(GameState::RUNNING);
+			button->isClicked = false;
 		});
 }
 
-void EndStage::ReturnToMenu() {
+void EndStage::ReturnToMenu(ButtonElement* button) {
 	Renderer* renderer = Renderer::GetInstance();
 	GameManager* game_mgr = GameManager::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
-
-	if (game_mgr->state != GameState::ENDGAME) return;
 
 	game_mgr->FireStateChange(GameState::WAITING);
 
@@ -72,7 +69,8 @@ void EndStage::ReturnToMenu() {
 			this->SetActive(false);
 			scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
 		},
-		[](TimerTask* self) {
+		[button](TimerTask* self) {
+			button->isClicked = false;
 		});
 }
 

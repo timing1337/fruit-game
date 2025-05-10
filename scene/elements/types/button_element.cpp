@@ -1,7 +1,7 @@
 #include "button_element.h"
 
 ButtonElement::ButtonElement(const char* id, vec2_t position, 
-	const char* text, const char* fontId, const int size, const SDL_Color color, function<void()> onClick,
+	const char* text, const char* fontId, const int size, const SDL_Color color, function<void(ButtonElement* button)> onClick,
 	const int outlineSize, const SDL_Color outlineColor, const int boxPadding): Element(id, position){
 	this->text = text;
 	this->fontId = fontId;
@@ -79,7 +79,10 @@ void ButtonElement::Release() {
 }
 
 void ButtonElement::OnMouseClick(SDL_MouseButtonEvent& e) {
-	if (IsHovered() && onClick != nullptr) onClick();
+	if (IsHovered() && onClick != nullptr && !isClicked) {
+		isClicked = true;
+		onClick(this);
+	}
 }
 
 bool ButtonElement::IsHovered() {
