@@ -20,20 +20,36 @@ struct GameData{
 ```
 
 * Encryption:
-Signature is used as seed for generating obfuscation keys for data. The encryption itself is just simple xor
+Timestamp is used as seed for generating obfuscation keys for data. The encryption itself is just simple xor
 ```c
-mt.seed(this->signature);
-uint32_t key = mt();
+//Encryption
+randomSeed.seed(this->timestamp);
+uint64_t key = randomSeed();
 for (int i = 0; i < size; i++) {
-  uint8_t keyByte = ((uint8_t*)&key)[i % 4];
-  buffer[i] ^= keyByte;
-  key = mt();
+	uint8_t keyByte = ((uint8_t*)&key)[i % 8];
+	buffer[i] ^= keyByte;
+	key = randomSeed();
 }
 ```
 
-* Signature: Signature is calculated as follow
+* Signature: Signature is a [FNV hashed](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) game data string
 ```c
-uint64_t signature = this->timestamp ^ this->highestScore | this->highestComboAchived ^ this->longestTimeAlive;
+inline const uint32_t HashGameDataStringFN(string gameDataStr) {
+
+	uint32_t hash = 0x811c9dc5;
+	uint32_t prime = 0x1000193;
+
+	for (int i = 0; i < gameDataStr.length(); ++i) {
+		uint8_t value = gameDataStr[i];
+		hash = hash ^ value;
+		hash *= prime;
+	}
+
+	return hash;
+}
+
+string gameDataString = to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" + to_string(longestTimeAlive)
+uint64_t signature = HashGameDataStringFN(gameDataString);
 ```
 
 ### References
