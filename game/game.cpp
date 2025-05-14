@@ -135,6 +135,11 @@ void GameManager::FireStateChange(GameState state) {
 			this->gameData->highestComboAchieved = this->highestComboRecorded;
 		}
 
+		if (this->score > this->gameData->highestScore) {
+			this->gameData->highestScore = this->score;
+		}
+
+		this->gameData->ReloadBladeData();
 		this->gameData->Save();
 		break;
 	case GameState::ENDGAME:
@@ -223,7 +228,7 @@ void GameManager::SetScore(int score) {
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 
 	if (this->score > this->gameData->highestScore) {
-		this->gameData->highestScore = this->score;
+		//dont save the score yet, just update the text
 		TextElement* highestScoreElement = (TextElement*)mainStage->GetElementById("highest_score");
 		highestScoreElement->SetText("Record: " + to_string(this->score));
 	}

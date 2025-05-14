@@ -25,10 +25,8 @@ public:
 	GameData(string path);
 	void Save();
 	void ResetData();
-	string ToString() {
-		return to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" +
-			to_string(longestTimeAlive);
-	}
+	void ReloadBladeData();
+	string ToString();
 private:
 	mt19937_64 randomSeed;
 };

@@ -9,7 +9,7 @@ void SceneManager::Initialize() {
 
 	MainMenu* mainMenu = new MainMenu();
 	mainMenu->SetBackgroundTexture(backgroundTexture);
-	mainMenu->SetActive(false);
+	mainMenu->SetActive(true);
 
 	MainStage* mainStage = new MainStage();
 	mainStage->SetBackgroundTexture(backgroundTexture);
@@ -24,7 +24,7 @@ void SceneManager::Initialize() {
 
 	CosmeticMenu* cosmeticMenu = new CosmeticMenu();
 	cosmeticMenu->SetBackgroundTexture(cosmeticMenuTexture);
-	cosmeticMenu->SetActive(true);
+	cosmeticMenu->SetActive(false);
 
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);

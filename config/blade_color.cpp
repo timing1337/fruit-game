@@ -5,16 +5,16 @@
 
 std::vector<BladeColor*> BladeColorsConfig::colors = {
 	new BladeColor("default_blade", "Default", "Default blade", "blades/bloomify.png", { 102, 204, 255, 255 }, {204, 228, 255, 255}, [](int score, int combo) {
-		return true;
+		return true; //default, always true
 	}),
 	new BladeColor("bloomify_blade", "Bloomify", "Reach 50 scores", "blades/bloomify.png", { 255, 44, 123, 255 }, {255, 143, 227, 255}, [](int score, int combo) {
-		return true;
+		return score >= 50;
 	}),
 	new BladeColor("kyoko_blade", "Kyoko", "Reach 50 combos", "blades/blood_silver.png", { 255, 0, 0, 255 }, {150, 200, 230, 255}, [](int score, int combo) {
-		return true;
+		return combo >= 50;
 	}),
 	new BladeColor("yin_and_yang_blade", "Yin & yang", "Reach 200 scores", "blades/yin_and_yang.png", {0, 0, 0, 255}, {255, 255, 255, 255}, [](int score, int combo) {
-		return true;
+		return score >= 200;
 	}),
 };
 

@@ -10,5 +10,6 @@ public:
 	CosmeticMenu();
 
 	void OnSelectBlade(ImageElement* blade);
+	void Render() override;
 };
 

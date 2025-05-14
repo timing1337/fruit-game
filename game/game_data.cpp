@@ -22,6 +22,17 @@ void GameData::ResetData() {
 	this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
 }
 
+string GameData::ToString() {
+	return to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" +
+		to_string(longestTimeAlive);
+}
+
+void GameData::ReloadBladeData() {
+	for (auto bladeColor : BladeColorsConfig::colors) {
+		bladeColor->isUnlocked = bladeColor->checkUnlock(this->highestScore, this->highestComboAchieved);
+	}
+}
+
 GameData::GameData(string path) {
 	this->path = path;
 	fstream file(path, ios::in | ios::binary);
@@ -56,7 +67,10 @@ GameData::GameData(string path) {
 	this->highestScore = *(int*)(buffer);
 	this->highestComboAchieved = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
+
+	this->ReloadBladeData();
 	
+	//ulgy lol, i should write a wrapper or something
 	int bladeColorIdLength = *(int*)(buffer + 16);
 	char* bladeColorId = new char[bladeColorIdLength + 1];
 	memcpy(bladeColorId, buffer + 20, bladeColorIdLength);
@@ -68,6 +82,7 @@ GameData::GameData(string path) {
 	if (this->bladeColor == nullptr) {
 		SDL_Log("Blade color %s not found, using default blade color", bladeColorId);
 		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+		return;
 	}
 
 	//Cleanup
