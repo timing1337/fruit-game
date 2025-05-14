@@ -5,10 +5,11 @@ SceneManager* SceneManager::instancePtr = new SceneManager();
 void SceneManager::Initialize() {
 	GameTexture* backgroundTexture = Renderer::GetInstance()->GetTextureByName("background.png");
 	GameTexture* backgroundBlurredTexture = Renderer::GetInstance()->GetTextureByName("background_blurred.png");
+	GameTexture* cosmeticMenuTexture = Renderer::GetInstance()->GetTextureByName("cosmetic_background.png");
 
 	MainMenu* mainMenu = new MainMenu();
 	mainMenu->SetBackgroundTexture(backgroundTexture);
-	mainMenu->SetActive(true);
+	mainMenu->SetActive(false);
 
 	MainStage* mainStage = new MainStage();
 	mainStage->SetBackgroundTexture(backgroundTexture);
@@ -21,10 +22,15 @@ void SceneManager::Initialize() {
 	PauseScreen* pauseScreen = new PauseScreen();
 	pauseScreen->SetActive(false);
 
+	CosmeticMenu* cosmeticMenu = new CosmeticMenu();
+	cosmeticMenu->SetBackgroundTexture(cosmeticMenuTexture);
+	cosmeticMenu->SetActive(true);
+
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);
 	this->scenes.push_back(endStage);
 	this->scenes.push_back(pauseScreen);
+	this->scenes.push_back(cosmeticMenu);
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {

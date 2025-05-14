@@ -56,6 +56,7 @@ int main(int argc, char* args[])
 
 		entity_mgr->Heartbeat(game_mgr->deltaTime);
 
+		//TODO: event bus, honestly just something minor if we have time for it
 		SDL_Event e;
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -85,6 +86,15 @@ int main(int argc, char* args[])
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(false);
 						game_mgr->FireStateChange(GameState::RUNNING);
+					}
+
+					if (scene_mgr->GetScene(SceneId::COSMETIC)->active) {
+						renderer->PlayFadeTransition(
+							[scene_mgr](TimerTask* self) {
+								scene_mgr->GetScene(SceneId::COSMETIC)->SetActive(false);
+								scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
+							},
+							[](TimerTask* self) {});
 					}
 					break;
 				}

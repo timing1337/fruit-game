@@ -10,6 +10,7 @@ public:
 	MainMenu();
 
 	void OnStart(ButtonElement* button);
+	void OnCosmetic(ButtonElement* button);
 	void OnSettings(ButtonElement* button);
 	void OnQuit(ButtonElement* button);
 };

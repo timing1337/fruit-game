@@ -41,7 +41,7 @@ void Renderer::UpdateRender() {
 }
 
 bool Renderer::LoadFontByName(const char* name) {
-	TTF_Font* font = TTF_OpenFont((game_data_path + "fonts/" + name + ".ttf").c_str(), 10);
+	TTF_Font* font = TTF_OpenFont((fs::current_path().string() + "/game_data/fonts/" + name + ".ttf").c_str(), 10);
 	if (font == NULL) {
 		SDL_Log(TTF_GetError());
 		return false;
@@ -52,7 +52,7 @@ bool Renderer::LoadFontByName(const char* name) {
 }
 
 bool Renderer::LoadTextureByName(const char* name) {
-	SDL_Texture* texture = IMG_LoadTexture(gRenderer, (game_data_path + "textures/" + name).c_str());
+	SDL_Texture* texture = IMG_LoadTexture(gRenderer, (fs::current_path().string() + "/game_data/textures/" + name).c_str());
 	if (texture == NULL) {
 		SDL_Log(IMG_GetError());
 		return false;

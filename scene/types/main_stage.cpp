@@ -5,7 +5,10 @@ MainStage::MainStage() : BaseScene(SceneId::GAME) {
 	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 16 }, "0", "genshin", 25, { 255, 255, 255, 255 });
 	comboElement->active = false;
 
-	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png");
+	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png", [](ImageElement* self) {
+		SDL_Log("ts is lowk fire af");
+	});
+
 	scoreIcon->SetAlignmentVertical(AlignmentVertical::TOP);
 
 	float scoreX = 10 + scoreIcon->bound.x + 5;
@@ -106,8 +109,8 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 			MousePath* point = &record->paths[i];
 			MousePath* nextPoint = &record->paths[i + 1];
 
-			SDL_Color color1 = { 0, 0, 0, 255 };
-			SDL_Color color2 = { 255, 255, 255, 255 };
+			SDL_Color color1 = { 255, 205, 0, 255 };
+			SDL_Color color2 = { 200, 16, 46, 255 };
 
 			float ratio = distance / record->distance;
 			SDL_Color color = GradientColorMix(color1, color2, ratio);

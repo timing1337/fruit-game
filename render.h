@@ -29,8 +29,6 @@ public:
 	unordered_map<const char*, TTF_Font*> fonts;
 	unordered_map<const char*, GameTexture*> textures;
 
-	const string game_data_path = fs::current_path().string() + "/game_data/";
-
 	void Initialize();
 
 	static Renderer* GetInstance() {

@@ -20,18 +20,18 @@ TextElement* BaseScene::AddText(const char* id, vec2_t position, const char* tex
 	return element;
 }
 
-ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* textureId) {
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* textureId, function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
 	GameTexture* texture = Renderer::GetInstance()->GetTextureByName(textureId);
 	if (texture == nullptr) {
 		printf("Error: Texture with id %s not found\n", textureId);
 		return nullptr;
 	}
-	return BaseScene::AddImage(id, position, texture);
+	return BaseScene::AddImage(id, position, texture, onClick, boxPadding, boxColor);
 }
 
 
-ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* texture) {
-	ImageElement* element = new ImageElement(id, position, texture);
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* texture, function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
+	ImageElement* element = new ImageElement(id, position, texture, onClick, boxPadding, boxColor);
 	this->elements.push_back(element);
 	return element;
 }

@@ -27,8 +27,8 @@ public:
 	TextElement* AddText(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 });
 	TextElement* AddText(const char* id, vec2_t position, string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 });
 	ButtonElement* AddButton(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void(ButtonElement* button)> onClick, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 }, const int boxPadding = 0);
-	ImageElement* AddImage(const char* id, vec2_t position, const char* textureId);
-	ImageElement* AddImage(const char* id, vec2_t position, GameTexture* texture);
+	ImageElement* AddImage(const char* id, vec2_t position, const char* textureId, function<void(ImageElement* button)> onClick = nullptr, int boxPadding = 0, SDL_Color boxColor = {0, 0, 0, 255});
+	ImageElement* AddImage(const char* id, vec2_t position, GameTexture* texture, function<void(ImageElement* button)> onClick = nullptr, int boxPadding = 0, SDL_Color boxColor = { 0, 0, 0, 255 });
 
 	Element* GetElementById(const char* id);
 

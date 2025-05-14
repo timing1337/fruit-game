@@ -8,7 +8,7 @@
 class ButtonElement : public Element
 {
 private:
-	GameTexture* texture;
+	GameTexture* texture = nullptr;
 public:
 	const char* text;
 	const char* fontId;

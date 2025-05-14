@@ -6,7 +6,7 @@
 class TextElement : public Element
 {
 private:
-	GameTexture* texture;
+	GameTexture* texture = nullptr;
 public:
 	string text;
 	const char* fontId;

@@ -5,5 +5,6 @@ enum SceneId {
 	GAME,
 	END_GAME,
 	SETTING,
-	PAUSE
+	PAUSE,
+	COSMETIC //MY DOWNFALL
 };

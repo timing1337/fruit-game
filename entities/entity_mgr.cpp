@@ -75,6 +75,7 @@ void EntityManager::CleanUp() {
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {
+			SDL_Log("Killing entity");
 			delete entity;
 			this->entities.erase(this->entities.begin() + i);
 		}

@@ -5,12 +5,9 @@ SDL_Texture* Downsampling::downsampledTextures[5];
 void Downsampling::Initialize() {
 	Renderer* renderer = Renderer::GetInstance();
 
-	SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, RENDERER_WIDTH, RENDERER_HEIGHT, 32, SDL_PIXELFORMAT_RGBA8888);
-	SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
-
 	float steps[5] = { (float) 1/4, (float) 1/8, (float)1/16, (float)1/32, (float)1/64};
 	for (int i = 0; i < 5; i++) {
-		downsampledTextures[i] = SDL_CreateTexture(renderer->gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, surface->w * steps[i], surface->h * steps[i]);
+		downsampledTextures[i] = SDL_CreateTexture(renderer->gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, RENDERER_WIDTH * steps[i], RENDERER_HEIGHT * steps[i]);
 		SDL_SetTextureBlendMode(downsampledTextures[i], SDL_BLENDMODE_BLEND);
 	}
 }
