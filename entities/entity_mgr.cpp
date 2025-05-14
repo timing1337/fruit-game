@@ -75,7 +75,6 @@ void EntityManager::CleanUp() {
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {
-			SDL_Log("Killing entity");
 			delete entity;
 			this->entities.erase(this->entities.begin() + i);
 		}
@@ -89,7 +88,7 @@ void EntityManager::spawnParticle(vec2_t position, SDL_Color deathParticleColor)
 		int randomSpeed = 200 + rand() % 100;
 		int randomAngle = 20 + (rand() % 130);
 		vec2_t randomizedPosition = vec2_t(position.x + randomX, position.y + randomY);
-		Particle* particle = new Particle(randomizedPosition, randomSpeed, randomAngle);
+		Particle* particle = new Particle(randomizedPosition, randomSpeed, randomAngle, PARTICLE_ALIVE_TICK);
 		particle->color = deathParticleColor;
 		particle->SetHitbox({ 5, 5 });
 

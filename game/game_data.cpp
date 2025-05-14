@@ -15,11 +15,19 @@ inline const uint32_t HashGameDataString(string gameDataStr) {
 	return hash;
 }
 
+void GameData::ResetData() {
+	this->highestScore = 0;
+	this->highestComboAchieved = 0;
+	this->longestTimeAlive = 0;
+	this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+}
+
 GameData::GameData(string path) {
 	this->path = path;
 	fstream file(path, ios::in | ios::binary);
 
 	if (!file.is_open()) {
+		this->ResetData();
 		this->Save();
 		return;
 	}
@@ -48,6 +56,19 @@ GameData::GameData(string path) {
 	this->highestScore = *(int*)(buffer);
 	this->highestComboAchieved = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
+	
+	int bladeColorIdLength = *(int*)(buffer + 16);
+	char* bladeColorId = new char[bladeColorIdLength + 1];
+	memcpy(bladeColorId, buffer + 20, bladeColorIdLength);
+
+	bladeColorId[bladeColorIdLength] = '\0';
+
+	this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId);
+
+	if (this->bladeColor == nullptr) {
+		SDL_Log("Blade color %s not found, using default blade color", bladeColorId);
+		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+	}
 
 	//Cleanup
 	delete[] buffer;
@@ -55,21 +76,20 @@ GameData::GameData(string path) {
 
 	//Signature checking
 	if (signature != HashGameDataString(this->ToString())) {
-		SDL_Log("Signature mismatch, resetting game data, stop cheating bruh");
-		this->highestScore = 0;
-		this->highestComboAchieved = 0;
-		this->longestTimeAlive = 0;
+		this->ResetData();
 		this->Save();
 	}
 }
 
 void GameData::Save() {
-	uint32_t size = 16;
+	uint32_t size = 16 + 4 + strlen(this->bladeColor->id);
 	uint8_t* buffer = new uint8_t[size];
 	
 	*(int*)(buffer) = this->highestScore;
 	*(int*)(buffer + 4) = this->highestComboAchieved;
 	*(uint64_t*)(buffer + 8) = this->longestTimeAlive;
+	*(int*)(buffer + 16) = strlen(this->bladeColor->id);
+	memcpy(buffer + 20, this->bladeColor->id, strlen(this->bladeColor->id));
 
 	this->timestamp = time(0);
 

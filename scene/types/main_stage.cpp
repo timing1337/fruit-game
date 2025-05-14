@@ -104,16 +104,16 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 
 	int thickness = 1;
 	vector<MousePath> paths = record->paths;
+
+	BladeColor* bladeColor = GameManager::GetInstance()->gameData->bladeColor;
+
 	if (paths.size() > 2) {
 		for (int i = 0; i < record->paths.size() - 1; i++) {
 			MousePath* point = &record->paths[i];
 			MousePath* nextPoint = &record->paths[i + 1];
 
-			SDL_Color color1 = { 255, 205, 0, 255 };
-			SDL_Color color2 = { 200, 16, 46, 255 };
-
 			float ratio = distance / record->distance;
-			SDL_Color color = GradientColorMix(color1, color2, ratio);
+			SDL_Color color = GradientColorMix(bladeColor->color1, bladeColor->color2, ratio);
 
 			int alpha = ((float)point->longevity / 500) * 255;
 

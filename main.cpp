@@ -63,6 +63,7 @@ int main(int argc, char* args[])
 			switch (e.type) {
 			case SDL_QUIT:
 				game_mgr->running = false;
+				game_mgr->gameData->Save();
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				game_mgr->OnMouseClick(e.button);

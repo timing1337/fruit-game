@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL.h"
+#include "config/blade_color.h"
 
 #include <fstream>
 #include <random>
@@ -19,8 +20,11 @@ public:
 	int highestComboAchieved = 0;
 	uint64_t longestTimeAlive = 0;
 
+	BladeColor* bladeColor;
+
 	GameData(string path);
 	void Save();
+	void ResetData();
 	string ToString() {
 		return to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" +
 			to_string(longestTimeAlive);

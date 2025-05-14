@@ -2,7 +2,7 @@
 
 void Particle::onTick(int deltaTicks) {
 	this->aliveTicks += deltaTicks;
-	if (this->aliveTicks >= PARTICLE_ALIVE_TICK) {
+	if (this->aliveTicks >= this->maxAliveTicks) {
 		this->despawn(EntityDeathType::UNKNOWN);
 		return;
 	}
@@ -13,7 +13,7 @@ void Particle::onRender() {
 	Renderer* renderer = Renderer::GetInstance();
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 
-	float progress = (float)this->aliveTicks / PARTICLE_ALIVE_TICK;
+	float progress = (float)this->aliveTicks / this->maxAliveTicks;
 	int calculatedOpacity = max(0, (int)(255 - (progress * 255)));
 
 	SDL_SetRenderTarget(renderer->gRenderer, mainStage->glowCanvas);

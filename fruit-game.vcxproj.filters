@@ -105,6 +105,9 @@
     <ClCompile Include="scene\elements\types\checkbox_element.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="config\blade_color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -213,6 +216,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="scene\elements\types\checkbox_element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config\blade_color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

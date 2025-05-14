@@ -9,30 +9,45 @@ CosmeticMenu::CosmeticMenu() : BaseScene(SceneId::COSMETIC)
 	description->SetAlignment(Alignment::CENTER);
 	description->SetAlignmentVertical(AlignmentVertical::TOP);
 
-	ImageElement* blood_silver_blade = this->AddImage("blood_silver_blade", vec2_t{ 300, 300 }, "blades/blood_silver.png", [](ImageElement* self) {
-		SDL_Log("Blade clicked");
-		}, 20, { 0, 0, 0, 255 });
-	blood_silver_blade->SetAlignment(Alignment::CENTER);
-	blood_silver_blade->SetAlignmentVertical(AlignmentVertical::MIDDLE);
+	vec2_t basePosition = { 200, 250 };
 
-	TextElement* blood_silver_blade_text = this->AddText("blood_silver_blade_text", vec2_t{ blood_silver_blade->position.x, blood_silver_blade->position.y + 70 }, "Blood & Silver", "genshin", 15, { 255, 255, 255, 255 });
-	blood_silver_blade_text->SetAlignment(Alignment::CENTER);
+	for (auto& bladeColor : BladeColorsConfig::colors) {
+		ImageElement* blade = this->AddImage(bladeColor->id, basePosition, bladeColor->textureId, [this](ImageElement* element) { this->OnSelectBlade(element); }, 20);
+		blade->SetAlignment(Alignment::CENTER);
+		blade->SetAlignmentVertical(AlignmentVertical::MIDDLE);
 
-	ImageElement* yin_and_yang_blade = this->AddImage("yin_and_yang_blade", vec2_t{ 500, 300 }, "blades/yin_and_yang.png", [](ImageElement* self) {
-		SDL_Log("Blade clicked");
-		}, 20, { 0, 0, 0, 255 });
-	yin_and_yang_blade->SetAlignment(Alignment::CENTER);
-	yin_and_yang_blade->SetAlignmentVertical(AlignmentVertical::MIDDLE);
+		TextElement* bladeName = this->AddText(bladeColor->id, vec2_t{ basePosition.x, basePosition.y + 70 }, bladeColor->name, "genshin", 20, { 255, 255, 255, 255 });
+		bladeName->SetAlignment(Alignment::CENTER);
+		bladeName->SetAlignmentVertical(AlignmentVertical::MIDDLE);
 
-	TextElement* yin_and_yang_blade_text = this->AddText("yin_and_yang_blade_text", vec2_t{ yin_and_yang_blade->position.x, yin_and_yang_blade->position.y + 70 }, "Yin & Yang", "genshin", 15, { 255, 255, 255, 255 });
-	yin_and_yang_blade_text->SetAlignment(Alignment::CENTER);
+		TextElement* bladeDescription = this->AddText(bladeColor->id, vec2_t{ basePosition.x, bladeName->position.y + bladeName->bound.y / 2 + 10 }, bladeColor->description, "genshin", 14, { 255, 255, 255, 255 });
+		bladeDescription->SetAlignment(Alignment::CENTER);
+		bladeDescription->SetAlignmentVertical(AlignmentVertical::MIDDLE);
 
-	ImageElement* bloomify_blade = this->AddImage("bloomify_blade", vec2_t{ 700, 300 }, "blades/bloomify.png", [](ImageElement* self) {
-		SDL_Log("Blade clicked");
-		}, 20, { 0, 0, 0, 255 });
-	bloomify_blade->SetAlignment(Alignment::CENTER);
-	bloomify_blade->SetAlignmentVertical(AlignmentVertical::MIDDLE);
+		basePosition.x += blade->bound.x + 150;
+		if (basePosition.x >= RENDERER_WIDTH - 200) {
+			basePosition.x = 100;
+			basePosition.y += 50;
+		}
+	}
+}
 
-	TextElement* bloomify_blade_text = this->AddText("bloomify_blade_text", vec2_t{ bloomify_blade->position.x, bloomify_blade->position.y + 70 }, "Bloomify", "genshin", 15, { 255, 255, 255, 255 });
-	bloomify_blade_text->SetAlignment(Alignment::CENTER);
+void CosmeticMenu::OnSelectBlade(ImageElement* element) {
+	GameData* data = GameManager::GetInstance()->gameData;
+
+	BladeColor* bladeColor = BladeColorsConfig::GetBladeColorByName(element->id);
+
+	if (bladeColor == nullptr) {
+		SDL_Log("Can't find blade with name %s", element->id);
+		return;
+	}
+
+	if (!bladeColor->isUnlocked(data->highestScore, data->highestComboAchieved)) {
+		SDL_Log("Blade %s is not unlocked", bladeColor->name);
+		return;
+	}
+
+	SDL_Log("Blade %s is selected", bladeColor->name);
+
+	data->bladeColor = bladeColor;
 }
