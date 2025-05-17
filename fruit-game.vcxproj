@@ -165,6 +165,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="config\buff_data.cpp" />
     <ClCompile Include="config\blade_color.cpp" />
     <ClCompile Include="scene\elements\types\checkbox_element.cpp" />
     <ClCompile Include="scene\types\cosmetic_menu.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config\buff_data.h" />
     <ClInclude Include="config\blade_color.h" />
     <ClInclude Include="scene\elements\types\checkbox_element.h" />
     <ClInclude Include="scene\types\cosmetic_menu.h" />

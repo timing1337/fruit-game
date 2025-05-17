@@ -60,8 +60,8 @@ void Entity::onTick(int deltaTicks) {
 	//Gravity
 	this->direction.y -= GRAVITY_SPEED * deltaSeconds;
 
-	this->position.x += this->direction.x * deltaSeconds;
-	this->position.y -= this->direction.y * deltaSeconds;
+	this->position.x += this->direction.x * deltaSeconds * (1 - this->slowdownFactor);
+	this->position.y -= this->direction.y * deltaSeconds * (1 - this->slowdownFactor);
 }
 
 void Entity::despawn(EntityDeathType type) {

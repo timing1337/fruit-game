@@ -23,6 +23,9 @@ public:
     vec2_t direction;
     vec2_t hitbox;
 
+    //used for freeze buff
+	float slowdownFactor = 0;
+
     bool alive = true;
 
     Entity(vec2_t position, vec2_t direction);

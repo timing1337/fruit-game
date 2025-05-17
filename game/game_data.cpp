@@ -1,4 +1,4 @@
-#include "game_data.h"
+﻿#include "game_data.h"
 
 //fn1v hash
 inline const uint32_t HashGameDataString(string gameDataStr) {

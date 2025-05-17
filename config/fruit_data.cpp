@@ -15,8 +15,3 @@ FruitConfig* FruitData::GetFruitConfigByName(const char* name) {
 	}
 	return nullptr;
 }
-
-FruitConfig FruitData::GetRandomFruitConfig() {
-	int randomIndex = rand() % configs.size();
-	return configs[randomIndex];
-}

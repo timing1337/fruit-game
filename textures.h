@@ -20,7 +20,6 @@ struct RenderedText {
 };
 
 enum GameTextureType {
-	NONE = 0,
 	SPRITE = 1,
 	TEXT = 2
 };

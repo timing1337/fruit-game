@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 
+#include "config/buff_data.h"
 #include "entities/entity_mgr.h"
 #include "entities/enemy.h"
 #include "scene/scene_manager.h"
@@ -61,5 +62,7 @@ public:
 	void AddCombo(int combo);
 
 	void SetRemainingLives(int lives);
+
+	void TriggerBuff(BuffConfig* buff);
 };
 

@@ -17,12 +17,13 @@ struct FruitConfig {
 
 class FruitData
 {
+public:
 	static vector<FruitConfig> configs;
 
-public:
-	static void Initialize();
-	static void Release();
-
 	static FruitConfig* GetFruitConfigByName(const char* name);
-	static FruitConfig GetRandomFruitConfig();
+
+	static FruitConfig GetRandomFruitConfig() {
+		int randomIndex = rand() % configs.size();
+		return configs[randomIndex];
+	}
 };

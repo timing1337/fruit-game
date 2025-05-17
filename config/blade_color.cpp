@@ -24,5 +24,5 @@ BladeColor* BladeColorsConfig::GetBladeColorByName(const char* name) {
 			return color;
 		}
 	}
-	return nullptr;
+	return nullptr; 
 }

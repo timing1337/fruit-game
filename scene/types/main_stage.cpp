@@ -36,7 +36,6 @@ void MainStage::Render() {
 	EntityManager* entity_mgr = EntityManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
 	
-
 	SDL_SetRenderTarget(renderer->gRenderer, glowCanvas);
 	SDL_SetRenderDrawColor(renderer->gRenderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer->gRenderer);

@@ -37,7 +37,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 void Enemy::onRender() {
 	Renderer* renderer = Renderer::GetInstance();
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
-	SDL_SetRenderTarget(renderer->gRenderer, mainStage->gameCanvas);
+	SDL_SetRenderTarget(renderer->gRenderer, mainStage->glowCanvas);
 	if (entityTexture == nullptr) {
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
 		SDL_Rect rect = { position.x - hitbox.x / 2, position.y - hitbox.y / 2, hitbox.x, hitbox.y };

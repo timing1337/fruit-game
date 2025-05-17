@@ -122,6 +122,35 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 	}
 }
 
+void GameManager::TriggerBuff(BuffConfig* config) {
+	/*
+	TaskManager* task_mgr = TaskManager::GetInstance();
+	switch (config->id) {
+	case BuffId::FREEZE:
+		task_mgr->RunTimerTask(config->duration,
+			[config](TimerTask* self) {
+				for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
+					Entity* entity = EntityManager::GetInstance()->entities[i];
+					if (!entity->alive) continue;
+					if (entity->slowdownFactor < 1) {
+						entity->slowdownFactor += 0.1;
+					}
+
+				}
+			},
+			[](TimerTask* self) {
+				for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
+					Entity* entity = EntityManager::GetInstance()->entities[i];
+					if (!entity->alive) continue;
+					entity->slowdownFactor += 0;
+				}
+			});
+
+		break;
+	}
+	*/
+}
+
 void GameManager::FireStateChange(GameState state) {
 	this->state = state;
 	switch (state) {
