@@ -53,9 +53,9 @@ void EntityManager::RandomizeSpawningEntity() {
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
 		float buffRate = rand() % 100 / 100.0f;
-		float buffChance = min(0.03f + game_mgr->currentCombo * 0.004f, 0.07f);
+		float buffChance = min(0.005f + game_mgr->currentCombo * 0.0025f, 0.035f);
 		if (buffRate < buffChance) {
-			BuffConfig* buffConfig = BuffData::GetBuffConfigById(BuffId::FRUIT_PARTY);
+			BuffConfig* buffConfig = BuffData::GetRandomBuffConfig();
 			canSpawnBuff = false;
 			enemy->buff = buffConfig;
 		}

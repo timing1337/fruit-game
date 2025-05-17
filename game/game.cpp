@@ -193,7 +193,7 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 				TaskManager::GetInstance()->RunTimerTask(500,
 					[](TimerTask* self) {},
 					[this, entity_mgr](TimerTask* self) {
-						entity_mgr->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+						entity_mgr->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MIN);
 						this->activeBuff = BUFF_NONE;
 					});
 			});
@@ -316,7 +316,7 @@ void GameManager::SetScore(int score) {
 	scoreElement->SetText(to_string(this->score));
 
 	if (this->activeBuff != BuffId::FRUIT_PARTY) {
-		EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+		EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MIN);
 	}
 }
 
