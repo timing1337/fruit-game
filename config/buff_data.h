@@ -7,6 +7,7 @@
 using namespace std;
 
 enum BuffId {
+	BUFF_NONE,
 	DOUBLE_SCORE, //combo trigger
 	FREEZE, // freeze fruit
 	FRUIT_PARTY //fruit_party
@@ -30,4 +31,6 @@ public:
 		int randomIndex = rand() % configs.size();
 		return configs[randomIndex];
 	}
+
+	static BuffConfig* GetBuffConfigById(BuffId id);
 };

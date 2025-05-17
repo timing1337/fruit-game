@@ -14,8 +14,8 @@ public:
 	BuffConfig* buff = nullptr;
 	SDL_Color deathParticleColor = { 255, 255, 255, 255 };
 
-	Enemy(vec2_t position, vec2_t direction) : Entity(position, direction) {};
-	Enemy(vec2_t position, float speed, float angle) : Entity(position, speed, angle) {};
+	Enemy(vec2_t position, vec2_t direction) : Entity(EntityType::ENEMY, position, direction) {};
+	Enemy(vec2_t position, float speed, float angle) : Entity(EntityType::ENEMY, position, speed, angle) {};
 
 	void onTick(int deltaTicks) override;
 	void onRender() override;

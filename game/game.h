@@ -41,6 +41,8 @@ public:
 
 	int slicedFruit = 0;
 
+	BuffId activeBuff = BUFF_NONE;
+
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;
 	vector<MousePathRecord*> mousePathRecordsLeftover;

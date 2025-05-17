@@ -50,9 +50,12 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->score = fruitConfig.score;
 	enemy->deathParticleColor = fruitConfig.color;
 	enemy->hp = fruitConfig.maxHp;
-	
-	SDL_Log("Spawned enemy at %f, %f", position.x, position.y);
-	SDL_Log("Hp: %d", enemy->hp);
+
+	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
+		BuffConfig* buffConfig = BuffData::GetBuffConfigById(BuffId::FREEZE);
+		canSpawnBuff = false;
+		enemy->buff = buffConfig;
+	}
 
 	spawnEntity(enemy);
 }
@@ -75,6 +78,12 @@ void EntityManager::CleanUp() {
 	for (int i = 0; i < this->entities.size(); i++) {
 		Entity* entity = this->entities[i];
 		if (!entity->alive) {
+			if (entity->type == EntityType::ENEMY) {
+				Enemy* enemy = (Enemy*)entity;
+				if (enemy->buff != nullptr) {
+					this->canSpawnBuff = true;
+				}
+			}
 			delete entity;
 			this->entities.erase(this->entities.begin() + i);
 		}

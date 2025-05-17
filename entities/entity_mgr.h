@@ -19,6 +19,9 @@ class EntityManager
 private:
 	int entityId = 0;
 public:
+
+	bool canSpawnBuff = true;
+
 	static EntityManager* instancePtr;
 	vector<Entity*> entities;
 

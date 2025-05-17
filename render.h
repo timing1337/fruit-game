@@ -39,6 +39,7 @@ public:
 	void UpdateRender();
 
 	void PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete);
+	void PlayFadeOverlay(GameTexture* texture, int duration);
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);

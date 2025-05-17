@@ -1,12 +1,10 @@
 #include "entity.h"
 
-Entity::Entity(vec2_t position, vec2_t direction) {
-	this->position = position;
-	this->direction = direction;
+Entity::Entity(EntityType type, vec2_t position, vec2_t direction): type(type), position(position), direction(direction){
 	this->hitbox = vec2_t(0, 0);
 };
 
-Entity::Entity(vec2_t position, float speed, float angle) {
+Entity::Entity(EntityType type, vec2_t position, float speed, float angle): type(type){
 	float radian = deg2rad(angle);
 	this->position = position;
 	this->direction = vec2_t(speed * cos(radian), speed * sin(radian));
@@ -58,10 +56,14 @@ void Entity::onTick(int deltaTicks) {
 
 	float deltaSeconds = deltaTicks / 1000.0f;
 	//Gravity
-	this->direction.y -= GRAVITY_SPEED * deltaSeconds;
 
-	this->position.x += this->direction.x * deltaSeconds * (1 - this->slowdownFactor);
-	this->position.y -= this->direction.y * deltaSeconds * (1 - this->slowdownFactor);
+	//dont accerlerate gravity speed if we are froze
+	if(this->slowdownFactor == 0){
+		this->direction.y -= GRAVITY_SPEED * deltaSeconds;
+	}
+
+	this->position.x += this->direction.x * deltaSeconds * (1.0f - this->slowdownFactor);
+	this->position.y -= this->direction.y * deltaSeconds * (1.0f - this->slowdownFactor);
 }
 
 void Entity::despawn(EntityDeathType type) {

@@ -3,7 +3,6 @@
 void Enemy::onHit() {
 	this->hp -= 1;
 
-	SDL_Log("Enemy hit! Remaining HP: %d", this->hp);
 	if (this->hp <= 0) {
 		EntityManager::GetInstance()->spawnParticle(this->position, deathParticleColor);
 		this->despawn(EntityDeathType::PLAYER_INTERACTION);
@@ -30,6 +29,10 @@ void Enemy::onDespawn(EntityDeathType type) {
 		game_mgr->AddCombo(1);
 
 		game_mgr->slicedFruit++;
+
+		if (this->buff != nullptr) {
+			game_mgr->TriggerBuff(this->buff);
+		}
 		break;
 	}
 }
@@ -37,13 +40,14 @@ void Enemy::onDespawn(EntityDeathType type) {
 void Enemy::onRender() {
 	Renderer* renderer = Renderer::GetInstance();
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
-	SDL_SetRenderTarget(renderer->gRenderer, mainStage->glowCanvas);
-	if (entityTexture == nullptr) {
-		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
-		SDL_Rect rect = { position.x - hitbox.x / 2, position.y - hitbox.y / 2, hitbox.x, hitbox.y };
-		SDL_RenderFillRect(renderer->gRenderer, &rect);
+	if (this->buff != nullptr) {
+		SDL_SetRenderTarget(renderer->gRenderer, mainStage->glowCanvas);
+		SDL_SetTextureColorMod(entityTexture->sprite->texture, this->buff->fruitColorChange.r, this->buff->fruitColorChange.g, this->buff->fruitColorChange.b);
+		renderer->RenderTexture(entityTexture, position.x, position.y, Alignment::CENTER, AlignmentVertical::MIDDLE);
+		SDL_SetTextureColorMod(entityTexture->sprite->texture, 255, 255, 255);
 	}
 	else {
+		SDL_SetRenderTarget(renderer->gRenderer, mainStage->gameCanvas);
 		renderer->RenderTexture(entityTexture, position.x, position.y, Alignment::CENTER, AlignmentVertical::MIDDLE);
 	}
 }

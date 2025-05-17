@@ -11,6 +11,7 @@ enum EntityDeathType {
 };
 
 enum EntityType {
+	ENTITY_UNKNOWN,
 	PARTICLE,
 	ENEMY,
 };
@@ -18,18 +19,19 @@ enum EntityType {
 class Entity
 {
 public:
+	EntityType type;
     GameTexture* entityTexture = nullptr;
     vec2_t position;
     vec2_t direction;
     vec2_t hitbox;
 
     //used for freeze buff
-	float slowdownFactor = 0;
+	float slowdownFactor = 0.0f;
 
     bool alive = true;
 
-    Entity(vec2_t position, vec2_t direction);
-    Entity(vec2_t position, float speed, float angle);
+    Entity(EntityType type, vec2_t position, vec2_t direction);
+    Entity(EntityType type, vec2_t position, float speed, float angle);
 
 	virtual ~Entity() = default;
 

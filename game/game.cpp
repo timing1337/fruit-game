@@ -123,32 +123,56 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 }
 
 void GameManager::TriggerBuff(BuffConfig* config) {
-	/*
+	if (this->activeBuff != BUFF_NONE) return;
+	this->activeBuff = config->id;
 	TaskManager* task_mgr = TaskManager::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
 	switch (config->id) {
 	case BuffId::FREEZE:
-		task_mgr->RunTimerTask(config->duration,
-			[config](TimerTask* self) {
-				for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
-					Entity* entity = EntityManager::GetInstance()->entities[i];
-					if (!entity->alive) continue;
-					if (entity->slowdownFactor < 1) {
-						entity->slowdownFactor += 0.1;
-					}
+		GameTexture* texture = renderer->GetTextureByName("freeze_buff_overlay.png");
+		SDL_SetTextureBlendMode(texture->sprite->texture, SDL_BLENDMODE_ADD);
+		task_mgr->RunTimerTask(500,
+			[this, renderer, texture](TimerTask* self) {
+				int calculatedOpacity = self->GetProgress() * 255;
+				SDL_SetTextureAlphaMod(texture->sprite->texture, calculatedOpacity);
+				SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
 
-				}
-			},
-			[](TimerTask* self) {
 				for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
 					Entity* entity = EntityManager::GetInstance()->entities[i];
 					if (!entity->alive) continue;
-					entity->slowdownFactor += 0;
+					entity->slowdownFactor = min(entity->slowdownFactor + 0.0035f, 1.0f);
 				}
+			}, [this, config, renderer, texture](TimerTask* self) {
+				TaskManager* task_mgr = TaskManager::GetInstance();
+				task_mgr->RunTimerTask(config->duration,
+					[renderer, texture](TimerTask* self) {
+						SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
+						for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
+							Entity* entity = EntityManager::GetInstance()->entities[i];
+							if (!entity->alive) continue;
+							entity->slowdownFactor = min(entity->slowdownFactor + 0.0035f, 1.0f);
+						}
+					},
+					[this, task_mgr, renderer, texture](TimerTask* self) {
+						task_mgr->RunTimerTask(500,
+							[this, renderer, texture](TimerTask* self) {
+								int calculatedOpacity = 255 - self->GetProgress() * 255;
+								SDL_SetTextureAlphaMod(texture->sprite->texture, calculatedOpacity);
+								SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
+								for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
+									Entity* entity = EntityManager::GetInstance()->entities[i];
+									if (!entity->alive) continue;
+									entity->slowdownFactor = max(entity->slowdownFactor - 0.0035f, 0.0f);
+								}
+							}, [this](TimerTask* self) {
+								this->activeBuff = BUFF_NONE;
+								EntityManager::GetInstance()->canSpawnBuff = true;
+								});
+					});
 			});
 
 		break;
 	}
-	*/
 }
 
 void GameManager::FireStateChange(GameState state) {
