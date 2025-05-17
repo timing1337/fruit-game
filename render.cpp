@@ -182,10 +182,19 @@ GameTexture* Renderer::CreateText(const char* text, const char* fontId, const in
 	return textureData;
 }
 
-void Renderer::RenderTextureBackground(const char* textureId) {
+void Renderer::RenderTextureBackground(const char* textureId, int opacity) {
 	GameTexture* texture = GetTextureByName(textureId);
 	Sprite* sprite = texture->sprite;
-	SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
+	SDL_SetTextureBlendMode(sprite->texture, SDL_BLENDMODE_ADD);
+	if (opacity != 255) {
+		SDL_SetTextureAlphaMod(sprite->texture, opacity);
+		SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
+		SDL_SetTextureAlphaMod(sprite->texture, 255);
+	}
+	else {
+		SDL_RenderCopy(gRenderer, sprite->texture, NULL, NULL);
+	}
+	SDL_SetTextureBlendMode(sprite->texture, SDL_BLENDMODE_NONE);
 }
 
 void Renderer::RenderTexture(const char* textureId, int x, int y, const Alignment align, const AlignmentVertical alignmentVertical) {

@@ -51,7 +51,7 @@ public:
 
 	GameTexture* CreateText(const char* text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 0xff });
 
-	void RenderTextureBackground(const char* textureId);
+	void RenderTextureBackground(const char* textureId, int opacity = 255);
 	void SetBackgroundColor(const int r, const int g, const int b, const int a);
 
 	void RenderTexture(const char* textureId, int x, int y, const Alignment align = Alignment::LEFT, const AlignmentVertical alignmentVertical = AlignmentVertical::TOP);

@@ -20,7 +20,9 @@ void Enemy::onDespawn(EntityDeathType type) {
 
 	switch (type) {
 	case EntityDeathType::OUT_OF_BOUND:
-		SDL_Log("Enemy out of bound");
+		if (game_mgr->activeBuff == BuffId::FRUIT_PARTY) {
+			return;
+		}
 		game_mgr->SetRemainingLives(game_mgr->remainingLives - 1);
 		game_mgr->SetCombo(0);
 		break;

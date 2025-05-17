@@ -16,10 +16,10 @@ void EntityManager::RandomizeSpawningEntity() {
 		return;
 	}
 
-	float spawnRate = max(ENEMY_SPAWN_BASE_RATE + game_mgr->score * ENEMY_SPAWN_RATE_MULTIPLIER, ENEMY_SPAWN_RATE_MAX);
+	float spawnRate = min(ENEMY_SPAWN_BASE_RATE + game_mgr->score * ENEMY_SPAWN_RATE_MULTIPLIER, ENEMY_SPAWN_RATE_MAX);
 
 	float rate = rand() % 100 / 100.0f;
-	if (rate > spawnRate) {
+	if (rate > spawnRate && game_mgr->activeBuff != BuffId::FRUIT_PARTY) {
 		return;
 	}
 
@@ -52,9 +52,13 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->hp = fruitConfig.maxHp;
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
-		BuffConfig* buffConfig = BuffData::GetBuffConfigById(BuffId::FREEZE);
-		canSpawnBuff = false;
-		enemy->buff = buffConfig;
+		float buffRate = rand() % 100 / 100.0f;
+		float buffChance = min(0.03f + game_mgr->currentCombo * 0.004f, 0.07f);
+		if (buffRate < buffChance) {
+			BuffConfig* buffConfig = BuffData::GetBuffConfigById(BuffId::FRUIT_PARTY);
+			canSpawnBuff = false;
+			enemy->buff = buffConfig;
+		}
 	}
 
 	spawnEntity(enemy);

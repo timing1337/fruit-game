@@ -125,52 +125,78 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 void GameManager::TriggerBuff(BuffConfig* config) {
 	if (this->activeBuff != BUFF_NONE) return;
 	this->activeBuff = config->id;
+
 	TaskManager* task_mgr = TaskManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
-	switch (config->id) {
-	case BuffId::FREEZE:
-		GameTexture* texture = renderer->GetTextureByName("freeze_buff_overlay.png");
-		SDL_SetTextureBlendMode(texture->sprite->texture, SDL_BLENDMODE_ADD);
-		task_mgr->RunTimerTask(500,
-			[this, renderer, texture](TimerTask* self) {
-				int calculatedOpacity = self->GetProgress() * 255;
-				SDL_SetTextureAlphaMod(texture->sprite->texture, calculatedOpacity);
-				SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
+	EntityManager* entity_mgr = EntityManager::GetInstance();
 
-				for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
-					Entity* entity = EntityManager::GetInstance()->entities[i];
-					if (!entity->alive) continue;
-					entity->slowdownFactor = min(entity->slowdownFactor + 0.0035f, 1.0f);
-				}
-			}, [this, config, renderer, texture](TimerTask* self) {
-				TaskManager* task_mgr = TaskManager::GetInstance();
+	switch (config->id) {
+	case BuffId::FREEZE: {
+		auto applyAcceleration = [](float slowDelta) {
+			EntityManager* entity_mgr = EntityManager::GetInstance();
+			for (Entity* entity : entity_mgr->entities) {
+				if (!entity->alive) continue;
+				entity->slowdownFactor = std::clamp(entity->slowdownFactor + slowDelta, 0.0f, 1.0f);
+			}};
+
+		// Fade-in effect
+		task_mgr->RunTimerTask(500,
+			[renderer, applyAcceleration](TimerTask* self) {
+				int opacity = static_cast<int>(self->GetProgress() * 255);
+				renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
+				applyAcceleration(0.0035f);
+			},
+			[this, config, task_mgr, renderer, applyAcceleration](TimerTask* self) {
+				// Active phase
 				task_mgr->RunTimerTask(config->duration,
-					[renderer, texture](TimerTask* self) {
-						SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
-						for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
-							Entity* entity = EntityManager::GetInstance()->entities[i];
-							if (!entity->alive) continue;
-							entity->slowdownFactor = min(entity->slowdownFactor + 0.0035f, 1.0f);
-						}
+					[renderer, applyAcceleration](TimerTask* self) {
+						renderer->RenderTextureBackground("freeze_buff_overlay.png", 255);
+						applyAcceleration(0.0035f);
 					},
-					[this, task_mgr, renderer, texture](TimerTask* self) {
+					[this, task_mgr, renderer, applyAcceleration](TimerTask* self) {
+						// Fade-out effect
 						task_mgr->RunTimerTask(500,
-							[this, renderer, texture](TimerTask* self) {
-								int calculatedOpacity = 255 - self->GetProgress() * 255;
-								SDL_SetTextureAlphaMod(texture->sprite->texture, calculatedOpacity);
-								SDL_RenderCopy(renderer->gRenderer, texture->sprite->texture, NULL, NULL);
-								for (int i = 0; i < EntityManager::GetInstance()->entities.size(); i++) {
-									Entity* entity = EntityManager::GetInstance()->entities[i];
-									if (!entity->alive) continue;
-									entity->slowdownFactor = max(entity->slowdownFactor - 0.0035f, 0.0f);
-								}
-							}, [this](TimerTask* self) {
+							[applyAcceleration, renderer](TimerTask* self) {
+								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
+								renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
+								applyAcceleration(-0.0035f);
+							},
+							[this](TimerTask* self) {
 								this->activeBuff = BUFF_NONE;
 								EntityManager::GetInstance()->canSpawnBuff = true;
-								});
+							});
 					});
 			});
+		break;
+	}
+	case BuffId::DOUBLE_SCORE:
+		this->activeBuff = BUFF_NONE;
+		break;
 
+	case BuffId::FRUIT_PARTY:
+		entity_mgr->spawnTask->interval = 30;
+		task_mgr->RunTimerTask(config->duration,
+			[this](TimerTask* self) {
+			},
+			[this, entity_mgr](TimerTask* self) {
+				//kill every remaining entity & halt the spawn process
+				entity_mgr->spawnTask->interval = 9999;
+				for (int i = 0; i < entity_mgr->entities.size(); i++) {
+					Entity* entity = entity_mgr->entities[i];
+					if (!entity->alive || entity->type != EntityType::ENEMY) continue;
+					Enemy* enemy = (Enemy*)entity;
+					enemy->despawn(EntityDeathType::OUT_OF_BOUND);
+					entity_mgr->spawnParticle(entity->position, enemy->deathParticleColor);
+				}
+
+				//7 second cooldown before buff end
+				TaskManager::GetInstance()->RunTimerTask(500,
+					[](TimerTask* self) {},
+					[this, entity_mgr](TimerTask* self) {
+						entity_mgr->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+						this->activeBuff = BUFF_NONE;
+					});
+			});
 		break;
 	}
 }
@@ -289,7 +315,9 @@ void GameManager::SetScore(int score) {
 	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
 	scoreElement->SetText(to_string(this->score));
 
-	EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+	if (this->activeBuff != BuffId::FRUIT_PARTY) {
+		EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MAX);
+	}
 }
 
 void GameManager::AddCombo(int combo) {
@@ -308,7 +336,7 @@ void GameManager::SetCombo(int combo) {
 		comboElement->SetActive(false);
 	}
 	else {
-		comboExpirationTick = max(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
+		comboExpirationTick = min(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
 		comboElement->SetActive(true);
 
 		this->highestComboRecorded = max(this->highestComboRecorded, currentCombo);
