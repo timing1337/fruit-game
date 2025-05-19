@@ -4,8 +4,6 @@
 
 #include <vector>
 
-using namespace std;
-
 enum BuffId {
 	BUFF_NONE,
 	DOUBLE_SCORE, //combo trigger
@@ -18,19 +16,17 @@ public:
 	BuffId id;
 	int duration;
 	SDL_Color fruitColorChange;
+	float chance;
 
-	BuffConfig(BuffId id, int duration, SDL_Color fruitColorChange) : id(id), duration(duration), fruitColorChange(fruitColorChange){}
+	BuffConfig(BuffId id, int duration, SDL_Color fruitColorChange, float chance) : id(id), duration(duration), fruitColorChange(fruitColorChange), chance(chance){}
 };
 
 class BuffData
 {
 public:
-	static vector<BuffConfig*> configs;
+	static std::vector<BuffConfig*> configs;
 
-	static BuffConfig* GetRandomBuffConfig() {
-		int randomIndex = rand() % configs.size();
-		return configs[randomIndex];
-	}
+	static BuffConfig* GetRandomBuffConfig();
 
 	static BuffConfig* GetBuffConfigById(BuffId id);
 };

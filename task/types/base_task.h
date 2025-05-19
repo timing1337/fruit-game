@@ -4,17 +4,17 @@
 
 #include "task/task_state.h"
 
-using namespace std;
+
 
 class BaseTask
 {
 public:
 	TaskState state = TaskState::WAIT;
 
-	function<void(BaseTask* self)> onUpdate;
-	function<void(BaseTask* self)> onComplete;
+	std::function<void(BaseTask* self)> onUpdate;
+	std::function<void(BaseTask* self)> onComplete;
 
-	BaseTask(function<void(BaseTask* self)> onUpdate, function<void(BaseTask* self)> onComplete);
+	BaseTask(std::function<void(BaseTask* self)> onUpdate, std::function<void(BaseTask* self)> onComplete);
 	virtual ~BaseTask() = default;
 
 	void Start();

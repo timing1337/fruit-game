@@ -107,7 +107,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 		}
 		SDL_Point lastPoint = path->point;
 		SDL_Point currentPoint = this->mousePathRecord->paths[i + 1].point;
-		vector<SDL_Point> points = Algorithm_GetPoints(lastPoint, currentPoint, 1);
+		std::vector<SDL_Point> points = Algorithm_GetPoints(lastPoint, currentPoint, 1);
 
 		for (int i = 0; i < points.size(); i++) {
 			SDL_Point point = points[i];
@@ -193,7 +193,7 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 				TaskManager::GetInstance()->RunTimerTask(500,
 					[](TimerTask* self) {},
 					[this, entity_mgr](TimerTask* self) {
-						entity_mgr->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MIN);
+						entity_mgr->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
 						this->activeBuff = BUFF_NONE;
 					});
 			});
@@ -309,14 +309,14 @@ void GameManager::SetScore(int score) {
 	if (this->score > this->gameData->highestScore) {
 		//dont save the score yet, just update the text
 		TextElement* highestScoreElement = (TextElement*)mainStage->GetElementById("highest_score");
-		highestScoreElement->SetText("Record: " + to_string(this->score));
+		highestScoreElement->SetText("Record: " + std::to_string(this->score));
 	}
 
 	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
-	scoreElement->SetText(to_string(this->score));
+	scoreElement->SetText(std::to_string(this->score));
 
 	if (this->activeBuff != BuffId::FRUIT_PARTY) {
-		EntityManager::GetInstance()->spawnTask->interval = max((int)(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER), ENEMY_SPAWN_INTERVAL_MIN);
+		EntityManager::GetInstance()->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
 	}
 }
 
@@ -329,16 +329,16 @@ void GameManager::SetCombo(int combo) {
 
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 	TextElement* comboElement = (TextElement*)mainStage->GetElementById("combo");
-	comboElement->SetText(to_string(currentCombo));
+	comboElement->SetText(std::to_string(currentCombo));
 
 	if (currentCombo == 0) {
 		comboExpirationTick = 0;
 		comboElement->SetActive(false);
 	}
 	else {
-		comboExpirationTick = min(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
+		comboExpirationTick = std::min(COMBO_DURATION_BASE + currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
 		comboElement->SetActive(true);
 
-		this->highestComboRecorded = max(this->highestComboRecorded, currentCombo);
+		this->highestComboRecorded = std::max(this->highestComboRecorded, currentCombo);
 	}
 }

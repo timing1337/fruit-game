@@ -1,6 +1,6 @@
 #include "image_element.h"
 
-ImageElement::ImageElement(const char* id, vec2_t position, GameTexture* texture, function<void(ImageElement* image)> onClick, int boxPadding, SDL_Color boxColor) : Element(id, position) {
+ImageElement::ImageElement(const char* id, vec2_t position, GameTexture* texture, std::function<void(ImageElement* image)> onClick, int boxPadding, SDL_Color boxColor) : Element(id, position) {
 	this->texture = texture;
 	this->bound.x = texture->width + boxPadding;
 	this->bound.y = texture->height + boxPadding;

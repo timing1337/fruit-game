@@ -2,13 +2,13 @@
 
 BaseScene::BaseScene(SceneId sceneId) : sceneId(sceneId) {}
 
-ButtonElement* BaseScene::AddButton(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, function<void(ButtonElement* button)> onClick, const int outlineSize, const SDL_Color outlineColor, const int boxPadding) {
+ButtonElement* BaseScene::AddButton(const char* id, vec2_t position, const char* text, const char* fontId, const int size, const SDL_Color color, std::function<void(ButtonElement* button)> onClick, const int outlineSize, const SDL_Color outlineColor, const int boxPadding) {
 	ButtonElement* element = new ButtonElement(id, position, text, fontId, size, color, onClick, outlineSize, outlineColor, boxPadding);
 	this->elements.push_back(element);
 	return element;
 }
 
-TextElement* BaseScene::AddText(const char* id, vec2_t position, string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
+TextElement* BaseScene::AddText(const char* id, vec2_t position, std::string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize, const SDL_Color outlineColor) {
 	TextElement* element = new TextElement(id, position, text, fontId, size, color, outlineSize, outlineColor);
 	this->elements.push_back(element);
 	return element;
@@ -20,7 +20,7 @@ TextElement* BaseScene::AddText(const char* id, vec2_t position, const char* tex
 	return element;
 }
 
-ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* textureId, function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* textureId, std::function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
 	GameTexture* texture = Renderer::GetInstance()->GetTextureByName(textureId);
 	if (texture == nullptr) {
 		printf("Error: Texture with id %s not found\n", textureId);
@@ -30,7 +30,7 @@ ImageElement* BaseScene::AddImage(const char* id, vec2_t position, const char* t
 }
 
 
-ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* texture, function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
+ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* texture, std::function<void(ImageElement* button)> onClick, int boxPadding, SDL_Color boxColor) {
 	ImageElement* element = new ImageElement(id, position, texture, onClick, boxPadding, boxColor);
 	this->elements.push_back(element);
 	return element;

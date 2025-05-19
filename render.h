@@ -15,7 +15,6 @@
 #include <string>
 #include <unordered_map>
 
-using namespace std;
 namespace fs = std::filesystem;
 
 class Renderer {
@@ -26,8 +25,8 @@ public:
 	SDL_Window* gWindow = nullptr;
 	SDL_Renderer* gRenderer = nullptr;
 
-	unordered_map<const char*, TTF_Font*> fonts;
-	unordered_map<const char*, GameTexture*> textures;
+	std::unordered_map<const char*, TTF_Font*> fonts;
+	std::unordered_map<const char*, GameTexture*> textures;
 
 	void Initialize();
 
@@ -38,7 +37,8 @@ public:
 	void PreRender();
 	void UpdateRender();
 
-	void PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete);
+	//Deprecate this function pleaseee
+	void PlayFadeTransition(std::function<void(TimerTask* self)> onTransitioned, std::function<void(TimerTask* self)> onComplete);
 	void PlayFadeOverlay(GameTexture* texture, int duration);
 
 	bool LoadFontByName(const char* name);

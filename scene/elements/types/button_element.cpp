@@ -1,7 +1,7 @@
 #include "button_element.h"
 
 ButtonElement::ButtonElement(const char* id, vec2_t position, 
-	const char* text, const char* fontId, const int size, const SDL_Color color, function<void(ButtonElement* button)> onClick,
+	const char* text, const char* fontId, const int size, const SDL_Color color, std::function<void(ButtonElement* button)> onClick,
 	const int outlineSize, const SDL_Color outlineColor, const int boxPadding): Element(id, position){
 	this->text = text;
 	this->fontId = fontId;

@@ -1,6 +1,6 @@
 #include "base_task.h"
 
-BaseTask::BaseTask(function<void(BaseTask* self)> onUpdate, function<void(BaseTask* self)> onComplete) {
+BaseTask::BaseTask(std::function<void(BaseTask* self)> onUpdate, std::function<void(BaseTask* self)> onComplete) {
 	this->onUpdate = onUpdate;
 	this->onComplete = onComplete;
 }

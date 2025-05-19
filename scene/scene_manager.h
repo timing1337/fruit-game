@@ -11,12 +11,12 @@
 
 #include <vector>
 
-using namespace std;
+
 
 class SceneManager
 {
 public:
-	vector<BaseScene*> scenes;
+	std::vector<BaseScene*> scenes;
 
 	static SceneManager* instancePtr;
 

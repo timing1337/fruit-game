@@ -21,7 +21,7 @@ void Renderer::SetBackgroundColor(const int r, const int g, const int b, const i
 	SDL_RenderFillRect(gRenderer, &fillRect);
 }
 
-void Renderer::PlayFadeTransition(function<void(TimerTask* self)> onTransitioned, function<void(TimerTask* self)> onComplete) {
+void Renderer::PlayFadeTransition(std::function<void(TimerTask* self)> onTransitioned, std::function<void(TimerTask* self)> onComplete) {
 	TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
 		[this](TimerTask* self) {
 			int calculatedOpacity = self->GetProgress() * 255;

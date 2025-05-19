@@ -14,7 +14,7 @@ void Particle::onRender() {
 	MainStage* mainStage = (MainStage*)SceneManager::GetInstance()->GetScene(SceneId::GAME);
 
 	float progress = (float)this->aliveTicks / this->maxAliveTicks;
-	int calculatedOpacity = max(0, (int)(255 - (progress * 255)));
+	int calculatedOpacity = std::max(0, (int)(255 - (progress * 255)));
 
 	SDL_SetRenderTarget(renderer->gRenderer, mainStage->glowCanvas);
 	SDL_SetRenderDrawColor(renderer->gRenderer, this->color.r, this->color.g, this->color.b, calculatedOpacity);

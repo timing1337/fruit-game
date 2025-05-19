@@ -12,7 +12,7 @@
 #include <random> 
 #include <vector>
 
-using namespace std;
+
 
 class EntityManager
 {
@@ -23,7 +23,7 @@ public:
 	bool canSpawnBuff = true;
 
 	static EntityManager* instancePtr;
-	vector<Entity*> entities;
+	std::vector<Entity*> entities;
 
 	RepeatedTask* spawnTask = nullptr;
 

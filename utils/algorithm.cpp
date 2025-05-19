@@ -1,7 +1,7 @@
 #include "algorithm.h"
 
-vector<SDL_Point> Algorithm_GetPoints(SDL_Point start, SDL_Point end, int thickness) {
-	vector<SDL_Point> points;
+std::vector<SDL_Point> Algorithm_GetPoints(SDL_Point start, SDL_Point end, int thickness) {
+	std::vector<SDL_Point> points;
 
 	int dx = abs(end.x - start.x);
 	int sx = start.x < end.x ? 1 : -1;

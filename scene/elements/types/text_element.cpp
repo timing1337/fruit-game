@@ -1,6 +1,6 @@
 #include "text_element.h"
 
-TextElement::TextElement(const char* id, vec2_t position, string text, const char* fontId, const int size, const SDL_Color color,
+TextElement::TextElement(const char* id, vec2_t position, std::string text, const char* fontId, const int size, const SDL_Color color,
 	const int outlineSize, const SDL_Color outlineColor) : Element(id, position) {
 	this->fontId = fontId;
 	this->size = size;
@@ -39,11 +39,11 @@ void TextElement::Release() {
 }
 
 void TextElement::SetText(const char* text) {
-	this->text = string(text);
+	this->text = std::string(text);
 	Update();
 }
 
-void TextElement::SetText(string text) {
+void TextElement::SetText(std::string text) {
 	this->text = text.c_str();
 	Update();
 }

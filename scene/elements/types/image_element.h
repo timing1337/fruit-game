@@ -11,9 +11,9 @@ private:
 	GameTexture* texture = nullptr;
 	int boxPadding;
 	SDL_Color boxColor;
-	function<void(ImageElement* image)> onClick = nullptr;
+	std::function<void(ImageElement* image)> onClick = nullptr;
 public:
-	ImageElement(const char* id, vec2_t position, GameTexture* texture, function<void(ImageElement* image)> onClick = nullptr, int boxPadding = 0, SDL_Color boxColor = {0, 0, 0, 255});
+	ImageElement(const char* id, vec2_t position, GameTexture* texture, std::function<void(ImageElement* image)> onClick = nullptr, int boxPadding = 0, SDL_Color boxColor = {0, 0, 0, 255});
 	void Render() override;
 	void OnMouseClick(SDL_MouseButtonEvent& e) override;
 	bool IsHovered() override;

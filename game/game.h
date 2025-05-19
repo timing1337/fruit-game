@@ -45,7 +45,7 @@ public:
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;
-	vector<MousePathRecord*> mousePathRecordsLeftover;
+	std::vector<MousePathRecord*> mousePathRecordsLeftover;
 
 	void Heartbeat(int deltaTicks);
 

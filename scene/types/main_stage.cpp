@@ -16,7 +16,7 @@ MainStage::MainStage() : BaseScene(SceneId::GAME) {
 	TextElement* scoreElement = this->AddText("score", vec2_t{ scoreX, 12 }, "0", "genshin", 30, { 255, 255, 255, 255 });
 	GameManager* game_mgr = GameManager::GetInstance();
 
-	TextElement* highestScoreElement = this->AddText("highest_score", vec2_t{ scoreX, 12 + scoreElement->bound.y + 2 }, "Record: " + to_string(game_mgr->gameData->highestScore), "genshin", 20, { 255, 255, 255, 255 });
+	TextElement* highestScoreElement = this->AddText("highest_score", vec2_t{ scoreX, 12 + scoreElement->bound.y + 2 }, "Record: " + std::to_string(game_mgr->gameData->highestScore), "genshin", 20, { 255, 255, 255, 255 });
 }
 
 void MainStage::Prepare() {
@@ -51,7 +51,7 @@ void MainStage::Render() {
 	if (game_mgr->currentCombo > 0 && game_mgr->comboExpirationTick > 0) {
 		int maxComboBarWidth = 200;
 		TextElement* comboElement = (TextElement*)this->GetElementById("combo");
-		int maxComboDuration = min(COMBO_DURATION_BASE + game_mgr->currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
+		int maxComboDuration = std::min(COMBO_DURATION_BASE + game_mgr->currentCombo * COMBO_DURATION_MULTIPLIER, COMBO_DURATION_MAX);
 		int width = ((float)game_mgr->comboExpirationTick / maxComboDuration) * maxComboBarWidth;
 		SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 255);
 		SDL_Rect fillRect = { comboElement->position.x - maxComboBarWidth/2, comboElement->position.y + comboElement->bound.y + 3, width, 15 };
@@ -102,7 +102,7 @@ void MainStage::DrawMousePathRecord(MousePathRecord* record) {
 	float distance = 0;
 
 	int thickness = 1;
-	vector<MousePath> paths = record->paths;
+	std::vector<MousePath> paths = record->paths;
 
 	BladeColor* bladeColor = GameManager::GetInstance()->gameData->bladeColor;
 

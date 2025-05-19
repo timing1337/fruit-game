@@ -1,7 +1,7 @@
 #include "timer_task.h"
 
 
-TimerTask::TimerTask(int duration, function<void(TimerTask* self)> onUpdate, function<void(TimerTask* self)> onComplete) :
+TimerTask::TimerTask(int duration, std::function<void(TimerTask* self)> onUpdate, std::function<void(TimerTask* self)> onComplete) :
 	BaseTask(
 		[onUpdate](BaseTask* self) { onUpdate(static_cast<TimerTask*>(self)); },
 		[onComplete](BaseTask* self) { onComplete(static_cast<TimerTask*>(self)); }

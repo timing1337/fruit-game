@@ -1,7 +1,7 @@
 #include "repeated_task.h"
 #include <iostream>
 
-RepeatedTask::RepeatedTask(int interval, function<void(RepeatedTask* self)> onUpdate, function<void(RepeatedTask* self)> onComplete) : 
+RepeatedTask::RepeatedTask(int interval, std::function<void(RepeatedTask* self)> onUpdate, std::function<void(RepeatedTask* self)> onComplete) :
 	BaseTask(
         [onUpdate](BaseTask* self) { onUpdate(static_cast<RepeatedTask*>(self)); }, 
         [onComplete](BaseTask* self) { onComplete(static_cast<RepeatedTask*>(self)); }

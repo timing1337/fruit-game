@@ -1,7 +1,7 @@
 ﻿#include "game_data.h"
 
 //fn1v hash
-inline const uint32_t HashGameDataString(string gameDataStr) {
+inline const uint32_t HashGameDataString(std::string gameDataStr) {
 
 	uint32_t hash = 0x811c9dc5;
 	uint32_t prime = 0x1000193;
@@ -22,9 +22,9 @@ void GameData::ResetData() {
 	this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
 }
 
-string GameData::ToString() {
-	return to_string(highestScore) + ":" + to_string(highestComboAchieved) + ":" +
-		to_string(longestTimeAlive);
+std::string GameData::ToString() {
+	return std::to_string(highestScore) + ":" + std::to_string(highestComboAchieved) + ":" +
+		std::to_string(longestTimeAlive);
 }
 
 void GameData::ReloadBladeData() {
@@ -33,9 +33,9 @@ void GameData::ReloadBladeData() {
 	}
 }
 
-GameData::GameData(string path) {
+GameData::GameData(std::string path) {
 	this->path = path;
-	fstream file(path, ios::in | ios::binary);
+	std::fstream file(path, std::ios::in | std::ios::binary);
 
 	if (!file.is_open()) {
 		this->ResetData();
@@ -120,7 +120,7 @@ void GameData::Save() {
 
 	uint64_t signature = HashGameDataString(this->ToString());
 
-	fstream file(path, ios::out | ios::binary);
+	std::fstream file(path, std::ios::out | std::ios::binary);
 
 	if (!file.is_open()) {
 		SDL_Log("Failed to open file for writing");

@@ -7,12 +7,12 @@
 #include <random>
 #include <string>
 
-using namespace std;
+
 
 struct GameData
 {
 public:
-	string path;
+	std::string path;
 
 	uint64_t timestamp;
 
@@ -22,11 +22,11 @@ public:
 
 	BladeColor* bladeColor;
 
-	GameData(string path);
+	GameData(std::string path);
 	void Save();
 	void ResetData();
 	void ReloadBladeData();
-	string ToString();
+	std::string ToString();
 private:
-	mt19937_64 randomSeed;
+	std::mt19937_64 randomSeed;
 };

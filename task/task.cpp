@@ -2,14 +2,14 @@
 
 TaskManager* TaskManager::instancePtr = new TaskManager();
 
-RepeatedTask* TaskManager::RunRepeatedTask(int interval, function<void(RepeatedTask* self)> onUpdate, function<void(RepeatedTask* self)> onComplete) {
+RepeatedTask* TaskManager::RunRepeatedTask(int interval, std::function<void(RepeatedTask* self)> onUpdate, std::function<void(RepeatedTask* self)> onComplete) {
 	RepeatedTask* task = new RepeatedTask(interval, onUpdate, onComplete);
 	animations.push_back(task);
 	task->Start();
 	return task;
 }
 
-TimerTask* TaskManager::RunTimerTask(int duration, function<void(TimerTask* self)> onUpdate, function<void(TimerTask* self)> onComplete) {
+TimerTask* TaskManager::RunTimerTask(int duration, std::function<void(TimerTask* self)> onUpdate, std::function<void(TimerTask* self)> onComplete) {
 	TimerTask* task = new TimerTask(duration, onUpdate, onComplete);
 	animations.push_back(task);
 	task->Start();

@@ -4,8 +4,6 @@
 
 #include <vector>
 
-using namespace std;
-
 struct FruitConfig {
 	const char* name;
 	const char* texture;
@@ -18,7 +16,7 @@ struct FruitConfig {
 class FruitData
 {
 public:
-	static vector<FruitConfig> configs;
+	static std::vector<FruitConfig> configs;
 
 	static FruitConfig* GetFruitConfigByName(const char* name);
 

@@ -8,17 +8,17 @@ class TextElement : public Element
 private:
 	GameTexture* texture = nullptr;
 public:
-	string text;
+	std::string text;
 	const char* fontId;
 	int size;
 	SDL_Color color;
 	int outlineSize;
 	SDL_Color outlineColor;
 
-	TextElement(const char* id, vec2_t position, string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 });
+	TextElement(const char* id, vec2_t position, std::string text, const char* fontId, const int size, const SDL_Color color, const int outlineSize = 0, const SDL_Color outlineColor = { 0, 0, 0, 255 });
 	
 	void SetText(const char* text);
-	void SetText(string text);
+	void SetText(std::string text);
 
 	void SetFont(const char* fontId);
 	void SetSize(int size);

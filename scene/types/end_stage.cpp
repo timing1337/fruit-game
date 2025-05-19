@@ -32,9 +32,9 @@ void EndStage::Prepare() {
 	TextElement* maxComboAchieved = (TextElement*)this->GetElementById("max_combo_achieved_value");
 	TextElement* amountOfFruitSliced = (TextElement*)this->GetElementById("amount_of_fruit_sliced_value");
 
-	score->SetText(to_string(GameManager::GetInstance()->score));
-	maxComboAchieved->SetText(to_string(GameManager::GetInstance()->highestComboRecorded));
-	amountOfFruitSliced->SetText(to_string(GameManager::GetInstance()->slicedFruit));
+	score->SetText(std::to_string(GameManager::GetInstance()->score));
+	maxComboAchieved->SetText(std::to_string(GameManager::GetInstance()->highestComboRecorded));
+	amountOfFruitSliced->SetText(std::to_string(GameManager::GetInstance()->slicedFruit));
 
 	BaseScene::Prepare();
 }

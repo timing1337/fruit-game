@@ -3,9 +3,22 @@
 EntityManager* EntityManager::instancePtr = new EntityManager();
 
 void EntityManager::Initialize() {
-	spawnTask = TaskManager::GetInstance()->RunRepeatedTask(1000,
+	spawnTask = TaskManager::GetInstance()->RunRepeatedTask(ENEMY_SPAWN_INTERVAL_BASE,
 		[](RepeatedTask* self) {
 			EntityManager::GetInstance()->RandomizeSpawningEntity();
+			GameManager* game_mgr = GameManager::GetInstance();
+
+			if (game_mgr->activeBuff == BUFF_NONE) {
+				float multiplySpawnChance = std::min(ENEMY_SPAWN_DUPLICATE_CHANCE_BASE + GameManager::GetInstance()->score * ENEMY_SPAWN_DUPLICATE_CHANCE_MULTIPLIER, ENEMY_SPAWN_DUPLICATE_CHANCE_MAX);
+				float spawnChance = rand() % 100 / 100.0f;
+				if (spawnChance < multiplySpawnChance) {
+					int duplicateCount = rand() % 2 + 1;
+					for (int i = 0; i < duplicateCount; i++) {
+						EntityManager::GetInstance()->RandomizeSpawningEntity();
+					}
+				}
+			}
+
 		}, [](RepeatedTask* self){});
 }
 
@@ -16,15 +29,8 @@ void EntityManager::RandomizeSpawningEntity() {
 		return;
 	}
 
-	float spawnRate = min(ENEMY_SPAWN_BASE_RATE + game_mgr->score * ENEMY_SPAWN_RATE_MULTIPLIER, ENEMY_SPAWN_RATE_MAX);
-
-	float rate = rand() % 100 / 100.0f;
-	if (rate > spawnRate && game_mgr->activeBuff != BuffId::FRUIT_PARTY) {
-		return;
-	}
-
 	int direction = rand() % 3;
-	float speed = min(ENEMY_BASE_SPEED + game_mgr->score * ENEMY_SPEED_MULTIPLIER, ENEMY_SPEED_MAX);
+	float speed = std::min(ENEMY_BASE_SPEED + game_mgr->score * ENEMY_SPEED_MULTIPLIER, ENEMY_SPEED_MAX);
 	float angle = 0;
 	vec2_t position;
 	switch (direction) {
@@ -53,7 +59,7 @@ void EntityManager::RandomizeSpawningEntity() {
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
 		float buffRate = rand() % 100 / 100.0f;
-		float buffChance = min(0.005f + game_mgr->currentCombo * 0.0025f, 0.035f);
+		float buffChance = std::min(0.005f + game_mgr->currentCombo * 0.0005f, 0.025f);
 		if (buffRate < buffChance) {
 			BuffConfig* buffConfig = BuffData::GetRandomBuffConfig();
 			canSpawnBuff = false;
