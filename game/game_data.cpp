@@ -69,22 +69,20 @@ GameData::GameData(std::string path) {
 	this->highestComboAchieved = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
 
+	std::string bladeColorId((char*)(buffer + 16));
+
 	this->ReloadBladeData();
 	
-	//ulgy lol, i should write a wrapper or something
-	int bladeColorIdLength = *(int*)(buffer + 16);
-	char* bladeColorId = new char[bladeColorIdLength + 1];
-	memcpy(bladeColorId, buffer + 20, bladeColorIdLength);
-
-	bladeColorId[bladeColorIdLength] = '\0';
-
-	this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId);
+	this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId.c_str());
 
 	if (this->bladeColor == nullptr) {
 		SDL_Log("Blade color %s not found, using default blade color", bladeColorId);
 		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
 		return;
 	}
+
+	SDL_Log("Loaded game data: %s", this->ToString().c_str());
+	SDL_Log("Loaded blade color: %s", this->bladeColor->id);
 
 	//Cleanup
 	delete[] buffer;
@@ -104,8 +102,7 @@ void GameData::Save() {
 	*(int*)(buffer) = this->highestScore;
 	*(int*)(buffer + 4) = this->highestComboAchieved;
 	*(uint64_t*)(buffer + 8) = this->longestTimeAlive;
-	*(int*)(buffer + 16) = strlen(this->bladeColor->id);
-	memcpy(buffer + 20, this->bladeColor->id, strlen(this->bladeColor->id));
+	memcpy(buffer + 16, this->bladeColor->id, strlen(this->bladeColor->id) + 1);
 
 	this->timestamp = time(0);
 

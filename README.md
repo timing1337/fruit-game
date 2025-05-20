@@ -5,17 +5,17 @@
 ### File-save
 * Structure:
 ```c
-struct FilesaveStructure{
-  uint64_t timestamp; // Thời gian bắt đầu save file
-  uint64_t signature; // Signature kiểm tra nếu kỉ lục có thật sự đúng không
-  uint32_t fileSize;
-  uint8_t* data;
+struct FilesaveStructure {
+	uint64_t timestamp; // thời gian lưu file
+	uint64_t signature; // signature kiểm tra data
+	uint32_t dataSize;
+	uint8_t* data; // game encrypted data
 };
-
-struct GameData{
-  uint32_t highestScore;
-  uint32_t highestCombo;
-  uint64_t longestTimeAlive;
+struct GameDataStructure {
+	uint32_t highestScore;
+	uint32_t highestCombo;
+	uint64_t longestTimeAlive;
+	std::string bladeColorId; //null-terminated string
 };
 ```
 
@@ -26,13 +26,15 @@ Timestamp is used as seed for generating obfuscation keys for data. The encrypti
 randomSeed.seed(this->timestamp);
 uint64_t key = randomSeed();
 for (int i = 0; i < size; i++) {
-	uint8_t keyByte = ((uint8_t*)&key)[i % 8];
+	//using byte at byte n % 8 of the seed and xor with byte n of encrypted buffer
+	uint8_t keyByte = ((uint8_t*)&key)[i % 8]; 
 	buffer[i] ^= keyByte;
+	//regenerate seed again
 	key = randomSeed();
 }
 ```
 
-* Signature: Signature is a [FNV hashed](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) game data string
+* Signature: Signature is a [FNV hashed](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) game data string, used for validating game data
 ```c
 inline const uint32_t HashGameDataStringFN(string gameDataStr) {
 

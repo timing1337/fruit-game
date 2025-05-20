@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "SDL.h"
 #include "config/blade_color.h"
@@ -7,7 +7,19 @@
 #include <random>
 #include <string>
 
-
+//these are used as reference only
+struct FilesaveStructure {
+	uint64_t timestamp; // thời gian lưu file
+	uint64_t signature; // signature kiểm tra data
+	uint32_t dataSize;
+	uint8_t* data; // game encrypted data
+};
+struct GameDataStructure {
+	uint32_t highestScore;
+	uint32_t highestCombo;
+	uint64_t longestTimeAlive;
+	std::string bladeColorId; //null-terminated string
+};
 
 struct GameData
 {
