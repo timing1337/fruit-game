@@ -80,6 +80,7 @@ void ButtonElement::Release() {
 
 void ButtonElement::OnMouseClick(SDL_MouseButtonEvent& e) {
 	if (IsHovered() && onClick != nullptr && !isClicked) {
+		AudioManager::GetInstance()->PlaySound("button.wav");
 		isClicked = true;
 		onClick(this);
 	}

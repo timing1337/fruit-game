@@ -24,6 +24,7 @@ void EntityManager::Initialize() {
 
 void EntityManager::RandomizeSpawningEntity() {
 	GameManager* game_mgr = GameManager::GetInstance();
+	TaskManager* task_mgr = TaskManager::GetInstance();
 
 	if (game_mgr->state != GameState::RUNNING) {
 		return;
@@ -68,6 +69,27 @@ void EntityManager::RandomizeSpawningEntity() {
 	}
 
 	spawnEntity(enemy);
+
+	if (game_mgr->activeBuff == FREEZE) {
+		//apply slowest
+		task_mgr->RunTimerTask(500,
+			//oh my god this is so ulgy
+			[enemy, game_mgr](TimerTask* self) {
+				//check if buff is still active and entity is still alive
+				if (!enemy->alive) {
+					self->Kill();
+					return;
+				}
+
+				if (game_mgr->activeBuff != FREEZE) {
+					self->Kill();
+					enemy->slowdownFactor = 0.0f;
+					return;
+				}
+
+				enemy->slowdownFactor = std::max(self->GetProgress(), 1.0f);
+			}, [](TimerTask* self) {});
+	}
 }
 
 void EntityManager::Heartbeat(int deltaTicks) {

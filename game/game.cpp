@@ -132,34 +132,36 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 
 	switch (config->id) {
 	case BuffId::FREEZE: {
-		auto applyAcceleration = [](float slowDelta) {
-			EntityManager* entity_mgr = EntityManager::GetInstance();
-			for (Entity* entity : entity_mgr->entities) {
-				if (!entity->alive) continue;
-				entity->slowdownFactor = std::clamp(entity->slowdownFactor + slowDelta, 0.0f, 1.0f);
-			}};
-
+		//goofy
 		// Fade-in effect
 		task_mgr->RunTimerTask(500,
-			[renderer, applyAcceleration](TimerTask* self) {
+			//oh my god this is so ulgy
+			[renderer, entity_mgr](TimerTask* self) {
 				int opacity = static_cast<int>(self->GetProgress() * 255);
 				renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
-				applyAcceleration(0.0035f);
+
+				for (Entity* entity : entity_mgr->entities) {
+					if (!entity->alive) continue;
+					entity->slowdownFactor = std::max(self->GetProgress(), 1.0f);
+				}
 			},
-			[this, config, task_mgr, renderer, applyAcceleration](TimerTask* self) {
+			[this, config, task_mgr, renderer, entity_mgr](TimerTask* self) {
 				// Active phase
 				task_mgr->RunTimerTask(config->duration,
-					[renderer, applyAcceleration](TimerTask* self) {
+					[renderer](TimerTask* self) {
 						renderer->RenderTextureBackground("freeze_buff_overlay.png", 255);
-						applyAcceleration(0.0035f);
 					},
-					[this, task_mgr, renderer, applyAcceleration](TimerTask* self) {
+					[this, task_mgr, renderer, entity_mgr](TimerTask* self) {
 						// Fade-out effect
 						task_mgr->RunTimerTask(500,
-							[applyAcceleration, renderer](TimerTask* self) {
+							[renderer, entity_mgr](TimerTask* self) {
 								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
 								renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
-								applyAcceleration(-0.0035f);
+
+								for (Entity* entity : entity_mgr->entities) {
+									if (!entity->alive) continue;
+									entity->slowdownFactor = 0;
+								}
 							},
 							[this](TimerTask* self) {
 								this->activeBuff = BUFF_NONE;
@@ -205,9 +207,19 @@ void GameManager::FireStateChange(GameState state) {
 	this->state = state;
 	switch (state) {
 	case GameState::WAITING:
+		//Play music again
+		AudioManager::GetInstance()->PlayMusic();
 		break;
 	case GameState::STARTING:
-		ResetGameData();
+		AudioManager::GetInstance()->HaltMusic();
+		ResetRuntimeGameData();
+		break;
+	case GameState::PAUSED:
+		//Pause the game and cancel the current path if player is slashing
+		if (this->mousePathRecord != nullptr) {
+			this->mousePathRecordsLeftover.push_back(this->mousePathRecord);
+			this->mousePathRecord = nullptr;
+		}
 		break;
 	case GameState::POSTGAME:
 		if (this->highestComboRecorded > this->gameData->highestComboAchieved) {
@@ -222,6 +234,7 @@ void GameManager::FireStateChange(GameState state) {
 		this->gameData->Save();
 		break;
 	case GameState::ENDGAME:
+		EntityManager* entity_mgr = EntityManager::GetInstance();
 		//clear out old entities and mouse path
 		for (int i = 0; i < this->mousePathRecordsLeftover.size(); i++) {
 			MousePathRecord* record = this->mousePathRecordsLeftover[i];
@@ -231,8 +244,6 @@ void GameManager::FireStateChange(GameState state) {
 
 		delete this->mousePathRecord;
 		this->mousePathRecord = nullptr;
-
-		EntityManager* entity_mgr = EntityManager::GetInstance();
 
 		for (int i = 0; i < entity_mgr->entities.size(); i++) {
 			Entity* entity = entity_mgr->entities[i];
@@ -290,7 +301,7 @@ void GameManager::SetRemainingLives(int lives) {
 	}
 }
 
-void GameManager::ResetGameData() {
+void GameManager::ResetRuntimeGameData() {
 	SetScore(0);
 	SetCombo(0);
 	SetRemainingLives(MAX_LIVES);

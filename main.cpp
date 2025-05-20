@@ -5,6 +5,7 @@
 #include "SDL_timer.h"
 #include "SDL_mixer.h"
 
+#include "audio/audio_mgr.h"
 #include "game/game.h"
 #include "render.h"
 #include "draw/downsampling.h"
@@ -44,10 +45,12 @@ int main(int argc, char* args[])
 	TaskManager* animation_mgr = TaskManager::GetInstance();
 	EntityManager* entity_mgr = EntityManager::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
+	AudioManager* audio_mgr = AudioManager::GetInstance();
 
 	renderer->Initialize();
 	entity_mgr->Initialize();
 	scene_mgr->Initialize();
+	audio_mgr->Initialize();
 
 	Downsampling::Initialize();
 
@@ -88,11 +91,13 @@ int main(int argc, char* args[])
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(true);
 						game_mgr->FireStateChange(GameState::PAUSED);
+						AudioManager::GetInstance()->PlaySound("button.wav");
 					}
 					else if (game_mgr->state == GameState::PAUSED) {
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(false);
 						game_mgr->FireStateChange(GameState::RUNNING);
+						AudioManager::GetInstance()->PlaySound("button.wav");
 					}
 
 					if (scene_mgr->GetScene(SceneId::COSMETIC)->active) {

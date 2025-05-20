@@ -44,12 +44,14 @@ void CosmeticMenu::OnSelectBlade(ImageElement* element) {
 	}
 
 	if (!bladeColor->isUnlocked) {
+		AudioManager::GetInstance()->PlaySound("error.wav");
 		SDL_Log("Blade %s is not unlocked", bladeColor->name);
 		return;
 	}
 
 	SDL_Log("Blade %s is selected", bladeColor->name);
 
+	AudioManager::GetInstance()->PlaySound("button.wav");
 	data->bladeColor = bladeColor;
 }
 
@@ -77,5 +79,4 @@ void CosmeticMenu::Render() {
 
 	ImageElement* selectedBlade = (ImageElement*)this->GetElementById(data->bladeColor->id);
 	renderer->RenderTexture(selectedIcon, selectedBlade->position.x, selectedBlade->position.y, Alignment::CENTER, AlignmentVertical::MIDDLE);
-
 }

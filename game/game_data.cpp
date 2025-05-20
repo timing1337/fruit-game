@@ -20,6 +20,7 @@ void GameData::ResetData() {
 	this->highestComboAchieved = 0;
 	this->longestTimeAlive = 0;
 	this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+	this->ReloadBladeData();
 }
 
 std::string GameData::ToString() {

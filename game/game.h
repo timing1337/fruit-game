@@ -55,7 +55,7 @@ public:
 	void OnMouseRelease(SDL_MouseButtonEvent& e);
 	void OnMouseMove(SDL_MouseButtonEvent& e);
 
-	void ResetGameData();
+	void ResetRuntimeGameData();
 
 	void AddScore(int score);
 	void SetScore(int score);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "audio/audio_mgr.h"
 #include "render.h"
 #include "scene/elements/basic_element.h"
 
