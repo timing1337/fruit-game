@@ -69,6 +69,7 @@ void MainStage::Render() {
 
 	SDL_SetRenderTarget(renderer->gRenderer, glowCanvas);
 	for (auto& record : game_mgr->mousePathRecordsLeftover) {
+		if (record == nullptr) continue;
 		DrawMousePathRecord(record);
 	}
 

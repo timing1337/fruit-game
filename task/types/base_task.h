@@ -20,4 +20,5 @@ public:
 	void Start();
 	virtual void Update(int deltaTick);
 	void Kill();
+	void Freeze();
 };

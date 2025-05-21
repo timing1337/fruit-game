@@ -58,6 +58,9 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->deathParticleColor = fruitConfig.color;
 	enemy->hp = fruitConfig.maxHp;
 
+	BuffConfig* buffConfig = BuffData::GetBuffConfigById(FREEZE);
+	enemy->buff = buffConfig;
+
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
 		float buffRate = rand() % 100 / 100.0f;
 		float buffChance = std::min(0.005f + game_mgr->currentCombo * 0.0005f, 0.025f);

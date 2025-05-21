@@ -16,9 +16,9 @@ void TimerTask::Update(int deltaTime) {
 	this->counter += deltaTime;
 
 	if (counter >= duration) {
-		Kill();
+		this->onComplete(this);
+		this->Kill();
 	}
-
 }
 
 float TimerTask::GetProgress() {

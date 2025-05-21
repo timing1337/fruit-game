@@ -136,7 +136,14 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 		//goofy
 		// Fade-in effect
 		task_mgr->RunTimerTask(500,
-			[renderer, entity_mgr](TimerTask* self) {
+			[this, renderer, entity_mgr](TimerTask* self) {
+				//Triggered when we already finish, kill it
+				if (this->state != GameState::RUNNING) {
+					self->Kill();
+					return;
+				}
+
+				//Render our overlay overtime and slowly freeze entities
 				int opacity = static_cast<int>(self->GetProgress() * 255);
 				renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
 
@@ -147,18 +154,20 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 			},
 			[this, config, task_mgr, renderer, entity_mgr](TimerTask* self) {
 				// Active phase
-				task_mgr->RunTimerTask(config->duration,
+				this->buffTask = task_mgr->RunTimerTask(config->duration,
 					[this, renderer](TimerTask* self) {
-						if (state != GameState::RUNNING) {
-							self->Kill();
-							return;
-						}
 						renderer->RenderTextureBackground("freeze_buff_overlay.png", 255);
 					},
 					[this, task_mgr, renderer, entity_mgr](TimerTask* self) {
 						// Fade-out effect
+						this->buffTask = nullptr;
 						task_mgr->RunTimerTask(500,
-							[renderer, entity_mgr](TimerTask* self) {
+							[this, renderer, entity_mgr](TimerTask* self) {
+								//Game ended when we are doing our post buff, just kill it
+								if (this->state != GameState::RUNNING) {
+									self->Kill();
+									return;
+								}
 								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
 								renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
 
@@ -177,14 +186,10 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 	}
 	case BuffId::FRUIT_PARTY:
 		entity_mgr->spawnTask->interval = 30;
-		task_mgr->RunTimerTask(config->duration,
-			[this](TimerTask* self) {
-				if (state != GameState::RUNNING) {
-					self->Kill();
-					return;
-				}
-			},
+		this->buffTask = task_mgr->RunTimerTask(config->duration,
+			[this](TimerTask* self) {},
 			[this, entity_mgr](TimerTask* self) {
+				this->buffTask = nullptr;
 				//kill every remaining entity & halt the spawn process
 				entity_mgr->spawnTask->interval = 9999;
 				for (int i = 0; i < entity_mgr->entities.size(); i++) {
@@ -221,11 +226,21 @@ void GameManager::FireStateChange(GameState state) {
 		AudioManager::GetInstance()->HaltMusic();
 		ResetRuntimeGameData();
 		break;
+	case GameState::RUNNING:
+		if (this->buffTask != nullptr) {
+			this->buffTask->Start();
+			SDL_Log("Buff task unfroze");
+		}
+		break;
 	case GameState::PAUSED:
-		//Pause the game and cancel the current path if player is slashing
+		//Pause the game and cancel the current path if player is slashing also stop buff
 		if (this->mousePathRecord != nullptr) {
 			this->mousePathRecordsLeftover.push_back(this->mousePathRecord);
 			this->mousePathRecord = nullptr;
+		}
+		if (this->buffTask != nullptr) {
+			this->buffTask->Freeze();
+			SDL_Log("Buff task frozen");
 		}
 		break;
 	case GameState::POSTGAME:
@@ -259,6 +274,15 @@ void GameManager::FireStateChange(GameState state) {
 			}
 		}
 		entity_mgr->entities.clear();
+
+		if (this->buffTask != nullptr) {
+			SDL_Log("Buff task killed");
+			this->buffTask->Kill();
+			this->buffTask = nullptr;
+		}
+
+		this->activeBuff = BUFF_NONE;
+		entity_mgr->canSpawnBuff = true;
 		break;
 	}
 }
@@ -318,6 +342,7 @@ void GameManager::SetScore(int score) {
 	TextElement* scoreElement = (TextElement*)mainStage->GetElementById("score");
 	scoreElement->SetText(std::to_string(this->score));
 
+	//if we are in active buff, dont reset the spawn interval
 	if (this->activeBuff != BuffId::FRUIT_PARTY) {
 		EntityManager::GetInstance()->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
 	}

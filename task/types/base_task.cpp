@@ -13,6 +13,10 @@ void BaseTask::Start() {
 }
 
 void BaseTask::Kill() {
-	this->onComplete(this);
 	this->state = TaskState::KILLED;
+}
+
+void BaseTask::Freeze() {
+	if (this->state != TaskState::RUN) return;
+	this->state = TaskState::FREEZED;
 }

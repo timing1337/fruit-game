@@ -3,5 +3,6 @@
 enum TaskState {
 	WAIT,
 	RUN,
+	FREEZED,
 	KILLED
 };

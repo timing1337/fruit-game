@@ -41,7 +41,9 @@ public:
 
 	int slicedFruit = 0;
 
+	// Buff
 	BuffId activeBuff = BUFF_NONE;
+	TimerTask* buffTask = nullptr;
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;
