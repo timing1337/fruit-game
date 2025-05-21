@@ -26,11 +26,16 @@ void SceneManager::Initialize() {
 	cosmeticMenu->SetBackgroundTexture(cosmeticMenuTexture);
 	cosmeticMenu->SetActive(false);
 
+	Settings* settings = new Settings();
+	settings->SetBackgroundTexture(backgroundTexture);
+	settings->SetActive(false);
+
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);
 	this->scenes.push_back(endStage);
-	this->scenes.push_back(pauseScreen);
 	this->scenes.push_back(cosmeticMenu);
+	this->scenes.push_back(settings);
+	this->scenes.push_back(pauseScreen);
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {

@@ -175,6 +175,8 @@
     <ClCompile Include="scene\elements\types\checkbox_element.cpp" />
     <ClCompile Include="scene\types\cosmetic_menu.cpp" />
     <ClCompile Include="scene\types\pause_screen.cpp" />
+    <ClCompile Include="scene\elements\types\slider_element.cpp" />
+    <ClCompile Include="scene\types\settings.cpp" />
     <ClCompile Include="utils\algorithm.cpp" />
     <ClCompile Include="config\fruit_data.cpp" />
     <ClCompile Include="scene\types\end_stage.cpp" />
@@ -210,6 +212,8 @@
     <ClInclude Include="scene\types\cosmetic_menu.h" />
     <ClInclude Include="scene\types\pause_screen.h" />
     <ClInclude Include="scene\scene_appear_type.h" />
+    <ClInclude Include="scene\elements\types\slider_element.h" />
+    <ClInclude Include="scene\types\settings.h" />
     <ClInclude Include="task\task_type.h" />
     <ClInclude Include="utils\algorithm.h" />
     <ClInclude Include="alignment.h" />

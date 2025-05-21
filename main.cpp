@@ -91,19 +91,30 @@ int main(int argc, char* args[])
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(true);
 						game_mgr->FireStateChange(GameState::PAUSED);
-						AudioManager::GetInstance()->PlaySound("button.wav");
+						audio_mgr->PlaySound("button.wav");
 					}
 					else if (game_mgr->state == GameState::PAUSED) {
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(false);
 						game_mgr->FireStateChange(GameState::RUNNING);
-						AudioManager::GetInstance()->PlaySound("button.wav");
+						audio_mgr->PlaySound("button.wav");
 					}
 
+					//this is kinda stupid but hwatever
 					if (scene_mgr->GetScene(SceneId::COSMETIC)->active) {
+						audio_mgr->PlaySound("button.wav");
 						renderer->PlayFadeTransition(
 							[scene_mgr](TimerTask* self) {
 								scene_mgr->GetScene(SceneId::COSMETIC)->SetActive(false);
+								scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
+							},
+							[](TimerTask* self) {});
+					}
+					else if (scene_mgr->GetScene(SceneId::SETTING)->active) {
+						audio_mgr->PlaySound("button.wav");
+						renderer->PlayFadeTransition(
+							[scene_mgr](TimerTask* self) {
+								scene_mgr->GetScene(SceneId::SETTING)->SetActive(false);
 								scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
 							},
 							[](TimerTask* self) {});

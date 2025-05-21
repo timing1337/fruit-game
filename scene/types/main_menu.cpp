@@ -36,7 +36,8 @@ MainMenu::MainMenu() : BaseScene(SceneId::MAIN_MENU) {
 		OnCosmetic(button);
 	}, 0, { 0, 0, 0, 255 }, 10);
 
-	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "Settings", "genshin", 24, { 245, 236, 233, 255 }, [](ButtonElement* button) {
+	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "Settings", "genshin", 24, { 245, 236, 233, 255 }, [this](ButtonElement* button) {
+		OnSettings(button);
 		}, 0, { 0, 0, 0, 255 }, 10);
 
 	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 120 }, "Quit", "genshin", 24, { 245, 236, 233, 255 }, [this](ButtonElement* button) {
@@ -51,6 +52,19 @@ void MainMenu::OnCosmetic(ButtonElement* button) {
 		[this, scene_mgr](TimerTask* self) {
 			this->SetActive(false);
 			scene_mgr->GetScene(SceneId::COSMETIC)->SetActive(true);
+		},
+		[button](TimerTask* self) {
+			button->isClicked = false;
+		});
+}
+
+void MainMenu::OnSettings(ButtonElement* button) {
+	SceneManager* scene_mgr = SceneManager::GetInstance();
+	Renderer* renderer = Renderer::GetInstance();
+	renderer->PlayFadeTransition(
+		[this, scene_mgr](TimerTask* self) {
+			this->SetActive(false);
+			scene_mgr->GetScene(SceneId::SETTING)->SetActive(true);
 		},
 		[button](TimerTask* self) {
 			button->isClicked = false;

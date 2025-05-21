@@ -61,3 +61,8 @@ void AudioManager::ChangeMusicVolume(int volume) {
 	Mix_VolumeMusic(volume);
 }
 
+void AudioManager::ChangeSoundVolume(int volume) {
+	int rescaled = (volume / 100.0f) * 128;
+	SDL_Log("Volume: %d", rescaled);
+	Mix_Volume(-1, volume);
+}

@@ -36,6 +36,18 @@ ImageElement* BaseScene::AddImage(const char* id, vec2_t position, GameTexture* 
 	return element;
 }
 
+SliderElement* BaseScene::AddSlider(const char* id, vec2_t position, int height, int width, int maxSliderValue, std::function<void(SliderElement* slider)> onValueChange) {
+	SliderElement* element = new SliderElement(id, position, height, width, maxSliderValue, onValueChange);
+	this->elements.push_back(element);
+	return element;
+}
+
+CheckboxElement* BaseScene::AddCheckbox(const char* id, vec2_t position, int size, std::function<void(CheckboxElement* checkbox)> onClick) {
+	CheckboxElement* element = new CheckboxElement(id, position, size, onClick);
+	this->elements.push_back(element);
+	return element;
+}
+
 Element* BaseScene::GetElementById(const char* id) {
 	for (auto& element : this->elements) {
 		if (strcmp(element->id, id) == 0) {

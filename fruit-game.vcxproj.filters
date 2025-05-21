@@ -111,6 +111,15 @@
     <ClCompile Include="config\buff_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="audio\audio_mgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\elements\types\slider_element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scene\types\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="textures.h">
@@ -225,6 +234,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="config\buff_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="audio\audio_mgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\elements\types\slider_element.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene\types\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

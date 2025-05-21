@@ -2,7 +2,7 @@
 
 //sort from lowest to highest
 std::vector<BuffConfig*> BuffData::configs = {
-	new BuffConfig(BuffId::FRUIT_PARTY, 10000, { 255, 255, 255, 255 }, 0.1f),
+	new BuffConfig(BuffId::FRUIT_PARTY, 10000, { 255, 100, 100, 255 }, 0.1f),
 	new BuffConfig(BuffId::FREEZE, 5000, { 150, 200, 255, 255 }, 0.9f),
 };
 

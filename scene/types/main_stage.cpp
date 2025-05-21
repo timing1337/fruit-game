@@ -80,8 +80,14 @@ void MainStage::Render() {
 	SDL_RenderCopy(renderer->gRenderer, gameCanvas, NULL, NULL);
 	SDL_RenderCopy(renderer->gRenderer, glowCanvas, NULL, NULL);
 
-	Downsampling::Downsample(glowCanvas);
-	Downsampling::Render();
+	SceneManager* scene_mgr = SceneManager::GetInstance();
+	Settings* settings = (Settings*)scene_mgr->GetScene(SceneId::SETTING);
+	CheckboxElement* bloomCheckbox = (CheckboxElement*)settings->GetElementById("enable_bloom");
+
+	if (bloomCheckbox->value) {
+		Downsampling::Downsample(glowCanvas);
+		Downsampling::Render();
+	}
 
 	renderer->SetBackgroundColor(255, 0, 0, redColorOverlayOpacity);
 }
