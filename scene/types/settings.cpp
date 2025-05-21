@@ -10,7 +10,7 @@ Settings::Settings() : BaseScene(SceneId::SETTING) {
 	description->SetAlignmentVertical(AlignmentVertical::TOP);
 
 	float alignedStartX = RENDERER_CENTER_X - 200;
-	float secondAlignedStartX = RENDERER_CENTER_X + 200;
+	float secondAlignedStartX = RENDERER_CENTER_X;
 
 	float alignedStartY = RENDERER_CENTER_Y - 200;
 
@@ -46,4 +46,6 @@ Settings::Settings() : BaseScene(SceneId::SETTING) {
 	TextElement* enableBloomText = this->AddText("enable_bloom_text", { alignedStartX, alignedStartY }, "Enable Bloom", "genshin", 20, { 255, 255, 255, 255 });
 	enableBloomText->SetAlignment(Alignment::LEFT);
 	enableBloomText->SetAlignmentVertical(AlignmentVertical::MIDDLE);
+
+	enableBloom->value = true;
 }

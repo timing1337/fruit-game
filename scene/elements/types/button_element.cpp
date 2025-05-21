@@ -42,32 +42,10 @@ void ButtonElement::OnHoveredRender() {
 	int halfBoundX = this->bound.x / 2;
 	int halfBoundY = this->bound.y / 2;
 
-	int boxStartX = this->position.x;
-	int boxStartY = this->position.y;
+	vec2_t position = GetAlignedPosition();
 
-	switch (alignmentVertical) {
-	case AlignmentVertical::TOP:
-		break;
-	case AlignmentVertical::MIDDLE:
-		boxStartY -= this->bound.y / 2;
-		break;
-	case AlignmentVertical::BOTTOM:
-		boxStartY -= this->bound.y;
-		break;
-	}
+	SDL_Rect rect = { position.x, position.y, this->bound.x, this->bound.y };
 
-	switch (this->alignment) {
-	case Alignment::LEFT:
-		break;
-	case Alignment::RIGHT:
-		boxStartX -= this->bound.x;
-		break;
-	case Alignment::CENTER:
-		boxStartX -= this->bound.x / 2;
-		break;
-	}
-
-	SDL_Rect rect = { boxStartX, boxStartY, this->bound.x, this->bound.y };
 	SDL_SetRenderDrawColor(renderer->gRenderer, 255, 255, 255, 150);
 	SDL_RenderDrawRect(renderer->gRenderer, &rect);
 }
@@ -79,9 +57,9 @@ void ButtonElement::Release() {
 }
 
 void ButtonElement::OnMouseClick(SDL_MouseButtonEvent& e) {
-	if (IsHovered() && onClick != nullptr && !isClicked) {
+	if (IsHovered() && onClick != nullptr) {
+		SDL_Log("Button %s clicked", this->id);
 		AudioManager::GetInstance()->PlaySound("button.wav");
-		isClicked = true;
 		onClick(this);
 	}
 }

@@ -18,9 +18,6 @@ public:
 	int outlineSize;
 	SDL_Color outlineColor;
 	int boxPadding;
-	
-	//this is for preventing double click
-	bool isClicked = false;
 
 	std::function<void(ButtonElement* button)> onClick = nullptr;
 

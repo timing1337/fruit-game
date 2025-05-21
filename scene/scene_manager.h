@@ -12,12 +12,13 @@
 
 #include <vector>
 
-
-
 class SceneManager
 {
 public:
 	std::vector<BaseScene*> scenes;
+
+	BaseScene* currentScene = nullptr;
+	bool lockInteraction = false;
 
 	static SceneManager* instancePtr;
 
@@ -28,6 +29,8 @@ public:
 	void Initialize();
 	void Render();
 	BaseScene* GetScene(SceneId sceneId);
+
+	void TransitionToScene(SceneId sceneId, std::function<void(SceneManager* scene_mgr)> callback = nullptr);
 
 	void OnMouseClick(SDL_MouseButtonEvent& e);
 };

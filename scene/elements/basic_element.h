@@ -27,6 +27,8 @@ public:
 	void SetAlignmentVertical(AlignmentVertical alignmentVertical);
 	void SetActive(bool active);
 
+	vec2_t GetAlignedPosition();
+
 	/* Preloading textures*/
 	virtual void Prepare();
 	virtual void Render();

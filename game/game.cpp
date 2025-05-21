@@ -142,7 +142,7 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 
 				for (Entity* entity : entity_mgr->entities) {
 					if (!entity->alive) continue;
-					entity->slowdownFactor = std::max(self->GetProgress(), 1.0f);
+					entity->slowdownFactor = self->GetProgress();
 				}
 			},
 			[this, config, task_mgr, renderer, entity_mgr](TimerTask* self) {
@@ -268,29 +268,15 @@ void GameManager::SetRemainingLives(int lives) {
 
 	if (this->remainingLives == 0) {
 		GameManager::GetInstance()->FireStateChange(GameState::POSTGAME);
-		TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
-			[renderer](TimerTask* self) {
-				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * 255);
-			}, [renderer, mainStage, endStage](TimerTask* self) {
-
-				endStage->SetActive(true);
-				mainStage->SetActive(false);
-
-				TaskManager::GetInstance()->RunTimerTask(FADING_IN_TRANSITION_TICKS,
-					[renderer](TimerTask* self) {
-						renderer->SetBackgroundColor(255, 0, 0, 255 - (self->GetProgress() * 255));
-					},
-					[](TimerTask* self) {
-						GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
-					});
-				});
-
+		SceneManager::GetInstance()->TransitionToScene(SceneId::END_GAME, [](SceneManager* scene_mgr) {
+			GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
+		});
 		return;
 	}
 
 	int amount = MAX_LIVES - this->remainingLives;
 	if (amount != 0) {
-		int calculatedRedOpacity = amount * 30;
+		int calculatedRedOpacity = amount * 40;
 		task_mgr->RunTimerTask(150,
 			[renderer, calculatedRedOpacity, mainStage](TimerTask* self) {
 				renderer->SetBackgroundColor(255, 0, 0, self->GetProgress() * calculatedRedOpacity);

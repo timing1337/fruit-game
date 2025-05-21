@@ -48,33 +48,17 @@ MainMenu::MainMenu() : BaseScene(SceneId::MAIN_MENU) {
 void MainMenu::OnCosmetic(ButtonElement* button) {
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 	Renderer* renderer = Renderer::GetInstance();
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::COSMETIC)->SetActive(true);
-		},
-		[button](TimerTask* self) {
-			button->isClicked = false;
-		});
+	SceneManager::GetInstance()->TransitionToScene(SceneId::COSMETIC);
 }
 
 void MainMenu::OnSettings(ButtonElement* button) {
 	SceneManager* scene_mgr = SceneManager::GetInstance();
-	Renderer* renderer = Renderer::GetInstance();
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::SETTING)->SetActive(true);
-		},
-		[button](TimerTask* self) {
-			button->isClicked = false;
-		});
+	scene_mgr->TransitionToScene(SceneId::SETTING);
 }
 
 void MainMenu::OnQuit(ButtonElement* button) {
 	GameManager* game_mgr = GameManager::GetInstance();
 	game_mgr->running = false;
-	button->isClicked = false;
 }
 
 void MainMenu::OnStart(ButtonElement* button) {
@@ -84,13 +68,7 @@ void MainMenu::OnStart(ButtonElement* button) {
 
 	game_mgr->FireStateChange(GameState::STARTING);
 
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::GAME)->SetActive(true);
-		},
-		[button](TimerTask* self) {
-			GameManager::GetInstance()->FireStateChange(GameState::RUNNING);
-			button->isClicked = false;
-		});
+	scene_mgr->TransitionToScene(SceneId::GAME, [game_mgr](SceneManager* scene_mgr) {
+		game_mgr->FireStateChange(GameState::RUNNING);
+	});
 }

@@ -30,12 +30,44 @@ void SceneManager::Initialize() {
 	settings->SetBackgroundTexture(backgroundTexture);
 	settings->SetActive(false);
 
+	this->currentScene = mainMenu;
+
 	this->scenes.push_back(mainMenu);
 	this->scenes.push_back(mainStage);
 	this->scenes.push_back(endStage);
 	this->scenes.push_back(cosmeticMenu);
 	this->scenes.push_back(settings);
 	this->scenes.push_back(pauseScreen);
+}
+
+void SceneManager::TransitionToScene(SceneId sceneId, std::function<void(SceneManager* scene_mgr)> callback) {
+	Renderer* renderer = Renderer::GetInstance();
+
+	if (lockInteraction) {
+		return;
+	}
+
+	SDL_Log("Transitioning to scene %d", (int)sceneId);
+
+	lockInteraction = true;
+
+	renderer->PlayFadeTransition(
+		[this, sceneId](TimerTask* self) {
+			this->currentScene->SetActive(false);
+
+			this->currentScene = this->GetScene(sceneId);
+			this->currentScene->SetActive(true);
+
+			SDL_Log("Transitioned to scene %d", (int)sceneId);
+		},
+		[this, callback](TimerTask* self) {
+			lockInteraction = false;
+			if (callback != nullptr) {
+				callback(this);
+			}
+			SDL_Log("Transition complete");
+			SDL_Log("Current scene: %d", (int)this->currentScene->sceneId);
+		});
 }
 
 BaseScene* SceneManager::GetScene(SceneId sceneId) {
@@ -57,7 +89,7 @@ void SceneManager::Render() {
 
 void SceneManager::OnMouseClick(SDL_MouseButtonEvent& e) {
 	for (auto& scene : this->scenes) {
-		if (scene->active) {
+		if (scene->active && !lockInteraction) {
 			scene->OnMouseClick(e);
 		}
 	}

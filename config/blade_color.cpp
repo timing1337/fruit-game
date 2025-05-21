@@ -4,7 +4,7 @@
 // this is extremely limited -> i need to figure out another way of doing this
 
 std::vector<BladeColor*> BladeColorsConfig::colors = {
-	new BladeColor("default_blade", "Default", "Default blade", "blades/bloomify.png", { 102, 204, 255, 255 }, {204, 228, 255, 255}, [](int score, int combo) {
+	new BladeColor("default_blade", "Default", "Default blade", "blades/bloomify.png", { 1, 79, 134, 255 }, {118, 215, 196, 255}, [](int score, int combo) {
 		return true; //default, always true
 	}),
 	new BladeColor("bloomify_blade", "Bloomify", "Reach 50 scores", "blades/bloomify.png", { 255, 44, 123, 255 }, {255, 143, 227, 255}, [](int score, int combo) {

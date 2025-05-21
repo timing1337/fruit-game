@@ -87,6 +87,8 @@ int main(int argc, char* args[])
 			case SDL_KEYDOWN:
 				switch (e.key.keysym.sym) {
 				case SDLK_ESCAPE:
+					if (scene_mgr->lockInteraction) break;
+
 					if (game_mgr->state == GameState::RUNNING) {
 						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
 						pauseScreen->SetActive(true);
@@ -100,24 +102,10 @@ int main(int argc, char* args[])
 						audio_mgr->PlaySound("button.wav");
 					}
 
-					//this is kinda stupid but hwatever
-					if (scene_mgr->GetScene(SceneId::COSMETIC)->active) {
+					BaseScene* currentScene = scene_mgr->currentScene;
+					if (currentScene->sceneId != SceneId::MAIN_MENU) {
 						audio_mgr->PlaySound("button.wav");
-						renderer->PlayFadeTransition(
-							[scene_mgr](TimerTask* self) {
-								scene_mgr->GetScene(SceneId::COSMETIC)->SetActive(false);
-								scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
-							},
-							[](TimerTask* self) {});
-					}
-					else if (scene_mgr->GetScene(SceneId::SETTING)->active) {
-						audio_mgr->PlaySound("button.wav");
-						renderer->PlayFadeTransition(
-							[scene_mgr](TimerTask* self) {
-								scene_mgr->GetScene(SceneId::SETTING)->SetActive(false);
-								scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
-							},
-							[](TimerTask* self) {});
+						scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
 					}
 					break;
 				}

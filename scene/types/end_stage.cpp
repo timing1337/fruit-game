@@ -45,16 +45,10 @@ void EndStage::PlayAgain(ButtonElement* button) {
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 
 	game_mgr->FireStateChange(GameState::STARTING);
+	scene_mgr->TransitionToScene(SceneId::GAME, [game_mgr](SceneManager* scene_mgr) {
+		game_mgr->FireStateChange(GameState::RUNNING);
+	});
 
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::GAME)->SetActive(true);
-		},
-		[button](TimerTask* self) {
-			GameManager::GetInstance()->FireStateChange(GameState::RUNNING);
-			button->isClicked = false;
-		});
 }
 
 void EndStage::ReturnToMenu(ButtonElement* button) {
@@ -63,15 +57,7 @@ void EndStage::ReturnToMenu(ButtonElement* button) {
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 
 	game_mgr->FireStateChange(GameState::WAITING);
-
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
-		},
-		[button](TimerTask* self) {
-			button->isClicked = false;
-		});
+	scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
 }
 
 void EndStage::Render() {
