@@ -89,23 +89,33 @@ int main(int argc, char* args[])
 				case SDLK_ESCAPE:
 					if (scene_mgr->lockInteraction) break;
 
-					if (game_mgr->state == GameState::RUNNING) {
-						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
-						pauseScreen->SetActive(true);
-						game_mgr->FireStateChange(GameState::PAUSED);
-						audio_mgr->PlaySound("button.wav");
-					}
-					else if (game_mgr->state == GameState::PAUSED) {
-						PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
-						pauseScreen->SetActive(false);
-						game_mgr->FireStateChange(GameState::RUNNING);
-						audio_mgr->PlaySound("button.wav");
-					}
-
 					BaseScene* currentScene = scene_mgr->currentScene;
-					if (currentScene->sceneId != SceneId::MAIN_MENU) {
-						audio_mgr->PlaySound("button.wav");
-						scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
+
+					if (currentScene->sceneId == SceneId::GAME) {
+						if (game_mgr->state == GameState::RUNNING) {
+							PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
+							pauseScreen->SetActive(true);
+							game_mgr->FireStateChange(GameState::PAUSED);
+							audio_mgr->PlaySound("button.wav");
+						}
+						else if (game_mgr->state == GameState::PAUSED) {
+							PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
+							pauseScreen->SetActive(false);
+							game_mgr->FireStateChange(GameState::RUNNING);
+							audio_mgr->PlaySound("button.wav");
+						}
+					}
+					else {
+						//Ulgy hacks #2
+
+						//ok player is trying to revert back to previous scene, prob is on settings and wanna go back
+						if (game_mgr->state == GameState::PAUSED) {
+							scene_mgr->TransitionToScene(SceneId::GAME);
+						}
+						else {
+							//or player is just chilling in menu
+							scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
+						}
 					}
 					break;
 				}

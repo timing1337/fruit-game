@@ -5,8 +5,8 @@ PauseScreen::PauseScreen() : BaseScene(SceneId::PAUSE) {
 	pausedTitle->SetAlignment(Alignment::CENTER);
 
 	this->AddButton("settings_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 20 }, "Settings", "genshin", 20, { 245, 236, 233, 255 }, [](ButtonElement* button) {
-
-		}, 0, { 0, 0, 0, 255 }, 7);
+		SceneManager::GetInstance()->TransitionToScene(SceneId::SETTING);
+	}, 0, { 0, 0, 0, 255 }, 7);
 
 	this->AddButton("quit_button", vec2_t{ RENDERER_CENTER_X, RENDERER_CENTER_Y + 60 }, "Back to menu", "genshin", 20, { 245,236,233,255 }, [this](ButtonElement* button) {
 		OnQuit(button);
@@ -26,15 +26,8 @@ void PauseScreen::OnQuit(ButtonElement* button) {
 	Renderer* renderer = Renderer::GetInstance();
 	SceneManager* scene_mgr = SceneManager::GetInstance();
 
-	renderer->PlayFadeTransition(
-		[this, scene_mgr](TimerTask* self) {
-			this->SetActive(false);
-			scene_mgr->GetScene(SceneId::GAME)->SetActive(false);
-			scene_mgr->GetScene(SceneId::MAIN_MENU)->SetActive(true);
-		},
-		[game_mgr, button](TimerTask* self) {
-			game_mgr->FireStateChange(GameState::ENDGAME); //cleanup
-			game_mgr->FireStateChange(GameState::WAITING); //reset back to default state
-			button->isClicked = false;
-		});
+	scene_mgr->TransitionToScene(SceneId::MAIN_MENU, [game_mgr](SceneManager* scene_mgr) {
+		game_mgr->FireStateChange(GameState::ENDGAME); //cleanup
+		game_mgr->FireStateChange(GameState::WAITING); //reset back to default state
+	});
 }

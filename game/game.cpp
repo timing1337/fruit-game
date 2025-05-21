@@ -122,6 +122,7 @@ void GameManager::OnMouseMove(SDL_MouseButtonEvent& e) {
 	}
 }
 
+// this could have been so much better :sad: 
 void GameManager::TriggerBuff(BuffConfig* config) {
 	if (this->activeBuff != BUFF_NONE) return;
 	this->activeBuff = config->id;
@@ -135,7 +136,6 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 		//goofy
 		// Fade-in effect
 		task_mgr->RunTimerTask(500,
-			//oh my god this is so ulgy
 			[renderer, entity_mgr](TimerTask* self) {
 				int opacity = static_cast<int>(self->GetProgress() * 255);
 				renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
@@ -148,7 +148,11 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 			[this, config, task_mgr, renderer, entity_mgr](TimerTask* self) {
 				// Active phase
 				task_mgr->RunTimerTask(config->duration,
-					[renderer](TimerTask* self) {
+					[this, renderer](TimerTask* self) {
+						if (state != GameState::RUNNING) {
+							self->Kill();
+							return;
+						}
 						renderer->RenderTextureBackground("freeze_buff_overlay.png", 255);
 					},
 					[this, task_mgr, renderer, entity_mgr](TimerTask* self) {
@@ -171,14 +175,14 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 			});
 		break;
 	}
-	case BuffId::DOUBLE_SCORE:
-		this->activeBuff = BUFF_NONE;
-		break;
-
 	case BuffId::FRUIT_PARTY:
 		entity_mgr->spawnTask->interval = 30;
 		task_mgr->RunTimerTask(config->duration,
 			[this](TimerTask* self) {
+				if (state != GameState::RUNNING) {
+					self->Kill();
+					return;
+				}
 			},
 			[this, entity_mgr](TimerTask* self) {
 				//kill every remaining entity & halt the spawn process
@@ -197,6 +201,7 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 					[this, entity_mgr](TimerTask* self) {
 						entity_mgr->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
 						this->activeBuff = BUFF_NONE;
+						EntityManager::GetInstance()->canSpawnBuff = true;
 					});
 			});
 		break;
@@ -205,6 +210,8 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 
 void GameManager::FireStateChange(GameState state) {
 	this->state = state;
+
+	SDL_Log("Game state changed to %d", (int)state);
 	switch (state) {
 	case GameState::WAITING:
 		//Play music again
@@ -268,9 +275,8 @@ void GameManager::SetRemainingLives(int lives) {
 
 	if (this->remainingLives == 0) {
 		GameManager::GetInstance()->FireStateChange(GameState::POSTGAME);
-		SceneManager::GetInstance()->TransitionToScene(SceneId::END_GAME, [](SceneManager* scene_mgr) {
-			GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
-		});
+		GameManager::GetInstance()->FireStateChange(GameState::ENDGAME);
+		SceneManager::GetInstance()->TransitionToScene(SceneId::END_GAME);
 		return;
 	}
 
