@@ -11,6 +11,7 @@ public:
 	int score = 1;
 	int hp = 100;
 
+	const char* soundHit = nullptr;
 	BuffConfig* buff = nullptr;
 	SDL_Color deathParticleColor = { 255, 255, 255, 255 };
 

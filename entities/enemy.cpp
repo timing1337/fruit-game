@@ -25,6 +25,7 @@ void Enemy::onDespawn(EntityDeathType type) {
 		}
 		game_mgr->SetRemainingLives(game_mgr->remainingLives - 1);
 		game_mgr->SetCombo(0);
+		AudioManager::GetInstance()->PlaySound("error.wav");
 		break;
 	case EntityDeathType::PLAYER_INTERACTION:
 		game_mgr->AddScore(this->score);
@@ -34,6 +35,15 @@ void Enemy::onDespawn(EntityDeathType type) {
 
 		if (this->buff != nullptr) {
 			game_mgr->TriggerBuff(this->buff);
+		}
+
+		BladeColor* bladeColor = game_mgr->gameData->bladeColor;
+		if (bladeColor->customHitSound != nullptr) {
+			AudioManager::GetInstance()->PlaySound(bladeColor->customHitSound);
+		}
+
+		if (this->soundHit != nullptr) {
+			AudioManager::GetInstance()->PlaySound(this->soundHit);
 		}
 		break;
 	}

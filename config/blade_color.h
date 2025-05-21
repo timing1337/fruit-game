@@ -11,6 +11,7 @@ public:
 	const char* name;
 	const char* description;
 	const char* textureId;
+	const char* customHitSound;
 	bool isUnlocked = false;
 	SDL_Color color1;
 	SDL_Color color2;
@@ -18,7 +19,7 @@ public:
 	//stupid but...i cant find any other way to make this better lol
 	std::function<bool(int score, int combo)> checkUnlock;
 
-	BladeColor(const char* id, const char* name, const char* description, const char* textureId, SDL_Color color1, SDL_Color color2, std::function<bool(int score, int combo)> checkUnlock) : id(id), name(name), description(description), textureId(textureId), color1(color1), color2(color2), checkUnlock(checkUnlock) { }
+	BladeColor(const char* id, const char* name, const char* description, const char* textureId, const char* customHitSound, SDL_Color color1, SDL_Color color2, std::function<bool(int score, int combo)> checkUnlock) : id(id), name(name), description(description), textureId(textureId), customHitSound(customHitSound), color1(color1), color2(color2), checkUnlock(checkUnlock) {}
 };
 
 class BladeColorsConfig

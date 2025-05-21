@@ -14,7 +14,9 @@ void EntityManager::Initialize() {
 				if (spawnChance < multiplySpawnChance) {
 					int duplicateCount = rand() % 2 + 1;
 					for (int i = 0; i < duplicateCount; i++) {
-						EntityManager::GetInstance()->RandomizeSpawningEntity();
+						TaskManager::GetInstance()->RunTimerTask(100 + i * 300, [](TimerTask* self) {}, [](TimerTask* self) {
+							EntityManager::GetInstance()->RandomizeSpawningEntity();
+						});
 					}
 				}
 			}
@@ -25,6 +27,7 @@ void EntityManager::Initialize() {
 void EntityManager::RandomizeSpawningEntity() {
 	GameManager* game_mgr = GameManager::GetInstance();
 	TaskManager* task_mgr = TaskManager::GetInstance();
+	AudioManager* audio_mgr = AudioManager::GetInstance();
 
 	if (game_mgr->state != GameState::RUNNING) {
 		return;
@@ -57,9 +60,11 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->score = fruitConfig.score;
 	enemy->deathParticleColor = fruitConfig.color;
 	enemy->hp = fruitConfig.maxHp;
+	enemy->soundHit = fruitConfig.hitSound;
 
-	BuffConfig* buffConfig = BuffData::GetBuffConfigById(FREEZE);
-	enemy->buff = buffConfig;
+	enemy->buff = BuffData::GetBuffConfigById(FREEZE);
+
+	audio_mgr->PlaySound("fruit_throw.wav");
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
 		float buffRate = rand() % 100 / 100.0f;

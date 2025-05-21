@@ -27,12 +27,7 @@ public:
 	void PlayMusic();
 	void HaltMusic();
 
-	void PlaySound(const char* name, int loops = 0) {
-		Mix_Chunk* sound = GetAudioByName(name);
-		if (sound != nullptr) {
-			Mix_PlayChannel(-1, sound, loops);
-		}
-	}
+	int PlaySound(const char* name, int loops = 0);
 
 	bool LoadAudioByName(const char* name);
 	Mix_Music* LoadMusicByName(const char* name);

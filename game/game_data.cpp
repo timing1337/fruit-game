@@ -69,9 +69,9 @@ GameData::GameData(std::string path) {
 	this->highestComboAchieved = *(int*)(buffer + 4);
 	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
 
-	std::string bladeColorId((char*)(buffer + 16));
-
 	this->ReloadBladeData();
+
+	std::string bladeColorId((char*)(buffer + 16));
 	
 	this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId.c_str());
 
@@ -81,8 +81,10 @@ GameData::GameData(std::string path) {
 		return;
 	}
 
-	SDL_Log("Loaded game data: %s", this->ToString().c_str());
-	SDL_Log("Loaded blade color: %s", this->bladeColor->id);
+	if (!this->bladeColor->isUnlocked) {
+		SDL_Log("Abnormal data, player has this blade on but hasn't unlocked it yet", bladeColorId);
+		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+	}
 
 	//Cleanup
 	delete[] buffer;

@@ -25,10 +25,10 @@ CosmeticMenu::CosmeticMenu() : BaseScene(SceneId::COSMETIC)
 		bladeDescription->SetAlignmentVertical(AlignmentVertical::MIDDLE);
 		
 		//if we run out of bound, just reset the location and go down
-		basePosition.x += blade->bound.x + 150;
+		basePosition.x += blade->bound.x + 250;
 		if (basePosition.x >= RENDERER_WIDTH - 200) {
 			basePosition.x = 200;
-			basePosition.y += 50;
+			basePosition.y += 250;
 		}
 	}
 }
@@ -50,6 +50,8 @@ void CosmeticMenu::OnSelectBlade(ImageElement* element) {
 	}
 
 	SDL_Log("Blade %s is selected", bladeColor->name);
+	SDL_Log("Color 1: r %d, g %d, b %d", bladeColor->color1.r, bladeColor->color1.g, bladeColor->color1.b);
+	SDL_Log("Color 2: r %d, g %d, b %d", bladeColor->color2.r, bladeColor->color2.g, bladeColor->color2.b);
 
 	AudioManager::GetInstance()->PlaySound("button.wav");
 	data->bladeColor = bladeColor;

@@ -66,3 +66,10 @@ void AudioManager::ChangeSoundVolume(int volume) {
 	SDL_Log("Volume: %d", rescaled);
 	Mix_Volume(-1, volume);
 }
+
+int AudioManager::PlaySound(const char* name, int loops) {
+	Mix_Chunk* sound = GetAudioByName(name);
+	if (sound != nullptr) {
+		return Mix_PlayChannel(-1, sound, loops);
+	}
+}

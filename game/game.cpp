@@ -2,6 +2,10 @@
 
 GameManager* GameManager::instancePtr = new GameManager();
 
+void GameManager::Initialize() {
+	gameData = new GameData("game_data.dat");
+}
+
 void GameManager::Heartbeat(int deltaTicks) {
 	if (this->state != GameState::RUNNING) {
 		return;
@@ -135,10 +139,15 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 	case BuffId::FREEZE: {
 		//goofy
 		// Fade-in effect
+		//Play sound in loop
+		buffChannelId = AudioManager::GetInstance()->PlaySound("freeze_buf.wav", -1);
 		task_mgr->RunTimerTask(500,
 			[this, renderer, entity_mgr](TimerTask* self) {
 				//Triggered when we already finish, kill it
 				if (this->state != GameState::RUNNING) {
+					//stop sound
+					Mix_FadeOutChannel(buffChannelId, 0);
+					buffChannelId = -1;
 					self->Kill();
 					return;
 				}
@@ -156,16 +165,28 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 				// Active phase
 				this->buffTask = task_mgr->RunTimerTask(config->duration,
 					[this, renderer](TimerTask* self) {
+						if (this->state != GameState::RUNNING) {
+							Mix_FadeOutChannel(buffChannelId, 0);
+							buffChannelId = -1;
+							SDL_Log("Buff task killed");
+							self->Kill();
+							return;
+						}
 						renderer->RenderTextureBackground("freeze_buff_overlay.png", 255);
 					},
 					[this, task_mgr, renderer, entity_mgr](TimerTask* self) {
 						// Fade-out effect
+						//stop sound
+						Mix_FadeOutChannel(buffChannelId, 500);
+						buffChannelId = -1;
 						this->buffTask = nullptr;
 						task_mgr->RunTimerTask(500,
 							[this, renderer, entity_mgr](TimerTask* self) {
 								//Game ended when we are doing our post buff, just kill it
 								if (this->state != GameState::RUNNING) {
 									self->Kill();
+									Mix_FadeOutChannel(buffChannelId, 500);
+									buffChannelId = -1;
 									return;
 								}
 								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
@@ -229,6 +250,7 @@ void GameManager::FireStateChange(GameState state) {
 	case GameState::RUNNING:
 		if (this->buffTask != nullptr) {
 			this->buffTask->Start();
+			Mix_Resume(buffChannelId);
 			SDL_Log("Buff task unfroze");
 		}
 		break;
@@ -240,6 +262,7 @@ void GameManager::FireStateChange(GameState state) {
 		}
 		if (this->buffTask != nullptr) {
 			this->buffTask->Freeze();
+			Mix_Pause(buffChannelId);
 			SDL_Log("Buff task frozen");
 		}
 		break;
@@ -279,6 +302,8 @@ void GameManager::FireStateChange(GameState state) {
 			SDL_Log("Buff task killed");
 			this->buffTask->Kill();
 			this->buffTask = nullptr;
+			Mix_FadeOutChannel(buffChannelId, 0);	
+			buffChannelId = -1;
 		}
 
 		this->activeBuff = BUFF_NONE;

@@ -48,6 +48,7 @@ int main(int argc, char* args[])
 	AudioManager* audio_mgr = AudioManager::GetInstance();
 
 	renderer->Initialize();
+	game_mgr->Initialize();
 	entity_mgr->Initialize();
 	scene_mgr->Initialize();
 	audio_mgr->Initialize();
@@ -97,6 +98,7 @@ int main(int argc, char* args[])
 							pauseScreen->SetActive(true);
 							game_mgr->FireStateChange(GameState::PAUSED);
 							audio_mgr->PlaySound("button.wav");
+
 						}
 						else if (game_mgr->state == GameState::PAUSED) {
 							PauseScreen* pauseScreen = (PauseScreen*)scene_mgr->GetScene(SceneId::PAUSE);
@@ -114,7 +116,10 @@ int main(int argc, char* args[])
 						}
 						else {
 							//or player is just chilling in menu
-							scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
+							if (currentScene->sceneId != SceneId::MAIN_MENU) {
+								scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
+								audio_mgr->PlaySound("button.wav");
+							}
 						}
 					}
 					break;

@@ -25,7 +25,7 @@ public:
 	int deltaTime = 0;
 
 	//Game Data
-	GameData* gameData = new GameData("game_data.dat");
+	GameData* gameData = nullptr;
 
 	//Timing
 	int lastUpdatedTicks = 0;
@@ -44,10 +44,13 @@ public:
 	// Buff
 	BuffId activeBuff = BUFF_NONE;
 	TimerTask* buffTask = nullptr;
+	int buffChannelId = -1;
 
 	//Mouse path recording
 	MousePathRecord* mousePathRecord = nullptr;
 	std::vector<MousePathRecord*> mousePathRecordsLeftover;
+
+	void Initialize();
 
 	void Heartbeat(int deltaTicks);
 
