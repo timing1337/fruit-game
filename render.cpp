@@ -36,12 +36,9 @@ void Renderer::PlayFadeTransition(std::function<void(TimerTask* self)> onTransit
 		});
 }
 
-
-//holy shit what the fuck
 void Renderer::PlayFadeOverlay(GameTexture* texture, int duration) {
 	TaskManager::GetInstance()->RunTimerTask(FADING_OUT_TRANSITION_TICKS,
 		[this, texture](TimerTask* self) {
-			SDL_Log("running fade in");
 			int calculatedOpacity = self->GetProgress() * 255;
 			SDL_SetTextureAlphaMod(texture->sprite->texture, calculatedOpacity);
 			SDL_RenderCopy(gRenderer, texture->sprite->texture, NULL, NULL);
@@ -49,7 +46,6 @@ void Renderer::PlayFadeOverlay(GameTexture* texture, int duration) {
 			SDL_SetTextureAlphaMod(texture->sprite->texture, 255);
 			TaskManager::GetInstance()->RunTimerTask(duration,
 				[this, texture](TimerTask* self) {
-					SDL_Log("draw");
 					SDL_RenderCopy(gRenderer, texture->sprite->texture, NULL, NULL);
 				},
 				[this, texture](TimerTask* self) {

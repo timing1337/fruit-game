@@ -37,7 +37,7 @@ public:
 	void PreRender();
 	void UpdateRender();
 
-	//Deprecate this function pleaseee
+	//this function needs to go
 	void PlayFadeTransition(std::function<void(TimerTask* self)> onTransitioned, std::function<void(TimerTask* self)> onComplete);
 	void PlayFadeOverlay(GameTexture* texture, int duration);
 

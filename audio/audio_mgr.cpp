@@ -57,13 +57,11 @@ Mix_Chunk* AudioManager::GetAudioByName(const char* name) {
 //scale from 0-100
 void AudioManager::ChangeMusicVolume(int volume) {
 	int rescaled = (volume / 100.0f) * 128;
-	SDL_Log("Volume: %d", rescaled);
 	Mix_VolumeMusic(volume);
 }
 
 void AudioManager::ChangeSoundVolume(int volume) {
 	int rescaled = (volume / 100.0f) * 128;
-	SDL_Log("Volume: %d", rescaled);
 	Mix_Volume(-1, volume);
 }
 

@@ -5,9 +5,7 @@ MainStage::MainStage() : BaseScene(SceneId::GAME) {
 	TextElement* comboElement = this->AddText("combo", vec2_t{ RENDERER_CENTER_X, 16 }, "0", "genshin", 25, { 255, 255, 255, 255 });
 	comboElement->active = false;
 
-	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png", [](ImageElement* self) {
-		SDL_Log("ts is lowk fire af");
-	});
+	ImageElement* scoreIcon = this->AddImage("score_icon", vec2_t{ 10, 10 }, "score_icon.png", [](ImageElement* self) {});
 
 	scoreIcon->SetAlignmentVertical(AlignmentVertical::TOP);
 

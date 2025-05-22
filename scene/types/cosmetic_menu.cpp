@@ -48,11 +48,6 @@ void CosmeticMenu::OnSelectBlade(ImageElement* element) {
 		SDL_Log("Blade %s is not unlocked", bladeColor->name);
 		return;
 	}
-
-	SDL_Log("Blade %s is selected", bladeColor->name);
-	SDL_Log("Color 1: r %d, g %d, b %d", bladeColor->color1.r, bladeColor->color1.g, bladeColor->color1.b);
-	SDL_Log("Color 2: r %d, g %d, b %d", bladeColor->color2.r, bladeColor->color2.g, bladeColor->color2.b);
-
 	AudioManager::GetInstance()->PlaySound("button.wav");
 	data->bladeColor = bladeColor;
 }
