@@ -39,15 +39,15 @@ void EntityManager::RandomizeSpawningEntity() {
 	vec2_t position;
 	switch (direction) {
 	case 0: //RIGHT
-		position = vec2_t(0, (RENDERER_CENTER_Y - 50) + rand() % 200);
+		position = vec2_t(40, (RENDERER_CENTER_Y - 50) + rand() % 200);
 		angle = 20.0f;
 		break;
 	case 1: //LEFT
-		position = vec2_t(RENDERER_WIDTH, (RENDERER_CENTER_Y - 50) + rand() % 200);
+		position = vec2_t(RENDERER_WIDTH - 40, (RENDERER_CENTER_Y - 50) + rand() % 200);
 		angle = 150.0f;
 		break;
 	case 2: //BOTTOM
-		position = vec2_t((RENDERER_CENTER_Y - 50) + rand() % 300, RENDERER_HEIGHT);
+		position = vec2_t((RENDERER_CENTER_X - 50) + rand() % 300, RENDERER_HEIGHT);
 		angle = 90.0f;
 		break;
 	}
