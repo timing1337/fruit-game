@@ -62,8 +62,6 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->hp = fruitConfig.maxHp;
 	enemy->soundHit = fruitConfig.hitSound;
 
-	enemy->buff = BuffData::GetBuffConfigById(FREEZE);
-
 	audio_mgr->PlaySound("fruit_throw.wav");
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
