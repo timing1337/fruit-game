@@ -61,6 +61,7 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->deathParticleColor = fruitConfig.color;
 	enemy->hp = fruitConfig.maxHp;
 	enemy->soundHit = fruitConfig.hitSound;
+	enemy->buff = BuffData::GetBuffConfigById(FREEZE);
 
 	audio_mgr->PlaySound("fruit_throw.wav");
 
@@ -78,7 +79,7 @@ void EntityManager::RandomizeSpawningEntity() {
 
 	if (game_mgr->activeBuff == FREEZE) {
 		//apply slowest
-		task_mgr->RunTimerTask(500,
+		task_mgr->RunTimerTask(1000,
 			//oh my god this is so ulgy
 			[enemy, game_mgr](TimerTask* self) {
 				//check if buff is still active and entity is still alive
@@ -93,7 +94,7 @@ void EntityManager::RandomizeSpawningEntity() {
 					return;
 				}
 
-				enemy->slowdownFactor = std::max(self->GetProgress(), 1.0f);
+				enemy->slowdownFactor = self->GetProgress();
 			}, [](TimerTask* self) {});
 	}
 }
