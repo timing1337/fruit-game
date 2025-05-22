@@ -38,62 +38,73 @@ GameData::GameData(std::string path) {
 	this->path = path;
 	std::fstream file(path, std::ios::in | std::ios::binary);
 
-	if (!file.is_open()) {
+	try{
+		if (!file.is_open()) {
+			this->ResetData();
+			this->Save();
+			return;
+		}
+
+		uint64_t signature;
+
+		file.read((char*)&this->timestamp, sizeof(uint64_t));
+		file.read((char*)&signature, sizeof(uint64_t));
+
+		uint32_t size;
+		file.read((char*)&size, sizeof(uint32_t));
+		uint8_t* buffer = new uint8_t[size];
+		file.read((char*)buffer, size);
+
+		//Encryption
+		randomSeed.seed(this->timestamp);
+
+		uint64_t key = randomSeed();
+
+		for (int i = 0; i < size; i++) {
+			uint8_t keyByte = ((uint8_t*)&key)[i % 8];
+			buffer[i] ^= keyByte;
+			key = randomSeed();
+		}
+
+		this->highestScore = *(int*)(buffer);
+		this->highestComboAchieved = *(int*)(buffer + 4);
+		this->longestTimeAlive = *(uint64_t*)(buffer + 8);
+
+		this->ReloadBladeData();
+
+		std::string bladeColorId((char*)(buffer + 16));
+
+		this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId.c_str());
+
+		if (this->bladeColor == nullptr) {
+			SDL_Log("Blade color %s not found, using default blade color", bladeColorId);
+			this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+			return;
+		}
+
+		if (!this->bladeColor->isUnlocked) {
+			SDL_Log("Abnormal data, player has this blade on but hasn't unlocked it yet", bladeColorId);
+			this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
+		}
+
+		//Cleanup
+		delete[] buffer;
+		file.close();
+
+		//Signature checking
+		if (signature != HashGameDataString(this->ToString())) {
+			this->ResetData();
+			this->Save();
+			SDL_Log("Abnormal game data, player might be cheating");
+		}
+	}
+	catch (...){
+		SDL_Log("Error reading game data file, resetting to default");
 		this->ResetData();
 		this->Save();
+		SDL_Log("Game data reset to default");
+		file.close();
 		return;
-	}
-
-	uint64_t signature;
-
-	file.read((char*)&this->timestamp, sizeof(uint64_t));
-	file.read((char*)&signature, sizeof(uint64_t));
-
-	uint32_t size;
-	file.read((char*)&size, sizeof(uint32_t));
-	uint8_t* buffer = new uint8_t[size];
-	file.read((char*)buffer, size);
-
-	//Encryption
-	randomSeed.seed(this->timestamp);
-
-	uint64_t key = randomSeed();
-
-	for (int i = 0; i < size; i++) {
-		uint8_t keyByte = ((uint8_t*)&key)[i % 8];
-		buffer[i] ^= keyByte;
-		key = randomSeed();
-	}
-	
-	this->highestScore = *(int*)(buffer);
-	this->highestComboAchieved = *(int*)(buffer + 4);
-	this->longestTimeAlive = *(uint64_t*)(buffer + 8);
-
-	this->ReloadBladeData();
-
-	std::string bladeColorId((char*)(buffer + 16));
-	
-	this->bladeColor = BladeColorsConfig::GetBladeColorByName(bladeColorId.c_str());
-
-	if (this->bladeColor == nullptr) {
-		SDL_Log("Blade color %s not found, using default blade color", bladeColorId);
-		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
-		return;
-	}
-
-	if (!this->bladeColor->isUnlocked) {
-		SDL_Log("Abnormal data, player has this blade on but hasn't unlocked it yet", bladeColorId);
-		this->bladeColor = BladeColorsConfig::GetBladeColorByName("default_blade");
-	}
-
-	//Cleanup
-	delete[] buffer;
-	file.close();
-
-	//Signature checking
-	if (signature != HashGameDataString(this->ToString())) {
-		this->ResetData();
-		this->Save();
 	}
 }
 
