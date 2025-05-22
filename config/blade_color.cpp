@@ -22,8 +22,8 @@ std::vector<BladeColor*> BladeColorsConfig::colors = {
 	new BladeColor("energized_blade", "ENERGIZEDDD", "Reach 1000 scores and 250 combo", "blades/energized.png", "blade/default.wav", {88, 250, 82, 255}, {255, 220, 43, 255}, [](int score, int combo) {
 		return score >= 1000 && combo >= 250;
 	}),
-	new BladeColor("summer_time", "Summertime", "Summer-themed blade, event-only", "blades/summertime.png", "blade/default.wav", { 61, 213, 255, 255 }, {243, 132, 23, 255}, [](int score, int combo) {
-		return false;
+	new BladeColor("summer_time", "Summertime", "Summer-themed blade", "blades/summertime.png", "blade/default.wav", { 61, 213, 255, 255 }, {243, 132, 23, 255}, [](int score, int combo) {
+		return true;
 	}),
 };
 

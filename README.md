@@ -11,10 +11,14 @@
 Game lấy cảm hứng từ trò chơi Fruit Ninja. Bạn sẽ được cho 3 mạng mỗi lượt chơi và phải cố đạt điểm cao nhất và không làm lỡ 1 quả nào.
 Trong quá trình chơi sẽ có buff tùy vào số combo mà người chơi đạt được
 
+### Design pattern
+Game sử dụng singleton-pattern, chia nhỏ ra thành các manager.
+
 ### Điểm đáng chú ý
 1. On-Demand Texture streaming and easy to handle texture library
-2. Game-data encryption
+2. Game-data encryption, preventing player from tampering with data
 3. Custom scene/ui framework for easier handling
+4. Timing/Task-ing system for running repeated, timer
 
 ### File-save
 * Structure:
