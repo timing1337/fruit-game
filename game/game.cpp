@@ -180,6 +180,15 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 						Mix_FadeOutChannel(buffChannelId, 500);
 						buffChannelId = -1;
 						this->buffTask = nullptr;
+
+						for (Entity* entity : entity_mgr->entities) {
+							if (!entity->alive) continue;
+							entity->slowdownFactor = 0;
+						}
+
+						this->activeBuff = BUFF_NONE;
+						EntityManager::GetInstance()->canSpawnBuff = true;
+
 						task_mgr->RunTimerTask(500,
 							[this, renderer, entity_mgr](TimerTask* self) {
 								//Game ended when we are doing our post buff, just kill it
@@ -189,16 +198,8 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 								}
 								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
 								renderer->RenderTextureBackground("freeze_buff_overlay.png", opacity);
-
-								for (Entity* entity : entity_mgr->entities) {
-									if (!entity->alive) continue;
-									entity->slowdownFactor = 0;
-								}
 							},
-							[this](TimerTask* self) {
-								this->activeBuff = BUFF_NONE;
-								EntityManager::GetInstance()->canSpawnBuff = true;
-							});
+							[this](TimerTask* self) {});
 					});
 			});
 		break;
@@ -212,9 +213,7 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 				Mix_FadeOutChannel(buffChannelId, 500);
 				buffChannelId = -1;
 
-				this->buffTask = nullptr;
 				//kill every remaining entity & halt the spawn process
-				entity_mgr->spawnTask->interval = 9999;
 				for (int i = 0; i < entity_mgr->entities.size(); i++) {
 					Entity* entity = entity_mgr->entities[i];
 					if (!entity->alive || entity->type != EntityType::ENEMY) continue;
@@ -223,14 +222,10 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 					entity_mgr->spawnParticle(entity->position, enemy->deathParticleColor);
 				}
 
-				//7 second cooldown before buff end
-				TaskManager::GetInstance()->RunTimerTask(500,
-					[](TimerTask* self) {},
-					[this, entity_mgr](TimerTask* self) {
-						entity_mgr->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
-						this->activeBuff = BUFF_NONE;
-						EntityManager::GetInstance()->canSpawnBuff = true;
-					});
+				entity_mgr->spawnTask->interval = std::max(ENEMY_SPAWN_INTERVAL_BASE - this->score * ENEMY_SPAWN_INTERVAL_MULTIPLIER, ENEMY_SPAWN_INTERVAL_MIN);
+				this->activeBuff = BUFF_NONE;
+				EntityManager::GetInstance()->canSpawnBuff = true;
+				this->buffTask = nullptr;
 			});
 		break;
 	}

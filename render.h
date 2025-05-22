@@ -39,7 +39,6 @@ public:
 
 	//this function needs to go
 	void PlayFadeTransition(std::function<void(TimerTask* self)> onTransitioned, std::function<void(TimerTask* self)> onComplete);
-	void PlayFadeOverlay(GameTexture* texture, int duration);
 
 	bool LoadFontByName(const char* name);
 	bool LoadTextureByName(const char* name);
