@@ -11,6 +11,9 @@
 Game lấy cảm hứng từ trò chơi Fruit Ninja. Bạn sẽ được cho 3 mạng mỗi lượt chơi và phải cố đạt điểm cao nhất và không làm lỡ 1 quả nào.
 Trong quá trình chơi sẽ có buff tùy vào số combo mà người chơi đạt được
 
+## Ngưỡng điểm 
+Trong khoảng từ 9.5-10
+
 ### Design pattern
 Game sử dụng singleton-pattern, chia nhỏ ra thành các manager.
 
