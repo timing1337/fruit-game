@@ -110,12 +110,12 @@ int main(int argc, char* args[])
 					else {
 						//Ulgy hacks #2
 
-						//ok player is trying to revert back to previous scene, prob is on settings and wanna go back
+						//ok player is trying to revert back to previous scene, prob is on settings and wanna play again
 						if (game_mgr->state == GameState::PAUSED) {
 							scene_mgr->TransitionToScene(SceneId::GAME);
 						}
 						else {
-							//or player is just chilling in menu
+							//or player is just in comsetics/settings and wanna go back to main menu
 							if (currentScene->sceneId != SceneId::MAIN_MENU) {
 								scene_mgr->TransitionToScene(SceneId::MAIN_MENU);
 								audio_mgr->PlaySound("button.wav");

@@ -61,7 +61,6 @@ void SceneManager::TransitionToScene(SceneId sceneId, std::function<void(SceneMa
 
 			//Really ulgy hacks
 			// I hate myself
-			
 
 			//check if player is on the game menu and pausing the game,
 			//this means player is moving to other scene (or settings),
