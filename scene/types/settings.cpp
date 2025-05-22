@@ -23,9 +23,6 @@ Settings::Settings() : BaseScene(SceneId::SETTING) {
 		AudioManager::GetInstance()->ChangeMusicVolume(slider->currentValue);
 	});
 
-	music_slider->currentValue = 50;
-	music_slider->Update();
-
 	alignedStartY += 100;
 
 	TextElement* sound_slider_text = this->AddText("sound_slider_text", { alignedStartX, alignedStartY }, "Sound Volume", "genshin", 20, { 255, 255, 255, 255 });

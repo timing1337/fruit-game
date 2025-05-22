@@ -19,7 +19,7 @@ public:
 		this->onValueChange = onValueChange;
 	}
 
-	void Update();
+	void Update(int value);
 	void Render() override;
 	void OnMouseClick(SDL_MouseButtonEvent& e) override;
 	bool IsHovered() override;

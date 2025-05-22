@@ -25,7 +25,7 @@ const float COMBO_MULTIPLICATION_MAX = 0.05f;
 
 const int COMBO_DURATION_BASE = 1000;
 const int COMBO_DURATION_MULTIPLIER = 20;
-const int COMBO_DURATION_MAX = 2000;
+const int COMBO_DURATION_MAX = 3000;
 
 //ENEMY SETTING
 
@@ -41,8 +41,9 @@ const int ENEMY_BASE_SPEED = 270;
 const int ENEMY_SPEED_MULTIPLIER = 2;
 const int ENEMY_SPEED_MAX = 600;
 
-const int ENTITY_DEATH_IMPACT = 400;
-const int ENTITY_KILL_IMPACT = 400;
+const float BUFF_BASE_CHANCE = 0.005f;
+const float BUFF_COMBO_MULTIPLIER = 0.0005f;
+const float BUFF_MAX_CHANCE = 0.025f;
 
 const int GRAVITY_SPEED = 250;
 

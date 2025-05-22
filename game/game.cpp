@@ -185,8 +185,6 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 								//Game ended when we are doing our post buff, just kill it
 								if (this->state != GameState::RUNNING) {
 									self->Kill();
-									Mix_FadeOutChannel(buffChannelId, 500);
-									buffChannelId = -1;
 									return;
 								}
 								int opacity = static_cast<int>(255 - self->GetProgress() * 255);
@@ -207,9 +205,13 @@ void GameManager::TriggerBuff(BuffConfig* config) {
 	}
 	case BuffId::FRUIT_PARTY:
 		entity_mgr->spawnTask->interval = 30;
+		buffChannelId = AudioManager::GetInstance()->PlaySound("fruit_party.wav", -1);
 		this->buffTask = task_mgr->RunTimerTask(config->duration,
 			[this](TimerTask* self) {},
 			[this, entity_mgr](TimerTask* self) {
+				Mix_FadeOutChannel(buffChannelId, 500);
+				buffChannelId = -1;
+
 				this->buffTask = nullptr;
 				//kill every remaining entity & halt the spawn process
 				entity_mgr->spawnTask->interval = 9999;

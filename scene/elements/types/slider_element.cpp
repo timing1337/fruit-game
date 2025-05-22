@@ -19,12 +19,20 @@ void SliderElement::OnMouseClick(SDL_MouseButtonEvent& e) {
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 		int value = ((mouseX - this->position.x) / this->bound.x) * this->maxValue;
-		this->currentValue = value;
-		Update();
+		Update(value);
 	}
 }
 
-void SliderElement::Update() {
+void SliderElement::Update(int value) {
+	if (value < 0) {
+		return;
+	}
+
+	if (value > this->maxValue) {
+		return;
+	}
+
+	this->currentValue = value;
 	if (this->onValueChange != nullptr) {
 		this->onValueChange(this);
 	}

@@ -61,13 +61,17 @@ void EntityManager::RandomizeSpawningEntity() {
 	enemy->deathParticleColor = fruitConfig.color;
 	enemy->hp = fruitConfig.maxHp;
 	enemy->soundHit = fruitConfig.hitSound;
-	enemy->buff = BuffData::GetBuffConfigById(FREEZE);
 
-	audio_mgr->PlaySound("fruit_throw.wav");
+	//enemy->buff = BuffData::GetBuffConfigById(FRUIT_PARTY);
+
+	if (game_mgr->activeBuff != FRUIT_PARTY) {
+		audio_mgr->PlaySound("fruit_throw.wav");
+	}
 
 	if (canSpawnBuff && game_mgr->activeBuff == BUFF_NONE) {
 		float buffRate = rand() % 100 / 100.0f;
-		float buffChance = std::min(0.005f + game_mgr->currentCombo * 0.0005f, 0.025f);
+		//buff chance is 0.5% + 0.05% per combo, max 2.5%
+		float buffChance = std::min(BUFF_BASE_CHANCE + game_mgr->currentCombo * BUFF_COMBO_MULTIPLIER, BUFF_MAX_CHANCE);
 		if (buffRate < buffChance) {
 			BuffConfig* buffConfig = BuffData::GetRandomBuffConfig();
 			canSpawnBuff = false;

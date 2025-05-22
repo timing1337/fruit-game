@@ -53,6 +53,12 @@ int main(int argc, char* args[])
 	scene_mgr->Initialize();
 	audio_mgr->Initialize();
 
+	Settings* settings = (Settings*)scene_mgr->GetScene(SceneId::SETTING);
+	SliderElement* music_slider = (SliderElement*)settings->GetElementById("music_volume");
+	music_slider->Update(10);
+	SliderElement* sound_slider = (SliderElement*)settings->GetElementById("sound_volume");
+	sound_slider->Update(15);
+
 	Downsampling::Initialize();
 
 	game_mgr->lastUpdatedTicks = SDL_GetTicks();
